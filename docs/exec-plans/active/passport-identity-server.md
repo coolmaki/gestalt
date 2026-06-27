@@ -380,11 +380,16 @@ All endpoints return a standard envelope: `{ success: bool, data?: T, errors?: E
 ```
 Passport.Infrastructure/
 ├── Data/
-│   ├── PassportDbContext.cs          # EF Core DbContext
+|   ├── PassportDbContext.cs          # EF Core DbContext
 │   ├── Configurations/
-│   │   ├── UserConfiguration.cs
-│   │   ├── PasskeyCredentialConfiguration.cs
-│   │   └── RecoveryCodeConfiguration.cs
+│   │   ├── Postgres/
+│   │   │   ├── UserConfiguration.cs
+│   │   │   ├── PasskeyCredentialConfiguration.cs
+│   │   │   └── RecoveryCodeConfiguration.cs
+│   │   └── Sqlite/
+│   │       ├── UserConfiguration.cs
+│   │       ├── PasskeyCredentialConfiguration.cs
+│   │       └── RecoveryCodeConfiguration.cs
 │   ├── Migrations/                   # ef migrations (auto-generated)
 │   └── Repositories/
 │       ├── UserRepository.cs         # IUserRepository implementation

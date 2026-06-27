@@ -214,6 +214,51 @@ All domain entities (in `{Project}.Core.Domain`) follow these rules:
 
 - **IEquatable<T> on all entities.** Every entity implements `IEquatable<T>` and overrides `Equals(object)` / `GetHashCode()`. The equality check uses the domain discriminator (natural key or strongly-typed ID), never the persistence ID.
 
+- **Navigation properties over FK ID properties.** When an entity needs to reference another entity, use a navigation property (e.g., `User` property on `PasskeyCredential`), not a foreign key ID property (e.g., `UserId`). Only add navigation properties if the entity actually needs to navigate to the related entity in its business logic.
+
+  ```csharp
+  // Good: navigation property
+  public User User { get; private set; } = null!;
+
+  // Avoid: FK ID property unless actually needed in domain logic
+  public Guid UserId { get; private set; }
+  ```
+
+### Extension Methods
+
+- Extension methods must reside in `Extensions/` at the project root.
+- The containing class must be `static` and named `<TypeBeingExtended>Extensions`.
+
+  ```csharp
+  // Supercluster.Lib.Infrastructure/Extensions/ServiceCollectionExtensions.cs
+  public static class ServiceCollectionExtensions
+  {
+      public static IServiceCollection AddProviders(this IServiceCollection services) { ... }
+  }
+  ```
+
+### EF Core Entity Configuration
+
+- Every entity and aggregate root must have a corresponding `IEntityTypeConfiguration<T>` implementation.
+- One configuration per EF Core backend provider (Postgres, SQLite, etc.).
+- Configuration classes live in `{Project}.Infrastructure/Data/Configurations/{Provider}/`.
+- All persistence concerns (relations, indexes, column types, conversions, shadow properties) live in these configuration classes — never in the domain entity itself. The domain model is persistence-ignorant.
+
+  ```
+  Passport.Infrastructure/
+  ├── Data/
+  │   ├── Configurations/
+  │   │   ├── Postgres/
+  │   │   │   ├── UserConfiguration.cs
+  │   │   │   ├── PasskeyCredentialConfiguration.cs
+  │   │   │   └── RecoveryCodeConfiguration.cs
+  │   │   └── Sqlite/
+  │   │       ├── UserConfiguration.cs
+  │   │       ├── PasskeyCredentialConfiguration.cs
+  │   │       └── RecoveryCodeConfiguration.cs
+  │   └── PassportDbContext.cs
+  ```
+
 ### C# Type Visibility & Sealing
 
 - **`internal` by default.** Types should be `internal` unless they are explicitly needed by another package in the monorepo. This keeps the public surface area small and intentional.
