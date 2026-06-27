@@ -381,3 +381,9 @@ dotnet_naming_style.s_camelcase.capitalization = camel_case
 [*.cs]
 dotnet_diagnostic.CA1716.severity = none
 
+# Functional sum types use static factories on generic types (Option<T>.Some, Result<T>.Success)
+dotnet_diagnostic.CA1000.severity = none
+
+# Unit.Value = new() is an intentional singleton, not default initialization
+dotnet_diagnostic.CA1805.severity = none
+

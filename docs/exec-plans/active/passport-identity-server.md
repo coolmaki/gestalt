@@ -15,7 +15,7 @@ Passport follows Clean Architecture like all Supercluster projects:
 
 ```
 Passport.Presentation.Http   ← OAuth/OIDC endpoints, login/signup pages (API + SSR or SPA)
-Passport.Core.Application    ← use cases: register, authenticate, refresh token, recover account
+Passport.Core.Application    ← commands/queries, ports (interfaces), read models
 Passport.Core.Domain         ← User, PasskeyCredential, Client, AuthorizationCode, RefreshToken, Session
 Passport.Infrastructure      ← EF Core with Postgres + SQLite adapters, WebAuthn (FIDO2) library
 ```
@@ -333,41 +333,96 @@ User                   SPA                  Server
 
 ---
 
-#### Use Cases
+#### Commands & Queries
 
-All in `Passport.Core.Application/UseCases/`:
+All in `Passport.Core.Application/`. Commands mutate state (via EF Core command repos). Queries read state (via Dapper query repos with raw SQL).
 
-| Use Case | Input | Output | Notes |
-|----------|-------|--------|-------|
-| `BeginRegistration` | email (string) | `CredentialCreateOptions` (JSON) | Generates challenge; stores in temp store (in-memory or DB-backed TTL) |
-| `CompleteRegistration` | email, attestation response | `Result<UserId>` | Validates attestation; creates User + Credential; sends verification email |
-| `VerifyEmail` | userId, code | `Result<Unit>` | Hashes code, compares, marks email verified |
-| `BeginAuthentication` | email | `AssertionOptions` (JSON) | Looks up user; generates challenge with their credential IDs |
-| `CompleteAuthentication` | email, assertion response | `Result<UserId>` | Validates assertion; bumps sign count; creates session |
-| `BeginRecovery` | email | `Result<Unit>` | Sends recovery code email (or silently succeeds if no user) |
-| `VerifyRecoveryCode` | email, code | `Result<string>` (recoveryToken) | Validates code; returns one-time recovery token |
-| `CompleteRecovery` | recoveryToken, attestation | `Result<UserId>` | Removes all existing passkeys; registers new one |
-| `ListCredentials` | userId | `Result<IReadOnlyList<CredentialInfo>>` | Returns list of passkey metadata (no secrets) |
-| `RemoveCredential` | userId, credentialId | `Result<Unit>` | Fails if it's the last credential (must use recovery) |
+##### Commands
+
+| Command | Handler | Result | Notes |
+|---------|---------|--------|-------|
+| `RegisterUser.Begin` | `ICommandHandler<BeginRegistrationCommand, CredentialCreateOptions>` | WebAuthn options JSON | Stores challenge in `IChallengeStore` |
+| `RegisterUser.Complete` | `ICommandHandler<CompleteRegistrationCommand, UserId>` | `Result<UserId>` | Validates attestation; creates User + Credential; sends verification email |
+| `VerifyUserEmail` | `ICommandHandler<VerifyEmailCommand, Unit>` | `Result<Unit>` | Hashes code, compares, marks email verified |
+| `AuthenticateUser.Begin` | `ICommandHandler<BeginAuthenticationCommand, AssertionOptions>` | WebAuthn assertion options | Looks up user; generates challenge with credential IDs |
+| `AuthenticateUser.Complete` | `ICommandHandler<CompleteAuthenticationCommand, UserId>` | `Result<UserId>` | Validates assertion; bumps sign count |
+| `RecoverAccount.Begin` | `ICommandHandler<BeginRecoveryCommand, Unit>` | `Result<Unit>` | Sends recovery code email (or silently succeeds if no user) |
+| `RecoverAccount.Verify` | `ICommandHandler<VerifyRecoveryCodeCommand, string>` | `Result<string>` (recovery token) | Validates code; returns one-time recovery token |
+| `RecoverAccount.Complete` | `ICommandHandler<CompleteRecoveryCommand, UserId>` | `Result<UserId>` | Removes all existing passkeys; registers new one |
+| `RemovePasskey` | `ICommandHandler<RemoveCredentialCommand, Unit>` | `Result<Unit>` | Fails if it's the last credential (must use recovery) |
+
+##### Queries
+
+| Query | Handler | Result | Notes |
+|-------|---------|--------|-------|
+| `GetCredentials` | `IQueryHandler<GetCredentialsQuery, IReadOnlyList<CredentialInfo>>` | Passkey metadata | Dapper; returns read model — no domain types |
+| `FindUser` | `IQueryHandler<FindUserQuery, UserReadModel>` | User read model | Dapper; lookup by email for auth flows |
 
 ---
 
 #### Endpoints (Presentation.Http)
 
+Controllers delegate to command/query handlers via DI:
+
 ```
-POST   /api/auth/register/begin       # → BeginRegistration
-POST   /api/auth/register/complete    # → CompleteRegistration
-POST   /api/auth/register/verify-email # → VerifyEmail
-POST   /api/auth/login/begin          # → BeginAuthentication
-POST   /api/auth/login/complete       # → CompleteAuthentication
-POST   /api/auth/recovery/begin       # → BeginRecovery
-POST   /api/auth/recovery/verify-code # → VerifyRecoveryCode
-POST   /api/auth/recovery/complete    # → CompleteRecovery
-GET    /api/auth/credentials          # → ListCredentials (authenticated)
-DELETE /api/auth/credentials/{id}     # → RemoveCredential (authenticated)
+POST   /api/auth/register/begin       # → BeginRegistrationCommand
+POST   /api/auth/register/complete    # → CompleteRegistrationCommand
+POST   /api/auth/register/verify-email # → VerifyEmailCommand
+POST   /api/auth/login/begin          # → BeginAuthenticationCommand
+POST   /api/auth/login/complete       # → CompleteAuthenticationCommand
+POST   /api/auth/recovery/begin       # → BeginRecoveryCommand
+POST   /api/auth/recovery/verify-code # → VerifyRecoveryCodeCommand
+POST   /api/auth/recovery/complete    # → CompleteRecoveryCommand
+GET    /api/auth/credentials          # → GetCredentialsQuery (authenticated)
+DELETE /api/auth/credentials/{id}     # → RemoveCredentialCommand (authenticated)
 ```
 
 All endpoints return a standard envelope: `{ success: bool, data?: T, errors?: Error[] }`.
+
+---
+
+#### Application Project Structure
+
+```
+Passport.Core.Application/
+├── Commands/
+│   ├── Registration/
+│   │   ├── BeginRegistrationCommand.cs
+│   │   ├── BeginRegistrationCommandHandler.cs
+│   │   ├── CompleteRegistrationCommand.cs
+│   │   └── CompleteRegistrationCommandHandler.cs
+│   ├── Authentication/
+│   │   ├── BeginAuthenticationCommand.cs
+│   │   ├── BeginAuthenticationCommandHandler.cs
+│   │   ├── CompleteAuthenticationCommand.cs
+│   │   └── CompleteAuthenticationCommandHandler.cs
+│   ├── Recovery/
+│   │   ├── BeginRecoveryCommand.cs
+│   │   ├── BeginRecoveryCommandHandler.cs
+│   │   ├── CompleteRecoveryCommand.cs
+│   │   └── CompleteRecoveryCommandHandler.cs
+│   ├── Credentials/
+│   │   ├── RemoveCredentialCommand.cs
+│   │   └── RemoveCredentialCommandHandler.cs
+│   └── Verification/
+│       ├── VerifyEmailCommand.cs
+│       └── VerifyEmailCommandHandler.cs
+├── Queries/
+│   ├── GetCredentialsQuery.cs
+│   ├── GetCredentialsQueryHandler.cs
+│   ├── FindUserQuery.cs
+│   └── FindUserQueryHandler.cs
+├── Ports/
+│   ├── IChallengeStore.cs              # temp storage for WebAuthn challenges
+│   ├── IEmailSender.cs                 # send verification/recovery emails
+│   ├── IFido2.cs                       # WebAuthn/FIDO2 abstraction
+│   ├── IUserCommandRepository.cs       # EF Core — load/save User aggregates
+│   ├── IUserQueryRepository.cs         # Dapper — read user data via SQL
+│   └── IRecoveryCodeRepository.cs      # manage recovery codes
+└── ReadModels/
+    ├── UserReadModel.cs
+    └── CredentialInfo.cs
+```
 
 ---
 
@@ -426,7 +481,7 @@ Decision for Phase 1: use `IMemoryCache` (it's built-in, sufficient for single-i
 | Test Project | What |
 |-------------|------|
 | `tests/Passport.Core.Domain.Tests/` | Entity invariants (can't create invalid User, PasskeyCredential, RecoveryCode) |
-| `tests/Passport.Core.Application.Tests/` | Use case logic with mocked repositories + mock WebAuthn; test error paths |
+| `tests/Passport.Core.Application.Tests/` | Command and query handler logic with mocked repositories + mock WebAuthn; test error paths |
 | `tests/Passport.Infrastructure.Tests/` | EF Core mappings (can persist/retrieve User with Passkeys); WebAuthn integration with fido2-net-lib mocks |
 
 WebAuthn mocking strategy: `fido2-net-lib` provides test helpers. Alternatively, wrap it behind an `IFido2` interface in Application and mock at that boundary. Prefer the interface approach — it keeps use case tests fast and not dependent on the library.
@@ -445,7 +500,7 @@ WebAuthn mocking strategy: `fido2-net-lib` provides test helpers. Alternatively,
 - [ ] Recovery code has 6 digits, 10-min TTL, max 3 attempts
 - [ ] WebAuthn ceremony works in Chrome, Firefox, Safari
 - [ ] EF Core migrations run against Postgres and SQLite
-- [ ] All use cases have tests covering happy path + error cases
+- [ ] All command and query handlers have tests covering happy path + error cases
 - [ ] Domain entities enforce their invariants at construction time
 
 ---
@@ -549,14 +604,14 @@ public readonly record struct RefreshTokenId(Guid Value);
 - Refresh tokens are stored as hashes in the DB (like recovery codes — plaintext never persisted).
 - Refresh token rotation: if enabled, each refresh issues a new refresh token AND invalidates the old one. This limits the damage window of a stolen refresh token (if both the attacker and the legitimate user try to refresh, one will fail because the old token was consumed → alert/log).
 
-#### Use Cases
+#### Commands
 
-| Use Case | Input | Output | Notes |
-|----------|-------|--------|-------|
-| `CreateSession` | userId, clientId? | `Result<(string accessToken, string refreshToken)>` | Generates JWT + opaque refresh token; stores refresh token hash |
-| `RefreshAccessToken` | refreshToken (raw) | `Result<(string accessToken, string? newRefreshToken)>` | Validates refresh token hash; if rotation enabled, revokes old, issues new |
-| `RevokeRefreshToken` | refreshToken (raw) | `Result<Unit>` | Revokes a specific refresh token |
-| `RevokeAllUserTokens` | userId | `Result<Unit>` | Revokes all refresh tokens for a user ("logout everywhere") |
+| Command | Handler | Result | Notes |
+|---------|---------|--------|-------|
+| `CreateSession` | `ICommandHandler<CreateSessionCommand, (string accessToken, string refreshToken)>` | Token pair | Generates JWT + opaque refresh token; stores refresh token hash |
+| `RefreshAccessToken` | `ICommandHandler<RefreshAccessTokenCommand, (string accessToken, string? newRefreshToken)>` | New token pair | Validates refresh token hash; if rotation enabled, revokes old, issues new |
+| `RevokeRefreshToken` | `ICommandHandler<RevokeRefreshTokenCommand, Unit>` | `Result<Unit>` | Revokes a specific refresh token |
+| `RevokeAllUserTokens` | `ICommandHandler<RevokeAllUserTokensCommand, Unit>` | `Result<Unit>` | Revokes all refresh tokens for a user ("logout everywhere") |
 
 #### Endpoints
 
@@ -612,7 +667,7 @@ Authorization Code + PKCE with refresh tokens. The OIDC protocol surface.
 - `GET /.well-known/jwks.json` — JWT signing keys
 - `GET /userinfo` — OIDC userinfo endpoint
 
-**Use cases:**
+**Commands:**
 - `RegisterClient` — register a new OAuth client
 - `BeginAuthorization` — validate client, scopes, generate authorization code
 - `ExchangeCode` — validate code + PKCE verifier, issue tokens

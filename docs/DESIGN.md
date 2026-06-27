@@ -42,30 +42,67 @@ public Customer? FindCustomer(CustomerId id) { ... }
 
 Domain types (entities, value objects, events) use `record` for value semantics and immutability. Properties use `{ get; init; }`. Mutable state is allowed only when a clear performance or interop requirement demands it — and is always clearly documented.
 
-### 5. Use Cases as the Application Boundary
+### 5. CQRS: Commands and Queries
 
-Every operation that changes state goes through a **use case** (command/query handler) in the Application layer. Controllers delegate to use cases; they contain no business logic.
+Every operation goes through the Application layer via a command or a query. This separates writes from reads.
+
+- **Commands** mutate state. They are handled by `ICommandHandler<TCommand, TResult>` and use EF Core command repositories to load aggregates, invoke domain logic, and persist changes. Commands return `Result<TResult>`.
+- **Queries** read state. They are handled by `IQueryHandler<TQuery, TResult>` and use Dapper query repositories with raw SQL against read models. Queries return `Result<TResult>` — errors-as-values applies to reads too.
+
+No external CQRS framework (MediatR, etc.). Handlers are wired manually via DI.
 
 ```csharp
-// Application layer: use case
-public sealed class PlaceOrderUseCase(IOrderRepository orders, IUnitOfWork uow)
+// Command: create a user
+public sealed record RegisterUserCommand(string Email, byte[] Attestation) : ICommand<UserId>;
+
+public sealed class RegisterUserCommandHandler(
+    IUserCommandRepository users,
+    IFido2 fido2,
+    IGuidProvider guids,
+    IDateTimeProvider clock
+) : ICommandHandler<RegisterUserCommand, UserId>
 {
-    public async Task<Result<Order>> Execute(PlaceOrderCommand command, CancellationToken ct)
+    public async Task<Result<UserId>> HandleAsync(RegisterUserCommand command, CancellationToken ct)
     {
-        // business orchestration lives here
+        // validate, create entity, persist
     }
 }
 
-// Presentation layer: controller — thin, no logic
-public sealed class OrdersController(PlaceOrderUseCase placeOrder) : ApiController
+// Query: find a user
+public sealed record FindUserQuery(string Email) : IQuery<UserReadModel>;
+
+public sealed class FindUserQueryHandler(
+    IUserQueryRepository users
+) : IQueryHandler<FindUserQuery, UserReadModel>
 {
-    public async Task<IActionResult> Place(PlaceOrderRequest request, CancellationToken ct)
+    public async Task<Result<UserReadModel>> HandleAsync(FindUserQuery query, CancellationToken ct)
     {
-        return await placeOrder.Execute(request.ToCommand(), ct)
+        // raw SQL via Dapper → read model
+    }
+}
+```
+
+**Controllers delegate to commands/queries.** They contain no business logic — just request mapping, handler dispatch, and response mapping.
+
+```csharp
+public sealed class AuthController(
+    ICommandHandler<RegisterUserCommand, UserId> registerUser,
+    IQueryHandler<FindUserQuery, UserReadModel> findUser
+) : ApiController
+{
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterRequest request, CancellationToken ct)
+    {
+        var command = new RegisterUserCommand(request.Email, request.Attestation);
+        return await registerUser.HandleAsync(command, ct)
             .Match(Ok, this.ToErrorResponse);
     }
 }
 ```
+
+**Repository split:**
+- `IUserCommandRepository` — EF Core. `Add(User)`, `Update(User)`, `FindById(id)`, `SaveChanges()`.
+- `IUserQueryRepository` — Dapper. `FindByEmail(email)`, `ListCredentials(userId)`. Returns read models, never domain entities.
 
 ---
 
@@ -135,6 +172,8 @@ Source files use visual section separators for consistent internal structure. Se
 // Internal
 // ------------------------------------------------------------
 ```
+
+**Async method naming:** All async methods use the `Async` suffix (e.g., `HandleAsync`, `FindByEmailAsync`, `SaveChangesAsync`).
 
 ### Domain Entity Conventions
 
