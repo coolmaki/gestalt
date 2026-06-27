@@ -1,6 +1,6 @@
 # Supercluster
 
-A constellation of self-hosted services, built with .NET and SolidJS.
+A collection of self-hosted services, built with .NET and SolidJS.
 
 ---
 
@@ -73,4 +73,4 @@ Apache 2.0 — see [`LICENSE`](LICENSE).
 
 ---
 
-*Supercluster is a constellation. Each project can run independently. Together, they can form anything.*
+*Supercluster is a gravitationally-bound collection of services — each a galaxy, able to run independently or together.*
