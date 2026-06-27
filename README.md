@@ -70,7 +70,3 @@ See [`docs/DESIGN.md`](docs/DESIGN.md) for the full philosophy.
 ## License
 
 Apache 2.0 — see [`LICENSE`](LICENSE).
-
----
-
-*Supercluster is a gravitationally-bound collection of services — each a galaxy, able to run independently or together.*
