@@ -4,7 +4,7 @@ Known technical debt items across the monorepo, their severity, and planned reme
 
 | ID | Severity | Area | Project | Description | Created |
 |----|----------|------|---------|-------------|---------|
-| TD-001 | 🔴 High | Backend | shared | `AgreggateRoot` is misspelled in `Supercluster.Lib.Domain` (should be `AggregateRoot`). Fix before any project depends on it. | 2026-06-27 |
+| TD-001 | ✅ Resolved | Backend | shared | `AgreggateRoot` typo fixed in `Supercluster.Lib.Domain`. Renamed to `AggregateRoot`. | 2026-06-27 |
 | TD-002 | 🟡 Medium | Backend | shared | No test projects exist for `Supercluster.Lib.Primitives` or `Supercluster.Lib.Domain`. | 2026-06-27 |
 | TD-003 | 🟡 Medium | CI | all | No CI/CD configuration. Build and test validation is manual. | 2026-06-27 |
 | TD-004 | 🔴 High | Frontend | shared | `apps/shared-ui/` not yet scaffolded. Design tokens, shared components, navigation, and PWA utilities need to exist before any app frontend is built. | 2026-06-27 |

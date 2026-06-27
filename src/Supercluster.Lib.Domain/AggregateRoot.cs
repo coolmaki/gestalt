@@ -1,6 +1,6 @@
 namespace Supercluster.Lib.Domain;
 
-public abstract class AgreggateRoot : Entity
+public abstract class AggregateRoot : Entity
 {
     // ------------------------------------------------------------
     // Backing Fields

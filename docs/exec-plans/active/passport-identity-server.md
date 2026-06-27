@@ -39,7 +39,7 @@ Frontend: SolidJS SPA in `apps/passport/` for login, signup, passkey management,
 
 The minimum viable identity server: register with passkey, authenticate with passkey, recover via email.
 
-**Status:** 🔧 Draft — refining
+**Status:** 🚀 Active
 
 ---
 
