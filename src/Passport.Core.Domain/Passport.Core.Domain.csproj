@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../Supercluster.Lib.Domain/Supercluster.Lib.Domain.csproj" />
+    <ProjectReference Include="../Supercluster.Lib.Primitives/Supercluster.Lib.Primitives.csproj" />
+  </ItemGroup>
+
+</Project>

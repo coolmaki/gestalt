@@ -18,7 +18,7 @@ public abstract class AggregateRoot : Entity
     // Methods
     // ------------------------------------------------------------
 
-    internal void RaiseEvent(DomainEvent e)
+    protected void RaiseEvent(DomainEvent e)
     {
         _events.Add(e);
     }
