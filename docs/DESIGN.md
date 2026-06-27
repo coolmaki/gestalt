@@ -105,9 +105,12 @@ Result<User> CreateUser(string email) =>
 
 ### C# Source Files
 
-Source files use visual section separators for consistent internal structure:
+Source files use visual section separators for consistent internal structure. Sections appear in this order (where applicable):
 
 ```csharp
+// --- Constants ---
+// (no header — constants go at the top before any section headers)
+
 // ------------------------------------------------------------
 // Constructors & Factories
 // ------------------------------------------------------------
@@ -121,9 +124,95 @@ Source files use visual section separators for consistent internal structure:
 // ------------------------------------------------------------
 
 // ------------------------------------------------------------
-// Methods
+// Equality
+// ------------------------------------------------------------
+
+// ------------------------------------------------------------
+// Behaviors (or Methods, depending on context)
+// ------------------------------------------------------------
+
+// ------------------------------------------------------------
+// Internal
 // ------------------------------------------------------------
 ```
+
+### Domain Entity Conventions
+
+All domain entities (in `{Project}.Core.Domain`) follow these rules:
+
+- **Private empty constructor only.** A single `private Foo() { }` serves both as the EF Core materialization entry point and as the construction path for factory methods. No other constructors.
+
+- **Public static factory methods.** The only way to create an entity from outside is through a static factory method. The factory calls the private constructor, sets properties, enforces invariants, and raises domain events.
+
+  ```csharp
+  public static User Register(string email, Guid userId, DateTimeOffset now)
+  {
+      // validate
+      var user = new User
+      {
+          Id = new UserId(userId),
+          Email = email.ToLowerInvariant().Trim(),
+          CreatedAt = now,
+          UpdatedAt = now,
+      };
+      user.RaiseEvent(new UserRegistered(user.Id, user.Email, now));
+      return user;
+  }
+  ```
+
+- **Properties: `public` get, `private` set.** EF Core can set private setters via reflection. The domain uses the factory method to set them.
+
+  ```csharp
+  public UserId Id { get; private set; }
+  public string Email { get; private set; } = string.Empty;
+  public bool EmailVerified { get; private set; }
+  public DateTimeOffset CreatedAt { get; private set; }
+  public DateTimeOffset UpdatedAt { get; private set; }
+  ```
+
+- **Pure/deterministic domain.** `Guid.CreateVersion7()`, `DateTimeOffset.UtcNow`, `Random`, etc. are never called in domain projects. All such values are passed as parameters to factory methods and behaviors.
+
+- **Collection properties use private backing fields.** EF Core populates the backing field; the domain exposes a read-only wrapper.
+
+  ```csharp
+  // Backing Fields
+  private readonly List<PasskeyCredential> _passkeys = [];
+
+  // Properties
+  public IReadOnlyCollection<PasskeyCredential> Passkeys => _passkeys.AsReadOnly();
+  ```
+
+- **Domain-specific discriminators over IDs.** Prefer natural domain identifiers for equality. IDs are a persistence concern and should only be used when no natural discriminator exists.
+
+  ```csharp
+  // Natural discriminator:
+  public bool Equals(User? other) => other is not null && Email == other.Email;
+
+  // No natural discriminator → strongly-typed ID fallback:
+  public readonly record struct SomeEntityId(Guid Value);
+  public bool Equals(SomeEntity? other) => other is not null && Id == other.Id;
+  ```
+
+- **Aggregate roots own public methods. Child entities are `internal`.** Only the aggregate root exposes public behaviors. Child entity methods are `internal` (or `private`) and invoked exclusively by the aggregate root. This prevents Application-layer code from mutating child entities directly.
+
+  ```csharp
+  // Aggregate root (User) — public behavior:
+  public PasskeyCredential AddPasskey(byte[] credentialId, byte[] publicKey, uint signCount, DateTimeOffset now)
+  {
+      var passkey = PasskeyCredential.Create(credentialId, publicKey, signCount, now);
+      _passkeys.Add(passkey);
+      RaiseEvent(new PasskeyAdded(Id, passkey.CredentialId, now));
+      return passkey;
+  }
+
+  // Child entity (PasskeyCredential) — internal factory:
+  internal static PasskeyCredential Create(byte[] credentialId, byte[] publicKey, uint signCount, DateTimeOffset now)
+  {
+      // validate, create, return
+  }
+  ```
+
+- **IEquatable<T> on all entities.** Every entity implements `IEquatable<T>` and overrides `Equals(object)` / `GetHashCode()`. The equality check uses the domain discriminator (natural key or strongly-typed ID), never the persistence ID.
 
 ### C# Type Visibility & Sealing
 
