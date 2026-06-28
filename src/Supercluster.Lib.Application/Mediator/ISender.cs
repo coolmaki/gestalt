@@ -2,7 +2,7 @@ using Supercluster.Lib.Application.Commands;
 using Supercluster.Lib.Application.Queries;
 using Supercluster.Lib.Primitives;
 
-namespace Supercluster.Lib.Application;
+namespace Supercluster.Lib.Application.Mediator;
 
 public interface ISender
 {

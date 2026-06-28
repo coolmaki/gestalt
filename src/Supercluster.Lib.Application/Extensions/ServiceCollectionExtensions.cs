@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Supercluster.Lib.Application.Commands;
+using Supercluster.Lib.Application.Mediator;
 using Supercluster.Lib.Application.Queries;
 
 namespace Supercluster.Lib.Application.Extensions;
