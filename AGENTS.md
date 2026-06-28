@@ -199,3 +199,14 @@ services.AddPassportInfrastructure(persistenceConfig);    // repos, services, Db
 ## Context
 
 See [`docs/references/`](./docs/references/) for external references and design inspirations.
+
+## Testing
+
+- **Framework**: xUnit
+- **Mocking**: NSubstitute
+- **Naming**: `Method_Scenario_ExpectedResult` (e.g., `Register_ValidEmail_CreatesUser`)
+- **Assertions**: xUnit `Assert` + FluentAssertions
+- **Test projects mirror `src/` layout** in `tests/`
+- **Coverage targets**: ≥80% Domain, ≥70% Application
+- **Integration tests**: `WebApplicationFactory` + Testcontainers (Postgres + SQLite)
+- **Container runtime**: Podman (Testcontainers auto-detects via `DOCKER_HOST`)
