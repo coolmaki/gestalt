@@ -136,7 +136,7 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
 ### Application Projects (`{Project}.Core.Application`)
 - **Commands** → `Commands/` flat (namespace: `{Project}.Core.Application.Commands`) — one directory, no sub-folders
 - **Queries** → `Queries/` flat (namespace: `{Project}.Core.Application.Queries`)
-- **Ports** → `Ports/Repositories/` + `Ports/Services/`
+- **Ports** → `Repositories/` + `Services/` at project root
 - **Read models** → `ReadModels/`
 - **Result types** → same file as command/query, `{Name}Result.cs` for non-Unit returns
 - **Handler registration** → `ServiceCollectionExtensions.Add{Project}Commands()` / `Add{Project}Queries()`

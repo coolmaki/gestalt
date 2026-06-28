@@ -1,7 +1,7 @@
 using Supercluster.Lib.Primitives;
 using Passport.Core.Application.ReadModels;
 
-namespace Passport.Core.Application.Ports.Repositories;
+namespace Passport.Core.Application.Repositories;
 
 public interface IUserQueryRepository
 {

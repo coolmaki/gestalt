@@ -1,6 +1,6 @@
 using Passport.Core.Domain.ValueObjects;
 
-namespace Passport.Core.Application.Ports.Services;
+namespace Passport.Core.Application.Services;
 
 /// <summary>
 /// Sends transactional emails (verification codes, recovery codes).

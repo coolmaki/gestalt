@@ -1,7 +1,7 @@
 using Supercluster.Lib.Application.Commands;
 using Supercluster.Lib.Primitives;
-using Passport.Core.Application.Ports.Repositories;
-using Passport.Core.Application.Ports.Services;
+using Passport.Core.Application.Repositories;
+using Passport.Core.Application.Services;
 
 namespace Passport.Core.Application.Commands;
 

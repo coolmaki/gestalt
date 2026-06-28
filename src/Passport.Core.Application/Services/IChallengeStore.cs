@@ -1,6 +1,6 @@
 using Supercluster.Lib.Primitives;
 
-namespace Passport.Core.Application.Ports.Services;
+namespace Passport.Core.Application.Services;
 
 /// <summary>
 /// Temporary storage for WebAuthn challenges between begin/complete calls.

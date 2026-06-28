@@ -2,7 +2,7 @@ using Supercluster.Lib.Primitives;
 using Passport.Core.Domain.Entities;
 using Passport.Core.Domain.ValueObjects;
 
-namespace Passport.Core.Application.Ports.Repositories;
+namespace Passport.Core.Application.Repositories;
 
 public interface IUserCommandRepository
 {

@@ -1,8 +1,8 @@
 using Supercluster.Lib.Application.Commands;
 using Supercluster.Lib.Application.Providers;
 using Supercluster.Lib.Primitives;
-using Passport.Core.Application.Ports.Repositories;
-using Passport.Core.Application.Ports.Services;
+using Passport.Core.Application.Repositories;
+using Passport.Core.Application.Services;
 using Passport.Core.Domain.ValueObjects;
 
 namespace Passport.Core.Application.Commands;

@@ -1,6 +1,6 @@
 using Supercluster.Lib.Application.Queries;
 using Supercluster.Lib.Primitives;
-using Passport.Core.Application.Ports.Repositories;
+using Passport.Core.Application.Repositories;
 
 namespace Passport.Core.Application.Queries;
 
