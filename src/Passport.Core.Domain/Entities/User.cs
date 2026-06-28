@@ -27,7 +27,7 @@ public sealed class User : AggregateRoot, IEquatable<User>
             UpdatedAt = now,
         };
 
-        user.RaiseEvent(new UserRegistered(email.Value, now));
+        user.RaiseEvent(new UserRegistered(email, now));
 
         return user;
     }
@@ -84,7 +84,7 @@ public sealed class User : AggregateRoot, IEquatable<User>
         var passkey = passkeyResult.Value;
         _passkeys.Add(passkey);
         UpdatedAt = now;
-        RaiseEvent(new PasskeyAdded(Email.Value, credentialId, now));
+        RaiseEvent(new PasskeyAdded(Email, credentialId, now));
         return passkey;
     }
 
@@ -105,7 +105,7 @@ public sealed class User : AggregateRoot, IEquatable<User>
 
         _passkeys.Remove(passkey);
         UpdatedAt = now;
-        RaiseEvent(new PasskeyRemoved(Email.Value, credentialId, now));
+        RaiseEvent(new PasskeyRemoved(Email, credentialId, now));
         return Unit.Value;
     }
 
@@ -122,7 +122,7 @@ public sealed class User : AggregateRoot, IEquatable<User>
 
         EmailVerified = true;
         UpdatedAt = now;
-        RaiseEvent(new EmailVerified(Email.Value, now));
+        RaiseEvent(new EmailVerified(Email, now));
         return Unit.Value;
     }
 }
