@@ -6,4 +6,5 @@
   <Project Path="../../src/Passport.Core.Domain/Passport.Core.Domain.csproj" />
   <Project Path="../../src/Passport.Core.Application/Passport.Core.Application.csproj" />
   <Project Path="../../src/Passport.Infrastructure/Passport.Infrastructure.csproj" />
+  <Project Path="../../src/Passport.Presentation.Http/Passport.Presentation.Http.csproj" />
 </Solution>
