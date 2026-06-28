@@ -40,7 +40,7 @@ public Customer? FindCustomer(CustomerId id) { ... }
 
 ### 4. Immutable Data Types
 
-Domain types (entities, value objects, events) use `record` for value semantics and immutability. Properties use `{ get; init; }`. Mutable state is allowed only when a clear performance or interop requirement demands it — and is always clearly documented.
+Domain types (entities, value objects, events) use `record` for value semantics and immutability. Properties use `{ get; private set; }`. Mutable state is allowed only when a clear performance or interop requirement demands it — and is always clearly documented.
 
 ### 5. CQRS: Commands and Queries
 
@@ -205,17 +205,16 @@ All domain entities (in `{Project}.Core.Domain`) follow these rules:
 - **Public static factory methods.** The only way to create an entity from outside is through a static factory method. The factory calls the private constructor, sets properties, enforces invariants, and raises domain events.
 
   ```csharp
-  public static User Register(string email, Guid userId, DateTimeOffset now)
+  public static Result<User> Register(Email email, DateTimeOffset now)
   {
-      // validate
       var user = new User
       {
-          Id = new UserId(userId),
-          Email = email.ToLowerInvariant().Trim(),
+          Email = email,
+          EmailVerified = false,
           CreatedAt = now,
           UpdatedAt = now,
       };
-      user.RaiseEvent(new UserRegistered(user.Id, user.Email, now));
+      user.RaiseEvent(new UserRegistered(email.Value, now));
       return user;
   }
   ```
@@ -223,8 +222,7 @@ All domain entities (in `{Project}.Core.Domain`) follow these rules:
 - **Properties: `public` get, `private` set.** EF Core can set private setters via reflection. The domain uses the factory method to set them.
 
   ```csharp
-  public UserId Id { get; private set; }
-  public string Email { get; private set; } = string.Empty;
+  public Email Email { get; private set; } = null!;
   public bool EmailVerified { get; private set; }
   public DateTimeOffset CreatedAt { get; private set; }
   public DateTimeOffset UpdatedAt { get; private set; }
@@ -242,26 +240,32 @@ All domain entities (in `{Project}.Core.Domain`) follow these rules:
   public IReadOnlyCollection<PasskeyCredential> Passkeys => _passkeys.AsReadOnly();
   ```
 
-- **Domain-specific discriminators over IDs.** Prefer natural domain identifiers for equality. IDs are a persistence concern and should only be used when no natural discriminator exists.
+- **Domain-specific discriminators over IDs.** Prefer natural domain identifiers for equality. IDs are a persistence concern and should only be used when no natural discriminator exists. Strongly-typed IDs (`FooId`) are a last resort.
 
   ```csharp
   // Natural discriminator:
   public bool Equals(User? other) => other is not null && Email == other.Email;
 
   // No natural discriminator → strongly-typed ID fallback:
-  public readonly record struct SomeEntityId(Guid Value);
-  public bool Equals(SomeEntity? other) => other is not null && Id == other.Id;
+  public readonly record struct RecoveryCodeId(Guid Value);
+  public bool Equals(RecoveryCode? other) => other is not null && Id == other.Id;
   ```
 
 - **Aggregate roots own public methods. Child entities are `internal`.** Only the aggregate root exposes public behaviors. Child entity methods are `internal` (or `private`) and invoked exclusively by the aggregate root. This prevents Application-layer code from mutating child entities directly.
 
   ```csharp
   // Aggregate root (User) — public behavior:
-  public PasskeyCredential AddPasskey(byte[] credentialId, byte[] publicKey, uint signCount, DateTimeOffset now)
+  public Result<PasskeyCredential> AddPasskey(byte[] credentialId, byte[] publicKey, uint signCount, DateTimeOffset now)
   {
-      var passkey = PasskeyCredential.Create(credentialId, publicKey, signCount, now);
+      var passkeyResult = PasskeyCredential.Create(credentialId, publicKey, signCount, now);
+      if (passkeyResult.IsFailure)
+      {
+          return passkeyResult.Error;
+      }
+
+      var passkey = passkeyResult.Value;
       _passkeys.Add(passkey);
-      RaiseEvent(new PasskeyAdded(Id, passkey.CredentialId, now));
+      RaiseEvent(new PasskeyAdded(Email.Value, credentialId, now));
       return passkey;
   }
 
@@ -277,10 +281,6 @@ All domain entities (in `{Project}.Core.Domain`) follow these rules:
 - **Domain events live in `Events/`** within the domain project root. Namespace: `{Project}.Core.Domain.Events`.
 
 - **IEquatable<T> on all entities.** Every entity implements `IEquatable<T>` and overrides `Equals(object)` / `GetHashCode()`. The equality check uses the domain discriminator (natural key or strongly-typed ID), never the persistence ID.
-
-- **Domain entity files live in `Entities/`** within the domain project root. Namespace: `{Project}.Core.Domain.Entities`.
-- **Value objects live in `ValueObjects/`** within the domain project root. Namespace: `{Project}.Core.Domain.ValueObjects`.
-- **Domain events live in `Events/`** within the domain project root. Namespace: `{Project}.Core.Domain.Events`.
 
 - **Navigation properties over FK ID properties.** When an entity needs to reference another entity, use a navigation property (e.g., `User` property on `PasskeyCredential`), not a foreign key ID property (e.g., `UserId`). Only add navigation properties if the entity actually needs to navigate to the related entity in its business logic.
 
@@ -361,8 +361,8 @@ See [`docs/FRONTEND.md`](./FRONTEND.md) for all frontend conventions.
 |--------|----------|
 | Public API docs | XML doc comments on all public types and members (C#) |
 | Null-safety | Nullable reference types enabled; no null returns |
-| Immutability | `{ get; init; }` on properties; `readonly` fields |
+| Immutability | `{ get; private set; }` on properties; `readonly` fields |
 | Error handling | `Result<T>` for fallible ops; `Option<T>` for optional values |
-| Use case pattern | All state changes go through explicit use case classes |
+| CQRS | All state changes via commands; all reads via queries |
 | Test coverage | Target >80% on Domain and Application layers |
 | Frontend types | TypeScript throughout; typed API client layer |

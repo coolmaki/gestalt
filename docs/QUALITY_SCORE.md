@@ -18,7 +18,7 @@ Per-project quality grades. Updated by the doc-gardening agent and during code r
 2. **Documentation**: XML docs on public types/members; design docs current
 3. **Architectural Compliance**: Dependency rules followed; no layer violations
 4. **Error Handling**: `Result<T>`/`Option<T>` used consistently; no null returns; no swallowed errors
-5. **Immutability**: Records with init-only properties; no mutable static state
+5. **Immutability**: Properties with private setters; no mutable static state
 
 ### Assessed Categories (Frontend)
 
@@ -43,7 +43,7 @@ Per-project quality grades. Updated by the doc-gardening agent and during code r
 
 | Project | Status | Backend | Frontend |
 |---------|--------|---------|----------|
-| Passport | 🔜 Planned | — | — |
+| Passport | 🚀 Phase 1 Active | `src/Passport.Core.*` | `apps/passport/` |
 | Training | 🔜 Planned | — | — |
 | Budgeting | 🔜 Planned | — | — |
 
@@ -58,5 +58,5 @@ Per-project quality grades. Updated by the doc-gardening agent and during code r
 ### Notes
 
 - **Primitives**: Code quality is excellent. No tests exist. Add test project before adding more code.
-- **Domain**: Doc coverage slightly lower (no XML comments on Entity/AggregateRoot/DomainEvent). Typo in `AggregateRoot` class name (spelled `AgreggateRoot`).
+- **Domain**: Doc coverage slightly lower (no XML comments on Entity/AggregateRoot/DomainEvent). AggreggateRoot typo was fixed.
 - **shared-ui**: Not yet scaffolded.

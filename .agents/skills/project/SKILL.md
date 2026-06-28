@@ -41,7 +41,7 @@ dotnet test projects/{name}/{Name}.slnx
 
 ## Adding a New Project
 
-1. Create `projects/{name}/` with `README.md`, `{Name}.slnx`, and `docs/plan.md`.
+1. Create `projects/{name}/` with `README.md` and `{Name}.slnx`.
 2. Add the project to the registry table in this skill's SKILL.md.
 3. Add the project to the quality tracker: [`docs/QUALITY_SCORE.md`](../../docs/QUALITY_SCORE.md).
 4. Add the project to the architecture doc: [`ARCHITECTURE.md`](../../ARCHITECTURE.md).

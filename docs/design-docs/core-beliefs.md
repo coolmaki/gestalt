@@ -22,7 +22,7 @@ If a state shouldn't exist, the type system should make it impossible to express
 - `Result<T>` for operations that can fail — the error path is part of the signature.
 - `Option<T>` for values that may be absent — null is never a valid return.
 - Private constructors + static factory methods to enforce invariants at construction time.
-- `{ get; init; }` properties — set once at construction, immutable thereafter.
+- `{ get; private set; }` properties — set once at construction, immutable thereafter.
 
 ## 3. Clean Architecture, Consistently
 

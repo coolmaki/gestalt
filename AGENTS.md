@@ -27,13 +27,11 @@ supercluster/                     ← monorepo root
   AGENTS.md                       ← you are here
   ARCHITECTURE.md                 ← architecture rules & dependency graph
   .editorconfig                   ← C# formatting (applies to all src/ and tests/)
-  projects/
-    {project}/                    ← per-project: .slnx, docs, docker, CI
   src/
     Supercluster.Lib.Primitives/  ← shared: Result<T>, Option<T>, Error, Unit
     Supercluster.Lib.Domain/      ← shared: Entity, AggregateRoot, DomainEvent
     {Project}.Core.Domain/        ← per-project: domain entities & business rules
-    {Project}.Core.Application/   ← per-project: use cases, ports/interfaces
+    {Project}.Core.Application/   ← per-project: commands/queries, ports/interfaces
     {Project}.Infrastructure/     ← per-project: DB, external APIs, file I/O
     {Project}.Presentation.Http/  ← per-project: ASP.NET controllers, middleware
   apps/
@@ -82,7 +80,7 @@ See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full map, namespace conventio
 - **Parse, don't validate**: Data shapes are validated at boundaries (controllers, API clients).
 - **Errors as values**: `Result<T>` for fallible operations; exceptions only for truly unexpected failures.
 - **Option over null**: `Option<T>` for optional values; null is never a valid return.
-- **Immutability by default**: Records with `{ get; init; }`; mutable state only when necessary.
+- **Immutability by default**: Properties use `{ get; private set; }`; mutable state only when necessary.
 
 See [`docs/DESIGN.md`](./docs/DESIGN.md) for the full design philosophy.
 See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.

@@ -11,6 +11,8 @@ supercluster/
 ├── src/
 │   ├── Supercluster.Lib.Primitives/       ← shared: foundational types
 │   ├── Supercluster.Lib.Domain/           ← shared: DDD base classes
+│   ├── Supercluster.Lib.Application/      ← shared: commands/queries interfaces, providers
+│   ├── Supercluster.Lib.Infrastructure/   ← shared: provider implementations
 │   ├── Passport.Core.Domain/              ← project: domain layer
 │   ├── Passport.Core.Application/         ← project: application layer
 │   ├── Passport.Infrastructure/           ← project: infrastructure layer
@@ -39,7 +41,7 @@ Every project follows the same layered architecture:
 ┌─────────────────────────────────────────────┐
 │              Presentation.Http               │  ← controllers, middleware, serialization
 │                   (↑)                        │
-│              Application                     │  ← use cases, ports (interfaces), DTOs
+│              Application                     │  ← commands/queries, ports (interfaces), read models
 │                   (↑)                        │
 │              Domain                          │  ← entities, value objects, domain events
 └─────────────────────────────────────────────┘
@@ -55,7 +57,7 @@ Every project follows the same layered architecture:
 - `Domain` depends on **nothing** (except `Supercluster.Lib.Primitives` for `Result<T>`, `Option<T>`, etc.).
 - `Application` depends on `Domain`. Defines interfaces (ports) that `Infrastructure` implements.
 - `Infrastructure` depends on `Application` (implements its interfaces). Also depends on external packages (EF Core, HttpClient, etc.).
-- `Presentation.Http` depends on `Application`. Wires up DI, maps HTTP to use cases.
+- `Presentation.Http` depends on `Application`. Wires up DI, maps HTTP to commands/queries.
 
 ### Cross-Cutting Concerns
 
@@ -155,7 +157,7 @@ These are mechanically enforced (linters, structural tests, build checks):
 
 | Project | Status | Backend | Frontend |
 |---------|--------|---------|----------|
-| Passport | 🚧 Early | `src/Passport.Core.*` | `apps/passport/` |
+| Passport | 🚀 Phase 1 Active | `src/Passport.Core.*` | `apps/passport/` |
 | Training | 🔜 Planned | — | — |
 | Budgeting | 🔜 Planned | — | — |
 
@@ -167,3 +169,5 @@ These are mechanically enforced (linters, structural tests, build checks):
 |---------|-----------|----------|
 | `Supercluster.Lib.Primitives` | *nothing* | `Result<T>`, `Option<T>`, `Error`, `ErrorType`, `Unit` |
 | `Supercluster.Lib.Domain` | Primitives | `Entity`, `AggregateRoot`, `DomainEvent` |
+| `Supercluster.Lib.Application` | Primitives | `ICommand<T>`, `ICommandHandler`, `IQuery<T>`, `IQueryHandler`, providers |
+| `Supercluster.Lib.Infrastructure` | Application | `DateTimeProvider`, `GuidProvider`, DI extensions |
