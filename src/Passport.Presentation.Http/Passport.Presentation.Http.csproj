@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../Supercluster.Lib.Presentation.Http/Supercluster.Lib.Presentation.Http.csproj" />
     <ProjectReference Include="../Passport.Core.Application/Passport.Core.Application.csproj" />
   </ItemGroup>
 

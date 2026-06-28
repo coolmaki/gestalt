@@ -1,13 +1,12 @@
-using Supercluster.Lib.Application;
 using Supercluster.Lib.Application.Mediator;
+using Supercluster.Lib.Presentation.Http;
 using Passport.Core.Application.Commands;
-using Passport.Core.Application.Queries;
 
-namespace Passport.Presentation.Http.Controllers;
+namespace Passport.Presentation.Http.Endpoints;
 
-internal static class AuthController
+internal sealed class AuthEndpoints : IEndpoint
 {
-    public static void MapAuthEndpoints(this WebApplication app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/auth");
 
