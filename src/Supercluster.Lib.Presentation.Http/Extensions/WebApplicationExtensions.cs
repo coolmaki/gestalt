@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Supercluster.Lib.Presentation.Http;
 
 namespace Supercluster.Lib.Presentation.Http.Extensions;
 

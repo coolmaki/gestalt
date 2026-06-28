@@ -1,4 +1,4 @@
-namespace Supercluster.Lib.Presentation.Http;
+namespace Supercluster.Lib.Presentation.Http.Extensions;
 
 public static class EndpointVersionExtensions
 {
