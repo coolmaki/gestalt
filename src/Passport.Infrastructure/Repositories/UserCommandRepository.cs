@@ -3,8 +3,9 @@ using Supercluster.Lib.Primitives;
 using Passport.Core.Application.Repositories;
 using Passport.Core.Domain.Entities;
 using Passport.Core.Domain.ValueObjects;
+using Passport.Infrastructure.Persistence;
 
-namespace Passport.Infrastructure.Data.Repositories;
+namespace Passport.Infrastructure.Repositories;
 
 internal sealed class UserCommandRepository(PassportDbContext dbContext) : IUserCommandRepository
 {

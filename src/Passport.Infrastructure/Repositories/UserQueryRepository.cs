@@ -4,7 +4,7 @@ using Supercluster.Lib.Primitives;
 using Passport.Core.Application.ReadModels;
 using Passport.Core.Application.Repositories;
 
-namespace Passport.Infrastructure.Data.Repositories;
+namespace Passport.Infrastructure.Repositories;
 
 internal sealed class UserQueryRepository(DbConnection connection) : IUserQueryRepository
 {

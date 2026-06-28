@@ -2,7 +2,7 @@ using Supercluster.Lib.Primitives;
 using Passport.Core.Application.Services;
 using Passport.Core.Domain.ValueObjects;
 
-namespace Passport.Infrastructure.Auth;
+namespace Passport.Infrastructure.Services;
 
 /// <summary>
 /// Placeholder FIDO2 service. Replace with fido2-net-lib integration.

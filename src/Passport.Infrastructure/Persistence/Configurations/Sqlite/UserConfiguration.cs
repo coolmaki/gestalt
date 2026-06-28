@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Passport.Core.Domain.Entities;
 using Passport.Core.Domain.ValueObjects;
 
-namespace Passport.Infrastructure.Data.Configurations.Sqlite;
+namespace Passport.Infrastructure.Persistence.Configurations.Sqlite;
 
 internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {

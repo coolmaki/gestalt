@@ -2,20 +2,33 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Passport.Core.Application.Repositories;
 using Passport.Core.Application.Services;
-using Passport.Infrastructure.Auth;
-using Passport.Infrastructure.Challenge;
-using Passport.Infrastructure.Data;
-using Passport.Infrastructure.Data.Repositories;
-using Passport.Infrastructure.EmailSender;
+using Passport.Infrastructure.Persistence;
+using Passport.Infrastructure.Repositories;
+using Passport.Infrastructure.Services;
 
 namespace Passport.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddPassportInfrastructure(this IServiceCollection services, Action<DbContextOptionsBuilder> dbOptions)
+    public static IServiceCollection AddPassportInfrastructure(
+        this IServiceCollection services,
+        PassportInfrastructureConfiguration config)
     {
-        // Database
-        services.AddDbContext<PassportDbContext>(dbOptions);
+        // Configuration
+        services.AddSingleton(config);
+
+        // Database — provider selection
+        services.AddDbContext<PassportDbContext>(options =>
+        {
+            if (string.Equals(config.Provider, "Postgres", StringComparison.OrdinalIgnoreCase))
+            {
+                options.UseNpgsql(config.ConnectionString);
+            }
+            else
+            {
+                options.UseSqlite(config.ConnectionString);
+            }
+        });
 
         // Repositories
         services.AddScoped<IUserCommandRepository, UserCommandRepository>();

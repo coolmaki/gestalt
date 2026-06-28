@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using Supercluster.Lib.Primitives;
 using Passport.Core.Application.Services;
 
-namespace Passport.Infrastructure.Challenge;
+namespace Passport.Infrastructure.Services;
 
 internal sealed class MemoryChallengeStore : IChallengeStore
 {

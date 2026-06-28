@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using Passport.Core.Application.Services;
 using Passport.Core.Domain.ValueObjects;
 
-namespace Passport.Infrastructure.EmailSender;
+namespace Passport.Infrastructure.Services;
 
 #pragma warning disable CA1848 // Dev logger is intentionally simple
 internal sealed class LoggingEmailSender(ILogger<LoggingEmailSender> logger) : IEmailSender
