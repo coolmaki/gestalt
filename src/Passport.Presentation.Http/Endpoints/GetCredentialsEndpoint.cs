@@ -1,5 +1,6 @@
 using Supercluster.Lib.Application.Mediator;
 using Supercluster.Lib.Presentation.Http;
+using Supercluster.Lib.Presentation.Http.Extensions;
 using Passport.Core.Application.Queries;
 
 namespace Passport.Presentation.Http.Endpoints;
@@ -12,7 +13,7 @@ internal sealed class GetCredentialsEndpoint : IEndpoint
         {
             var query = new GetCredentialsQuery(email);
             var result = await sender.SendAsync(query, cancellationToken);
-            return ApiResponse.FromResult(result);
+            return result.ToHttpResponse();
         });
     }
 }
