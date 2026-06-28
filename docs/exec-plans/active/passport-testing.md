@@ -15,7 +15,7 @@ Establish test conventions and implement test suites across the Passport layers.
 |----------|-----------|
 | xUnit | Standard .NET test framework; clean DI support, `WebApplicationFactory` integration |
 | NSubstitute | Cleaner API than Moq; fewer ceremony around setups/verifications |
-| Testcontainers for both Postgres + SQLite | Both providers are supported in production; both must be tested |
+| Testcontainers for Postgres; SQLite uses in-memory DB | SQLite is embedded — no container needed; Postgres runs in Testcontainers |
 | Podman | Container runtime used on this machine; Testcontainers supports it natively |
 | `Method_Scenario_ExpectedResult` naming | Standard .NET/xUnit convention; mirrors Arrange-Act-Assert structure |
 | 80%+ coverage on Domain, 70%+ on Application | Domain is deterministic and benefits most; Application has I/O boundaries |
@@ -147,7 +147,7 @@ public async Task RegisterFlow_DuplicateEmail_ReturnsConflict()
 ### Test Project Setup
 - Each test project references the project under test
 - Integration tests reference the host project (`Passport.csproj`) for `WebApplicationFactory`
-- Testcontainers packages: `Testcontainers.PostgreSql`, `Testcontainers.SqlEdge`
+- Testcontainers package: `Testcontainers.PostgreSql` (SQLite uses in-memory, no container needed)
 - Podman is the container runtime — Testcontainers detects it via `DOCKER_HOST` or Podman socket
 
 ### Podman
