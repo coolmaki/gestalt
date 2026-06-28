@@ -9,7 +9,7 @@ internal sealed class CredentialsEndpoints : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/auth/credentials");
+        var group = app.MapGroup("/auth/credentials");
 
         group.MapGet("/", async (string email, ISender sender, CancellationToken cancellationToken) =>
         {

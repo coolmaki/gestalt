@@ -8,7 +8,7 @@ internal sealed class AuthEndpoints : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/auth");
+        var group = app.MapGroup("/auth");
 
         group.MapPost("/register/begin", async (BeginRegistrationCommand command, ISender sender, CancellationToken cancellationToken) =>
         {

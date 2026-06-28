@@ -14,9 +14,18 @@ public static class WebApplicationExtensions
             ? app
             : routeGroupBuilder;
 
-        foreach (var endpoint in endpoints)
+        // Group by version so all v1 endpoints share a /api/v1 prefix
+        var versionGroups = endpoints.GroupBy(e => e.Version);
+
+        foreach (var group in versionGroups)
         {
-            endpoint.MapEndpoint(builder);
+            string versionPrefix = $"/api/{group.Key}";
+            var versionGroup = builder.MapGroup(versionPrefix);
+
+            foreach (var endpoint in group)
+            {
+                endpoint.MapEndpoint(versionGroup);
+            }
         }
 
         return app;

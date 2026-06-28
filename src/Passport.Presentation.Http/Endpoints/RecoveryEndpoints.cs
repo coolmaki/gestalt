@@ -8,7 +8,7 @@ internal sealed class RecoveryEndpoints : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/auth/recovery");
+        var group = app.MapGroup("/auth/recovery");
 
         group.MapPost("/begin", async (BeginRecoveryCommand command, ISender sender, CancellationToken cancellationToken) =>
         {
