@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../Supercluster.Lib.Application/Supercluster.Lib.Application.csproj" />
+    <ProjectReference Include="../Passport.Core.Domain/Passport.Core.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

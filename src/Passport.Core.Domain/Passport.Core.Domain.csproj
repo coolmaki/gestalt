@@ -5,4 +5,8 @@
     <ProjectReference Include="../Supercluster.Lib.Primitives/Supercluster.Lib.Primitives.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Passport.Core.Application" />
+  </ItemGroup>
+
 </Project>
