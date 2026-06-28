@@ -8,6 +8,7 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Passport.Core.Application" />
     <InternalsVisibleTo Include="Passport.Core.Domain.Tests" />
+    <InternalsVisibleTo Include="Passport.Core.Application.Tests" />
   </ItemGroup>
 
 </Project>

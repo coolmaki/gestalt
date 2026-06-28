@@ -6,7 +6,13 @@ public sealed record Option<T>
     // Constructors & Factories
     // ------------------------------------------------------------
 
-    private Option(T value, bool isSome)
+    /// <summary>
+    /// Constructs an <see cref="Option{T}"/>. Marked <c>internal</c> rather than
+    /// <c>private</c> to allow mocking libraries (NSubstitute, etc.) to create
+    /// instances when returning <see cref="Option{T}"/> values from mocked methods.
+    /// Callers should always use <see cref="Some"/> or <see cref="None"/>.
+    /// </summary>
+    internal Option(T value, bool isSome)
     {
         _value = value;
     }

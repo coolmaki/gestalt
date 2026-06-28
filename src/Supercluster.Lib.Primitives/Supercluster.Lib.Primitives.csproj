@@ -1,3 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Passport.Core.Domain.Tests" />
+    <InternalsVisibleTo Include="Passport.Core.Application.Tests" />
+    <InternalsVisibleTo Include="Passport.IntegrationTests" />
+  </ItemGroup>
 
 </Project>

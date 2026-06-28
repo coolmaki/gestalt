@@ -6,7 +6,7 @@ public sealed record Error
     // Constructors & Factories
     // ------------------------------------------------------------
 
-    private Error(ErrorType type, string code, string description)
+    internal Error(ErrorType type, string code, string description)
     {
         Type = type;
         Code = code;

@@ -6,7 +6,13 @@ public sealed record Result<T>
     // Constructors & Factories
     // ------------------------------------------------------------
 
-    private Result(T value, Error error, bool isSuccess)
+    /// <summary>
+    /// Constructs a <see cref="Result{T}"/>. Marked <c>internal</c> rather than
+    /// <c>private</c> to allow mocking libraries (NSubstitute, etc.) to create
+    /// instances when returning <see cref="Result{T}"/> values from mocked methods.
+    /// Callers should always use <see cref="Success"/> or <see cref="Failure"/>.
+    /// </summary>
+    internal Result(T value, Error error, bool isSuccess)
     {
         _value = value;
         _error = error;
