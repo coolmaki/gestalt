@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Passport.Core.Domain.Entities;
 using Passport.Infrastructure.Configuration;
+using Passport.Infrastructure.Extensions;
 
 namespace Passport.Infrastructure.Persistence;
 
@@ -17,14 +18,9 @@ internal sealed class PassportDbContext(
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        Action<ModelBuilder> configure = _config.Provider switch
-        {
-            PersistenceProvider.Sqlite => ConfigureSqlite,
-            PersistenceProvider.Postgres => ConfigurePostgres,
-            _ => throw new InvalidOperationException("Invalid PersistenceProvider value."),
-        };
-
-        configure.Invoke(modelBuilder);
+        _config.Provider.Configure(
+            configureSqlite: () => ConfigureSqlite(modelBuilder),
+            configurePostgres: () => ConfigurePostgres(modelBuilder));
     }
 
     private static void ConfigureSqlite(ModelBuilder modelBuilder)

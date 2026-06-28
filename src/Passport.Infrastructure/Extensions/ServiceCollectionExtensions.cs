@@ -1,13 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+
 using Passport.Core.Application.Repositories;
 using Passport.Core.Application.Services;
 using Passport.Infrastructure.Configuration;
+using Passport.Infrastructure.Extensions;
 using Passport.Infrastructure.Persistence;
 using Passport.Infrastructure.Repositories;
 using Passport.Infrastructure.Services;
 
-namespace Passport.Infrastructure;
+namespace Passport.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -21,14 +23,9 @@ public static class ServiceCollectionExtensions
         // Database — provider selection
         services.AddDbContext<PassportDbContext>(options =>
         {
-            if (persistenceConfig.Provider == PersistenceProvider.Postgres)
-            {
-                options.UseNpgsql(persistenceConfig.ConnectionString);
-            }
-            else
-            {
-                options.UseSqlite(persistenceConfig.ConnectionString);
-            }
+            persistenceConfig.Provider.Configure(
+                configureSqlite: () => options.UseSqlite(persistenceConfig.ConnectionString),
+                configurePostgres: () => options.UseNpgsql(persistenceConfig.ConnectionString));
         });
 
         // Repositories
