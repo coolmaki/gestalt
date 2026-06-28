@@ -14,12 +14,11 @@ public static class WebApplicationExtensions
             ? app
             : routeGroupBuilder;
 
-        // Group by version so all v1 endpoints share a /api/v1 prefix
         var versionGroups = endpoints.GroupBy(e => e.Version);
 
         foreach (var group in versionGroups)
         {
-            string versionPrefix = $"/api/{group.Key}";
+            string versionPrefix = $"/api/{group.Key.ToPathSegment()}";
             var versionGroup = builder.MapGroup(versionPrefix);
 
             foreach (var endpoint in group)

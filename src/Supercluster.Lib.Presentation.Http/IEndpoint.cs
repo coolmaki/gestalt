@@ -4,7 +4,7 @@ namespace Supercluster.Lib.Presentation.Http;
 
 public interface IEndpoint
 {
-    string Version => "v1";
+    EndpointVersion Version => EndpointVersion.V1;
 
     void MapEndpoint(IEndpointRouteBuilder app);
 }
