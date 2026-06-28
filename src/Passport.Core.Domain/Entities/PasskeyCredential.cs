@@ -1,6 +1,6 @@
 using Supercluster.Lib.Domain;
 
-namespace Passport.Core.Domain;
+namespace Passport.Core.Domain.Entities;
 
 public sealed class PasskeyCredential : Entity, IEquatable<PasskeyCredential>
 {

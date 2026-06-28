@@ -118,7 +118,13 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
 - Section separators: `// --- Section Name ---`.
 - **Braces required.** All control flow statements (`if`, `else`, `for`, `foreach`, `while`, `lock`) must use braces — even for single-statement bodies. `using` statements are the only exception where braces may be omitted. No other exceptions.
 - **Trailing commas.** Use trailing commas in multi-line lists: enums, array/collection initializers, object initializers, parameter lists, and switch expressions.
+- **Async suffix.** All async methods use the `Async` suffix (`HandleAsync`, `SaveChangesAsync`, etc.).
 - **Types are `internal` and `sealed` by default.** Only make a type `public` when it is explicitly needed by another package. Only make a type `unsealed` when inheritance is explicitly part of its design. Prefer composition over inheritance.
+
+### Domain Projects (`{Project}.Core.Domain`)
+- **Entities** → `Entities/` (namespace: `{Project}.Core.Domain.Entities`)
+- **Value objects** → `ValueObjects/` (namespace: `{Project}.Core.Domain.ValueObjects`)
+- **Domain events** → `Events/` (namespace: `{Project}.Core.Domain.Events`)
 
 ### SolidJS / TypeScript
 - See [`docs/FRONTEND.md`](./docs/FRONTEND.md).

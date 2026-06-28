@@ -251,7 +251,15 @@ All domain entities (in `{Project}.Core.Domain`) follow these rules:
   }
   ```
 
+- **Domain entity files live in `Entities/`** within the domain project root. Namespace: `{Project}.Core.Domain.Entities`.
+- **Value objects live in `ValueObjects/`** within the domain project root. Namespace: `{Project}.Core.Domain.ValueObjects`.
+- **Domain events live in `Events/`** within the domain project root. Namespace: `{Project}.Core.Domain.Events`.
+
 - **IEquatable<T> on all entities.** Every entity implements `IEquatable<T>` and overrides `Equals(object)` / `GetHashCode()`. The equality check uses the domain discriminator (natural key or strongly-typed ID), never the persistence ID.
+
+- **Domain entity files live in `Entities/`** within the domain project root. Namespace: `{Project}.Core.Domain.Entities`.
+- **Value objects live in `ValueObjects/`** within the domain project root. Namespace: `{Project}.Core.Domain.ValueObjects`.
+- **Domain events live in `Events/`** within the domain project root. Namespace: `{Project}.Core.Domain.Events`.
 
 - **Navigation properties over FK ID properties.** When an entity needs to reference another entity, use a navigation property (e.g., `User` property on `PasskeyCredential`), not a foreign key ID property (e.g., `UserId`). Only add navigation properties if the entity actually needs to navigate to the related entity in its business logic.
 

@@ -1,4 +1,4 @@
-namespace Passport.Core.Domain;
+namespace Passport.Core.Domain.ValueObjects;
 
 public enum RecoveryCodePurpose
 {

@@ -1,7 +1,8 @@
 using Supercluster.Lib.Domain;
 using Passport.Core.Domain.Events;
+using Passport.Core.Domain.ValueObjects;
 
-namespace Passport.Core.Domain;
+namespace Passport.Core.Domain.Entities;
 
 public sealed class User : AggregateRoot, IEquatable<User>
 {
@@ -33,7 +34,7 @@ public sealed class User : AggregateRoot, IEquatable<User>
             UpdatedAt = now,
         };
 
-        user.RaiseEvent(new UserRegistered(userId, normalizedEmail, now));
+        user.RaiseEvent(new UserRegistered(normalizedEmail, now));
 
         return user;
     }
@@ -83,7 +84,7 @@ public sealed class User : AggregateRoot, IEquatable<User>
         var passkey = PasskeyCredential.Create(credentialId, publicKey, signCount, now);
         _passkeys.Add(passkey);
         UpdatedAt = now;
-        RaiseEvent(new PasskeyAdded(Id, credentialId, now));
+        RaiseEvent(new PasskeyAdded(Email, credentialId, now));
         return passkey;
     }
 
@@ -99,7 +100,7 @@ public sealed class User : AggregateRoot, IEquatable<User>
 
         _passkeys.Remove(passkey);
         UpdatedAt = now;
-        RaiseEvent(new PasskeyRemoved(Id, credentialId, now));
+        RaiseEvent(new PasskeyRemoved(Email, credentialId, now));
     }
 
     // ------------------------------------------------------------
@@ -115,6 +116,6 @@ public sealed class User : AggregateRoot, IEquatable<User>
 
         EmailVerified = true;
         UpdatedAt = now;
-        RaiseEvent(new EmailVerified(Id, Email, now));
+        RaiseEvent(new EmailVerified(Email, now));
     }
 }

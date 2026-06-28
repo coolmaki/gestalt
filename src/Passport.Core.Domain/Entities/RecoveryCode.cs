@@ -1,6 +1,7 @@
 using Supercluster.Lib.Domain;
+using Passport.Core.Domain.ValueObjects;
 
-namespace Passport.Core.Domain;
+namespace Passport.Core.Domain.Entities;
 
 public sealed class RecoveryCode : Entity, IEquatable<RecoveryCode>
 {

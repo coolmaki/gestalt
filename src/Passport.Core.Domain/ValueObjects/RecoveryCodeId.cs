@@ -1,3 +1,3 @@
-namespace Passport.Core.Domain;
+namespace Passport.Core.Domain.ValueObjects;
 
 public readonly record struct RecoveryCodeId(Guid Value);
