@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using Supercluster.Lib.Primitives;
 
 namespace Supercluster.Lib.Presentation.Http.Extensions;
@@ -15,15 +15,7 @@ public static class ResultExtensions
     public static IResult ToHttpResponse<T>(this Result<T> result, HttpContext? context = null)
     {
         return result.Match(
-            onSuccess: value =>
-            {
-                if (value is Unit)
-                {
-                    return Results.Ok();
-                }
-
-                return Results.Ok(value);
-            },
+            onSuccess: value => value is Unit ? Results.Ok() : Results.Ok(value),
             onFailure: error => error.ToProblemDetails(context));
     }
 

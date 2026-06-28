@@ -338,6 +338,13 @@ All domain entities (in `{Project}.Core.Domain`) follow these rules:
 
 See [`docs/FRONTEND.md`](./FRONTEND.md) for all frontend conventions.
 
+### Presentation (HTTP)
+
+- **One class per endpoint.** Each API endpoint is its own class implementing `IEndpoint`. No controller-style grouping.
+- **API versioning.** Use the `EndpointVersion` enum. `MapEndpoints()` groups by version and prefixes `/api/{version}`.
+- **Error responses.** Use `Result<T>.ToHttpResponse()` which returns <see href="https://datatracker.ietf.org/doc/html/rfc7807">RFC 7807 Problem Details</see>.
+- **DI registration.** `Add{Project}Endpoints()` in `Extensions/ServiceCollectionExtensions.cs` scans the assembly for `IEndpoint` implementations.
+
 ---
 
 ## Directory & File Naming

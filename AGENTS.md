@@ -177,6 +177,23 @@ services.AddPassportInfrastructure(persistenceConfig);    // repos, services, Db
 ### SolidJS / TypeScript
 - See [`docs/FRONTEND.md`](./docs/FRONTEND.md).
 
+### Presentation Projects (`{Project}.Presentation.Http`)
+- **Endpoints** → `Endpoints/` flat — one class per API endpoint, each implementing `IEndpoint`
+- **API versioning** → `EndpointVersion` enum; `MapEndpoints` groups by version, prefixes `/api/{version}`
+- **Error responses** → `Result<T>.ToHttpResponse()` returns RFC 7807 Problem Details
+- **DI registration** → `Add{Project}Endpoints()` in `Extensions/ServiceCollectionExtensions.cs`
+
+### Mediator
+- **`ISender`** → `Supercluster.Lib.Application.Mediator` — inject this, not individual handlers
+- **`AddMediator()`** → registers `ISender` / `Sender` (shared lib)
+- **`AddHandlers(assemblies)`** → scans assemblies for `ICommandHandler<,>` and `IQueryHandler<,>`
+- Handlers are auto-discovered — creating a new handler class is all that's needed
+
+### Extension Methods
+- Must reside in `Extensions/` at the project root
+- Class name must be `<TypeBeingExtended>Extensions` (e.g., `IServiceCollection` → `ServiceCollectionExtensions`, `EndpointVersion` → `EndpointVersionExtensions`)
+- `I` prefix on interfaces is dropped from the class name
+
 ---
 
 ## Context
