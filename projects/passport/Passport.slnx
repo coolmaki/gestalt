@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="../../src/Supercluster.Lib.Primitives/Supercluster.Lib.Primitives.csproj" />
+  <Project Path="../../src/Supercluster.Lib.Domain/Supercluster.Lib.Domain.csproj" />
+  <Project Path="../../src/Supercluster.Lib.Application/Supercluster.Lib.Application.csproj" />
+  <Project Path="../../src/Supercluster.Lib.Infrastructure/Supercluster.Lib.Infrastructure.csproj" />
+  <Project Path="../../src/Passport.Core.Domain/Passport.Core.Domain.csproj" />
+</Solution>

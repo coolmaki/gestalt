@@ -88,7 +88,7 @@ When starting a new project in the monorepo:
    - Key domain concepts
 
 2. **Scaffold the solution:**
-   - Create `solutions/{ProjectName}.slnx`
+   - Create `projects/{project}/{ProjectName}.slnx`
    - Create backend projects in `src/`: `{ProjectName}.Core.Domain`, `{ProjectName}.Core.Application`, `{ProjectName}.Infrastructure`, `{ProjectName}.Presentation.Http`
    - Create test projects in `tests/`: `{ProjectName}.Core.Domain.Tests`, etc.
    - If frontend: create `apps/{project-name}/` with SolidJS + Tailwind scaffold

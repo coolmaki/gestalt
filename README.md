@@ -42,8 +42,8 @@ See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the full map.
 ### Build a backend
 
 ```bash
-dotnet build solutions/{ProjectName}.slnx
-dotnet test solutions/{ProjectName}.slnx
+dotnet build projects/{project}/{Project}.slnx
+dotnet test projects/{project}/{Project}.slnx
 ```
 
 ### Run a frontend

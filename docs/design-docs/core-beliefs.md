@@ -69,5 +69,5 @@ All projects share the same conventions, tools, and quality bar. The monorepo is
 **Implications:**
 - One `.editorconfig` governs all C# code.
 - Shared libraries, shared frontend components, shared docs.
-- Per-project solutions in `solutions/`; per-project tests in `tests/`.
+- Per-project solutions in `projects/{project}/`; per-project tests in `tests/`.
 - New projects start from the same template, not from ad-hoc decisions.

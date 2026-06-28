@@ -2,7 +2,7 @@ using Supercluster.Lib.Primitives;
 
 namespace Passport.Core.Domain.ValueObjects;
 
-public sealed record DeviceName : IEquatable<DeviceName>
+public sealed record DeviceName
 {
     private const int MaxLength = 100;
 
@@ -42,12 +42,4 @@ public sealed record DeviceName : IEquatable<DeviceName>
     // ------------------------------------------------------------
 
     public string Value { get; }
-
-    // ------------------------------------------------------------
-    // Equality
-    // ------------------------------------------------------------
-
-    public bool Equals(DeviceName? other) => other is not null && Value == other.Value;
-
-    public override int GetHashCode() => Value.GetHashCode();
 }

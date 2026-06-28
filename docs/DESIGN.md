@@ -346,7 +346,7 @@ See [`docs/FRONTEND.md`](./FRONTEND.md) for all frontend conventions.
 
 - Project directories: `{ProjectName}.{Layer}` (e.g. `Passport.Core.Domain`)
 - Test directories: `{ProjectName}.{Layer}.Tests`
-- One `.csproj` per project; one `.slnx` per deliverable project in `solutions/`
+- One `.csproj` per project; one `.slnx` per deliverable project in `projects/{project}/`
 
 ### Frontend Apps
 

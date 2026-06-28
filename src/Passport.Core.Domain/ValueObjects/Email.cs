@@ -2,7 +2,7 @@ using Supercluster.Lib.Primitives;
 
 namespace Passport.Core.Domain.ValueObjects;
 
-public sealed record Email : IEquatable<Email>
+public sealed record Email
 {
     // ------------------------------------------------------------
     // Constructors & Factories
@@ -47,12 +47,4 @@ public sealed record Email : IEquatable<Email>
     // ------------------------------------------------------------
 
     public string Value { get; }
-
-    // ------------------------------------------------------------
-    // Equality
-    // ------------------------------------------------------------
-
-    public bool Equals(Email? other) => other is not null && Value == other.Value;
-
-    public override int GetHashCode() => Value.GetHashCode();
 }

@@ -23,10 +23,12 @@ supercluster/
 │   ├── Passport.Core.Domain.Tests/
 │   ├── Passport.Core.Application.Tests/
 │   └── ...
-├── solutions/
-│   ├── Passport.slnx                      ← one solution per project
-│   └── ...
-└── docs/                                  ← system of record
+├── projects/
+│   └── passport/                           ← project: .slnx, docs, docker
+│       ├── Passport.slnx
+│       └── docs/
+│           └── plan.md
+└── docs/                                  ← repo-wide design & planning
 ```
 
 ---
@@ -146,7 +148,7 @@ These are mechanically enforced (linters, structural tests, build checks):
 3. **Components are self-contained.** One component per file; co-locate styles with Tailwind classes.
 
 ### Cross-Cutting
-1. **One `.slnx` per project** — no monolithic solution.
+1. **One `.slnx` per project** — in `projects/{project}/`.
 2. **Tests mirror `src/` layout** — `tests/{Project}.{Layer}.Tests/`.
 
 ---

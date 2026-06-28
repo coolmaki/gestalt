@@ -7,8 +7,8 @@
 ## Quick Start
 
 ### Backend (.NET 10, C#)
-- Build: `dotnet build solutions/{ProjectName}.slnx`
-- Test: `dotnet test solutions/{ProjectName}.slnx`
+- Build: `dotnet build projects/{project}/{Project}.slnx`
+- Test: `dotnet test projects/{project}/{Project}.slnx`
 - Formatting: `.editorconfig` at the repo root enforces all style rules
 - Package manager: NuGet (standard .NET SDK)
 
@@ -27,6 +27,8 @@ supercluster/                     ← monorepo root
   AGENTS.md                       ← you are here
   ARCHITECTURE.md                 ← architecture rules & dependency graph
   .editorconfig                   ← C# formatting (applies to all src/ and tests/)
+  projects/
+    {project}/                    ← per-project: .slnx, docs, docker, CI
   src/
     Supercluster.Lib.Primitives/  ← shared: Result<T>, Option<T>, Error, Unit
     Supercluster.Lib.Domain/      ← shared: Entity, AggregateRoot, DomainEvent
@@ -42,9 +44,18 @@ supercluster/                     ← monorepo root
     {Project}.Core.Domain.Tests/
     {Project}.Core.Application.Tests/
     ...
-  solutions/
-    {ProjectName}.slnx            ← one solution per project
-  docs/                           ← system of record for all design & planning
+  projects/
+    {project}/                     ← per-project: .slnx, docs, docker, CI
+    passport/
+      Passport.slnx
+      docs/
+        plan.md
+  docs/                           ← repo-wide design & planning knowledge
+  projects/
+    passport/
+      Passport.slnx
+      docs/
+        plan.md                   ← project-specific execution plan
 ```
 
 ---
@@ -89,14 +100,15 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
 - Active execution plans: [`docs/exec-plans/active/`](./docs/exec-plans/active/)
 - Completed plans: [`docs/exec-plans/completed/`](./docs/exec-plans/completed/)
 - Known technical debt: [`docs/exec-plans/tech-debt-tracker.md`](./docs/exec-plans/tech-debt-tracker.md)
-- Per-project plans and specs: create under `docs/exec-plans/` and `docs/product-specs/` with clear project prefixes (e.g. `passport-auth-flow.md`).
+- Per-project plans and specs: create under `projects/{project}/docs/` for project-specific plans.
+- Cross-cutting plans: `docs/exec-plans/active/` for work spanning multiple projects.
 
 ---
 
 ## How to Add a New Project
 
 1. Choose a project name (PascalCase, e.g. `Passport`, `Training`, `Budgeting`).
-2. Scaffold the .NET solution in `solutions/{ProjectName}.slnx` with projects:
+2. Scaffold the .NET solution in `projects/{project}/{Project}.slnx` with projects:
    - `{ProjectName}.Core.Domain`
    - `{ProjectName}.Core.Application`
    - `{ProjectName}.Infrastructure`
