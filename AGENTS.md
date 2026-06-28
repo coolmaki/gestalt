@@ -113,6 +113,7 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
 - `_camelCase` for private instance fields, `s_camelCase` for private static fields.
 - File-scoped namespaces (`namespace Foo.Bar;`).
 - Explicit types (no `var`).
+- **Null guards.** Use `ArgumentNullException.ThrowIfNull()` for required reference parameters from external callers.
 - Private constructors + public static factory methods for sum types (`Result<T>`, `Option<T>`).
 - XML doc comments on all public APIs.
 - Section separators: `// --- Section Name ---`.
@@ -120,6 +121,8 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
 - **Trailing commas.** Use trailing commas in multi-line lists: enums, array/collection initializers, object initializers, parameter lists, and switch expressions.
 - **Async suffix.** All async methods use the `Async` suffix (`HandleAsync`, `SaveChangesAsync`, etc.).
 - **Types are `internal` and `sealed` by default.** Only make a type `public` when it is explicitly needed by another package. Only make a type `unsealed` when inheritance is explicitly part of its design. Prefer composition over inheritance.
+- **Result, not exceptions.** Domain and Application methods return `Result<T>` for expected failures. Exceptions are for truly unexpected conditions only.
+- **Option<T> for optional parameters and returns.** Use `Option<T>` in method signatures when a value may legitimately be absent. Use `string?` (nullable reference types) for entity properties that map to nullable DB columns.
 
 ### Domain Projects (`{Project}.Core.Domain`)
 - **Entities** → `Entities/` (namespace: `{Project}.Core.Domain.Entities`)

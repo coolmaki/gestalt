@@ -1,4 +1,6 @@
 using Supercluster.Lib.Domain;
+using Supercluster.Lib.Primitives;
+using Passport.Core.Domain.ValueObjects;
 
 namespace Passport.Core.Domain.Entities;
 
@@ -10,16 +12,19 @@ public sealed class PasskeyCredential : Entity, IEquatable<PasskeyCredential>
 
     private PasskeyCredential() { }
 
-    internal static PasskeyCredential Create(byte[] credentialId, byte[] publicKey, uint signCount, DateTimeOffset now)
+    internal static Result<PasskeyCredential> Create(byte[] credentialId, byte[] publicKey, uint signCount, DateTimeOffset now)
     {
-        if (credentialId is null || credentialId.Length == 0)
+        ArgumentNullException.ThrowIfNull(credentialId);
+        ArgumentNullException.ThrowIfNull(publicKey);
+
+        if (credentialId.Length == 0)
         {
-            throw new ArgumentException("Credential ID must not be empty.", nameof(credentialId));
+            return Error.Validation("credential_id.empty", "Credential ID must not be empty.");
         }
 
-        if (publicKey is null || publicKey.Length == 0)
+        if (publicKey.Length == 0)
         {
-            throw new ArgumentException("Public key must not be empty.", nameof(publicKey));
+            return Error.Validation("public_key.empty", "Public key must not be empty.");
         }
 
         return new PasskeyCredential
@@ -41,7 +46,7 @@ public sealed class PasskeyCredential : Entity, IEquatable<PasskeyCredential>
 
     public uint SignCount { get; private set; }
 
-    public string? DeviceName { get; private set; }
+    public DeviceName? DeviceName { get; private set; }
 
     public DateTimeOffset CreatedAt { get; private set; }
 
@@ -65,8 +70,9 @@ public sealed class PasskeyCredential : Entity, IEquatable<PasskeyCredential>
         SignCount = newCount;
     }
 
-    internal void SetDeviceName(string? name)
+    internal Result<Unit> SetDeviceName(DeviceName name)
     {
         DeviceName = name;
+        return Unit.Value;
     }
 }

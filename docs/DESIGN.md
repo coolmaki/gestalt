@@ -179,6 +179,27 @@ Source files use visual section separators for consistent internal structure. Se
 
 All domain entities (in `{Project}.Core.Domain`) follow these rules:
 
+- **Return `Result<T>`, not exceptions.** All public and internal methods that can fail return `Result<T>` (or `Result<Unit>` for void operations). Exceptions are reserved for truly unexpected conditions — null arguments passed by buggy callers, not business rule violations.
+
+  ```csharp
+  public Result<Unit> RemovePasskey(byte[] credentialId, DateTimeOffset now) { ... }
+  public Result<Unit> MarkUsed(DateTimeOffset now) { ... }
+  ```
+
+- **Null guards + `Option<T>` split.** Method parameters use `ArgumentNullException.ThrowIfNull` for required references. Optional parameters use `Option<T>`. Entity properties mapped to nullable DB columns use `string?` (not `Option<T>`) — EF Core understands nullable reference types natively without value converters.
+
+  ```csharp
+  // Method parameter: required = null guard, optional = Option<T>
+  public Result<Unit> SomeMethod(string required, Option<string> optional) { ... }
+
+  // Entity property: nullable = string?
+  public DeviceName? DeviceName { get; private set; }
+  ```
+
+- **Value objects for invariants.** Properties that carry validation rules (format, length, character constraints) should be modeled as value objects. The value object enforces its own invariants at construction and returns `Result<T>`.
+
+  Candidates: `Email`, `DeviceName`, any user-provided string with constraints.
+
 - **Private empty constructor only.** A single `private Foo() { }` serves both as the EF Core materialization entry point and as the construction path for factory methods. No other constructors.
 
 - **Public static factory methods.** The only way to create an entity from outside is through a static factory method. The factory calls the private constructor, sets properties, enforces invariants, and raises domain events.

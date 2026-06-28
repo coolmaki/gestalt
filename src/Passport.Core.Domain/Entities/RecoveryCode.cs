@@ -1,4 +1,5 @@
 using Supercluster.Lib.Domain;
+using Supercluster.Lib.Primitives;
 using Passport.Core.Domain.ValueObjects;
 
 namespace Passport.Core.Domain.Entities;
@@ -15,16 +16,16 @@ public sealed class RecoveryCode : Entity, IEquatable<RecoveryCode>
     /// Issues a new recovery code. The caller is responsible for generating the
     /// plaintext code, hashing it, and passing <paramref name="codeHash"/>.
     /// </summary>
-    public static RecoveryCode Issue(RecoveryCodeId id, string codeHash, RecoveryCodePurpose purpose, DateTimeOffset now, TimeSpan ttl)
+    public static Result<RecoveryCode> Issue(RecoveryCodeId id, string codeHash, RecoveryCodePurpose purpose, DateTimeOffset now, TimeSpan ttl)
     {
         if (string.IsNullOrWhiteSpace(codeHash))
         {
-            throw new ArgumentException("Code hash must not be empty.", nameof(codeHash));
+            return Error.Validation("code_hash.empty", "Code hash must not be empty.");
         }
 
         if (ttl <= TimeSpan.Zero)
         {
-            throw new ArgumentException("TTL must be positive.", nameof(ttl));
+            return Error.Validation("ttl.invalid", "TTL must be positive.");
         }
 
         return new RecoveryCode
@@ -72,15 +73,16 @@ public sealed class RecoveryCode : Entity, IEquatable<RecoveryCode>
     // ------------------------------------------------------------
 
     /// <summary>
-    /// Marks this code as used. Throws if the code has already been used.
+    /// Marks this code as used. Returns an error if the code has already been used.
     /// </summary>
-    public void MarkUsed(DateTimeOffset now)
+    public Result<Unit> MarkUsed(DateTimeOffset now)
     {
         if (IsUsed)
         {
-            throw new InvalidOperationException("Recovery code has already been used.");
+            return Error.Conflict("recovery_code.already_used", "Recovery code has already been used.");
         }
 
         UsedAt = now;
+        return Unit.Value;
     }
 }
