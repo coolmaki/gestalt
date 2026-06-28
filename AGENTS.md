@@ -136,10 +136,35 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
 ### Application Projects (`{Project}.Core.Application`)
 - **Commands** → `Commands/` flat (namespace: `{Project}.Core.Application.Commands`) — one directory, no sub-folders
 - **Queries** → `Queries/` flat (namespace: `{Project}.Core.Application.Queries`)
-- **Ports** → `Repositories/` + `Services/` at project root
+- **Repositories** → `Repositories/` (namespace: `{Project}.Core.Application.Repositories`)
+- **Services** → `Services/` (namespace: `{Project}.Core.Application.Services`)
 - **Read models** → `ReadModels/`
+- **Configuration** → `Configuration/{Layer}Configuration.cs` (namespace: `{Project}.Core.Application.Configuration`)
 - **Result types** → same file as command/query, `{Name}Result.cs` for non-Unit returns
 - **Handler registration** → `ServiceCollectionExtensions.Add{Project}Commands()` / `Add{Project}Queries()`
+
+### Infrastructure Projects (`{Project}.Infrastructure`)
+- **Persistence** → `Persistence/` (DbContext, entity configurations per provider)
+- **Repositories** → `Repositories/` (implementations)
+- **Services** → `Services/` (implementations)
+- **Configuration** → `Configuration/{Layer}Configuration.cs` (namespace: `{Project}.Infrastructure.Configuration`)
+
+### Configuration Conventions
+- Each layer has its own configuration class in `Configuration/` named `{Layer}Configuration` (e.g., `ApplicationConfiguration`, `InfrastructureConfiguration`)
+- Config classes expose a `SectionName` constant for options binding
+- Sub-configs are nested properties (e.g., `InfrastructureConfiguration.Persistence`)
+- appsettings.json follows the form: `"<app-name>": { "<layer-name>": { ... } }`
+
+```json
+{
+  "Passport": {
+    "Application": { "BaseUrl": "https://passport.example.com" },
+    "Infrastructure": {
+      "Persistence": { "Provider": "Postgres", "ConnectionString": "..." }
+    }
+  }
+}
+```
 
 ### SolidJS / TypeScript
 - See [`docs/FRONTEND.md`](./docs/FRONTEND.md).

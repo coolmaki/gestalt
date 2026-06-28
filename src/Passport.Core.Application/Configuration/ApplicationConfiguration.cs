@@ -1,6 +1,6 @@
-namespace Passport.Core.Application;
+namespace Passport.Core.Application.Configuration;
 
-public sealed class PassportApplicationConfiguration
+public sealed class ApplicationConfiguration
 {
     public const string SectionName = "Passport:Application";
 

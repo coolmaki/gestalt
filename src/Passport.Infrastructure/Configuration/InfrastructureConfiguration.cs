@@ -1,6 +1,6 @@
 namespace Passport.Infrastructure.Configuration;
 
-public sealed class PassportInfrastructureConfiguration
+public sealed class InfrastructureConfiguration
 {
     public const string SectionName = "Passport:Infrastructure";
 
