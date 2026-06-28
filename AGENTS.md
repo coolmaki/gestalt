@@ -49,13 +49,13 @@ supercluster/                     ← monorepo root
     passport/
       Passport.slnx
       docs/
-        plan.md
+        exec-plans/               ← project-specific execution plans
   docs/                           ← repo-wide design & planning knowledge
   projects/
     passport/
       Passport.slnx
       docs/
-        plan.md                   ← project-specific execution plan
+        exec-plans/               ← project-specific execution plans
 ```
 
 ---
@@ -97,7 +97,8 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
 
 ## Plans & Tracking
 
-- Active execution plans: [`docs/exec-plans/active/`](./docs/exec-plans/active/)
+- Active execution plans: [`docs/exec-plans/active/`](./docs/exec-plans/active/) (cross-cutting)
+- Per-project plans: `projects/{project}/docs/exec-plans/active/`
 - Completed plans: [`docs/exec-plans/completed/`](./docs/exec-plans/completed/)
 - Known technical debt: [`docs/exec-plans/tech-debt-tracker.md`](./docs/exec-plans/tech-debt-tracker.md)
 - Per-project plans and specs: create under `projects/{project}/docs/` for project-specific plans.

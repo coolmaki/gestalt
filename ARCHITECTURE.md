@@ -27,7 +27,9 @@ supercluster/
 │   └── passport/                           ← project: .slnx, docs, docker
 │       ├── Passport.slnx
 │       └── docs/
-│           └── plan.md
+│           └── exec-plans/
+│               ├── active/
+│               └── completed/
 └── docs/                                  ← repo-wide design & planning
 ```
 
