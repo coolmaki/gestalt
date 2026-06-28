@@ -141,7 +141,15 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
 - **Read models** → `ReadModels/`
 - **Configuration** → `Configuration/{Layer}Configuration.cs` (namespace: `{Project}.Core.Application.Configuration`)
 - **Result types** → same file as command/query, `{Name}Result.cs` for non-Unit returns
-- **Handler registration** → `ServiceCollectionExtensions.Add{Project}Commands()` / `Add{Project}Queries()`
+- **Handler registration** → `Extensions/ServiceCollectionExtensions.Add{Project}CommandsAndQueries()` — uses assembly scanning, no manual per-handler registration
+
+### DI Setup (in host project)
+
+```csharp
+services.AddMediator();                                  // shared — registers ISender
+services.AddPassportCommandsAndQueries();                 // scans assembly for handler implementations
+services.AddPassportInfrastructure(persistenceConfig);    // repos, services, DbContext
+```
 
 ### Infrastructure Projects (`{Project}.Infrastructure`)
 - **Persistence** → `Persistence/` (DbContext, entity configurations per provider)
