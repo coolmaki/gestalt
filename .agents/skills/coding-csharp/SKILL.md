@@ -13,7 +13,6 @@ This skill points to the authoritative docs. Load them as needed.
 - **Braces required** on all control flow (`if`, `else`, `for`, `foreach`, `while`, `lock`). `using` is the only exception.
 - **Trailing commas** in multi-line lists.
 - **Async suffix** on all async methods (`HandleAsync`, `SaveChangesAsync`).
-- **Explicit types** — no `var`.
 - **File-scoped namespaces**.
 - **`ArgumentNullException.ThrowIfNull`** for required reference params from external callers.
 - **`internal` and `sealed` by default**.

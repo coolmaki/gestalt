@@ -31,4 +31,4 @@ src/Passport.Presentation.Http/ ← API endpoints
 
 ## Plan
 
-See [`docs/exec-plans/active/passport-identity-server.md`](docs/exec-plans/active/passport-identity-server.md).
+See [`docs/exec-plans/active/passport-identity-server.md`](../../docs/exec-plans/active/passport-identity-server.md).

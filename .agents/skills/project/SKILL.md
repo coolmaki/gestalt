@@ -17,7 +17,7 @@ Supercluster is a monorepo. Each project in `projects/{name}/` has a `README.md`
 
 1. Look up the project in the registry above.
 2. Load the project's `README.md` for details (what it does, current phase, code locations).
-3. Load the project's `docs/exec-plans/active/` for the current execution plan and next steps.
+3. Load the plan from `docs/exec-plans/active/` for the current execution plan and next steps.
 4. Check the tech debt tracker: [`docs/exec-plans/tech-debt-tracker.md`](../../docs/exec-plans/tech-debt-tracker.md).
 
 ## Project File Conventions
@@ -26,12 +26,7 @@ Supercluster is a monorepo. Each project in `projects/{name}/` has a `README.md`
 projects/{name}/
 ├── README.md          ← project overview, status, quick start
 ├── {Name}.slnx        ← .NET solution file
-└── docs/
-    └── exec-plans/
-        ├── active/
-        │   └── {feature}.md   ← execution plan
-        └── completed/
-            └── .gitkeep
+└── ci/                ← CI/CD configs (future)
 ```
 
 ## Build Commands

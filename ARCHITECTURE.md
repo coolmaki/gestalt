@@ -24,12 +24,8 @@ supercluster/
 │   ├── Passport.Core.Application.Tests/
 │   └── ...
 ├── projects/
-│   └── passport/                           ← project: .slnx, docs, docker
-│       ├── Passport.slnx
-│       └── docs/
-│           └── exec-plans/
-│               ├── active/
-│               └── completed/
+│   └── passport/                           ← project: .slnx, README, CI/CD
+│       └── Passport.slnx
 └── docs/                                  ← repo-wide design & planning
 ```
 

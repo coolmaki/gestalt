@@ -45,17 +45,11 @@ supercluster/                     ← monorepo root
     {Project}.Core.Application.Tests/
     ...
   projects/
-    {project}/                     ← per-project: .slnx, docs, docker, CI
+    {project}/                     ← per-project: .slnx, README, CI/CD
     passport/
       Passport.slnx
-      docs/
-        exec-plans/               ← project-specific execution plans
+      README.md
   docs/                           ← repo-wide design & planning knowledge
-  projects/
-    passport/
-      Passport.slnx
-      docs/
-        exec-plans/               ← project-specific execution plans
 ```
 
 ---
@@ -97,12 +91,10 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
 
 ## Plans & Tracking
 
-- Active execution plans: [`docs/exec-plans/active/`](./docs/exec-plans/active/) (cross-cutting)
-- Per-project plans: `projects/{project}/docs/exec-plans/active/`
+- Active execution plans: [`docs/exec-plans/active/`](./docs/exec-plans/active/)
 - Completed plans: [`docs/exec-plans/completed/`](./docs/exec-plans/completed/)
 - Known technical debt: [`docs/exec-plans/tech-debt-tracker.md`](./docs/exec-plans/tech-debt-tracker.md)
-- Per-project plans and specs: create under `projects/{project}/docs/` for project-specific plans.
-- Cross-cutting plans: `docs/exec-plans/active/` for work spanning multiple projects.
+- Plans use project-identifying filenames (e.g. `passport-identity-server.md`).
 
 ---
 
@@ -125,7 +117,6 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
 ### C# (all projects)
 - `_camelCase` for private instance fields, `s_camelCase` for private static fields.
 - File-scoped namespaces (`namespace Foo.Bar;`).
-- Explicit types (no `var`).
 - **Null guards.** Use `ArgumentNullException.ThrowIfNull()` for required reference parameters from external callers.
 - Private constructors + public static factory methods for sum types (`Result<T>`, `Option<T>`).
 - XML doc comments on all public APIs.
