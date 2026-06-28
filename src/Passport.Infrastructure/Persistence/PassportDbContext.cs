@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Passport.Core.Domain.Entities;
+using Passport.Infrastructure.Configuration;
 using Passport.Infrastructure.Persistence.Configurations.Postgres;
 
 namespace Passport.Infrastructure.Persistence;
 
-internal sealed class PassportDbContext(DbContextOptions<PassportDbContext> options, PassportInfrastructureConfiguration config)
+internal sealed class PassportDbContext(DbContextOptions<PassportDbContext> options, PersistenceConfiguration config)
     : DbContext(options)
 {
     private readonly string _provider = config.Provider;
