@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
         // Database — provider selection
         services.AddDbContext<PassportDbContext>(options =>
         {
-            if (string.Equals(persistenceConfig.Provider, "Postgres", StringComparison.OrdinalIgnoreCase))
+            if (persistenceConfig.Provider == PersistenceProvider.Postgres)
             {
                 options.UseNpgsql(persistenceConfig.ConnectionString);
             }

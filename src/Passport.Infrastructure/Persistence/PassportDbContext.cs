@@ -8,7 +8,7 @@ namespace Passport.Infrastructure.Persistence;
 internal sealed class PassportDbContext(DbContextOptions<PassportDbContext> options, PersistenceConfiguration config)
     : DbContext(options)
 {
-    private readonly string _provider = config.Provider;
+    private readonly PersistenceProvider _provider = config.Provider;
 
     internal DbSet<User> Users => Set<User>();
     internal DbSet<RecoveryCode> RecoveryCodes => Set<RecoveryCode>();

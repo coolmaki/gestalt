@@ -1,6 +1,6 @@
 namespace Passport.Infrastructure.Configuration;
 
-internal enum PersistenceProvider
+public enum PersistenceProvider
 {
     Postgres,
     Sqlite,
