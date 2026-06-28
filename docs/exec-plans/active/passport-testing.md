@@ -91,7 +91,7 @@ End-to-end tests using `WebApplicationFactory` with a real test host, real datab
 - Recovery flow (4-step)
 - Credential management (list, remove)
 - Error responses follow RFC 7807
-- Both Postgres and SQLite providers
+- Both Postgres (Testcontainers) and SQLite (in-memory) providers
 
 **Structure:**
 ```
