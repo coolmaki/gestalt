@@ -8,9 +8,9 @@ internal sealed class FindUserQueryHandler(
     IUserQueryRepository userQueryRepo
 ) : IQueryHandler<FindUserQuery, FindUserResult>
 {
-    public async Task<Result<FindUserResult>> HandleAsync(FindUserQuery query, CancellationToken ct)
+    public async Task<Result<FindUserResult>> HandleAsync(FindUserQuery query, CancellationToken cancellationToken)
     {
-        var userOption = await userQueryRepo.FindByEmailAsync(query.Email, ct);
+        var userOption = await userQueryRepo.FindByEmailAsync(query.Email, cancellationToken);
         if (userOption.IsNone)
         {
             return Error.NotFound("user.not_found", "No user found with this email.");

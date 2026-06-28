@@ -15,9 +15,9 @@ internal sealed class BeginRecoveryRegistrationCommandHandler(
     IFido2 fido2
 ) : ICommandHandler<BeginRecoveryRegistrationCommand, BeginRecoveryRegistrationResult>
 {
-    public async Task<Result<BeginRecoveryRegistrationResult>> HandleAsync(BeginRecoveryRegistrationCommand command, CancellationToken ct)
+    public async Task<Result<BeginRecoveryRegistrationResult>> HandleAsync(BeginRecoveryRegistrationCommand command, CancellationToken cancellationToken)
     {
-        var tokenData = await challengeStore.GetAndRemoveAsync($"recovery:{command.RecoveryToken}", ct);
+        var tokenData = await challengeStore.GetAndRemoveAsync($"recovery:{command.RecoveryToken}", cancellationToken);
         if (tokenData.IsNone)
         {
             return Error.Validation("recovery_token.invalid", "Invalid or expired recovery token.");
@@ -33,7 +33,7 @@ internal sealed class BeginRecoveryRegistrationCommandHandler(
 
         Email email = emailResult.Value;
 
-        var optionsResult = await fido2.CreateRegistrationOptionsAsync(email, ct);
+        var optionsResult = await fido2.CreateRegistrationOptionsAsync(email, cancellationToken);
         if (optionsResult.IsFailure)
         {
             return optionsResult.Error;
@@ -41,9 +41,9 @@ internal sealed class BeginRecoveryRegistrationCommandHandler(
 
         (string optionsJson, byte[] challenge) = optionsResult.Value;
 
-        await challengeStore.SetAsync(email.Value, challenge, TimeSpan.FromMinutes(5), ct);
+        await challengeStore.SetAsync(email.Value, challenge, TimeSpan.FromMinutes(5), cancellationToken);
         byte[] emailBytes = System.Text.Encoding.UTF8.GetBytes(email.Value);
-        await challengeStore.SetAsync($"recovery:{command.RecoveryToken}", emailBytes, TimeSpan.FromMinutes(5), ct);
+        await challengeStore.SetAsync($"recovery:{command.RecoveryToken}", emailBytes, TimeSpan.FromMinutes(5), cancellationToken);
 
         return new BeginRecoveryRegistrationResult(optionsJson);
     }

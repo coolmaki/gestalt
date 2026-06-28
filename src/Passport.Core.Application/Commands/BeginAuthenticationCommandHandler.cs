@@ -18,7 +18,7 @@ internal sealed class BeginAuthenticationCommandHandler(
     IChallengeStore challengeStore
 ) : ICommandHandler<BeginAuthenticationCommand, BeginAuthenticationResult>
 {
-    public async Task<Result<BeginAuthenticationResult>> HandleAsync(BeginAuthenticationCommand command, CancellationToken ct)
+    public async Task<Result<BeginAuthenticationResult>> HandleAsync(BeginAuthenticationCommand command, CancellationToken cancellationToken)
     {
         var emailResult = Email.Create(command.Email);
         if (emailResult.IsFailure)
@@ -28,13 +28,13 @@ internal sealed class BeginAuthenticationCommandHandler(
 
         Email email = emailResult.Value;
 
-        var userOption = await userQueryRepo.FindByEmailAsync(email.Value, ct);
+        var userOption = await userQueryRepo.FindByEmailAsync(email.Value, cancellationToken);
         if (userOption.IsNone)
         {
             return Error.NotFound("user.not_found", "No user found with this email.");
         }
 
-        var credentials = await userQueryRepo.GetCredentialsAsync(email.Value, ct);
+        var credentials = await userQueryRepo.GetCredentialsAsync(email.Value, cancellationToken);
         if (credentials.Count == 0)
         {
             return Error.NotFound("credentials.not_found", "No passkeys registered for this user.");
@@ -42,7 +42,7 @@ internal sealed class BeginAuthenticationCommandHandler(
 
         byte[][] allowedCredentialIds = credentials.Select(c => c.CredentialId).ToArray();
 
-        var optionsResult = await fido2.CreateAssertionOptionsAsync(allowedCredentialIds, ct);
+        var optionsResult = await fido2.CreateAssertionOptionsAsync(allowedCredentialIds, cancellationToken);
         if (optionsResult.IsFailure)
         {
             return optionsResult.Error;
@@ -50,7 +50,7 @@ internal sealed class BeginAuthenticationCommandHandler(
 
         (string optionsJson, byte[] challenge) = optionsResult.Value;
 
-        await challengeStore.SetAsync(email.Value, challenge, TimeSpan.FromMinutes(5), ct);
+        await challengeStore.SetAsync(email.Value, challenge, TimeSpan.FromMinutes(5), cancellationToken);
 
         return new BeginAuthenticationResult(optionsJson);
     }

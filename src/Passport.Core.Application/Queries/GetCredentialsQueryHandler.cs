@@ -8,9 +8,9 @@ internal sealed class GetCredentialsQueryHandler(
     IUserQueryRepository userQueryRepo
 ) : IQueryHandler<GetCredentialsQuery, GetCredentialsResult>
 {
-    public async Task<Result<GetCredentialsResult>> HandleAsync(GetCredentialsQuery query, CancellationToken ct)
+    public async Task<Result<GetCredentialsResult>> HandleAsync(GetCredentialsQuery query, CancellationToken cancellationToken)
     {
-        var credentials = await userQueryRepo.GetCredentialsAsync(query.Email, ct);
+        var credentials = await userQueryRepo.GetCredentialsAsync(query.Email, cancellationToken);
         return new GetCredentialsResult(credentials);
     }
 }

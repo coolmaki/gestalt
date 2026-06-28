@@ -17,7 +17,7 @@ internal sealed class VerifyRecoveryCodeCommandHandler(
     IDateTimeProvider clock
 ) : ICommandHandler<VerifyRecoveryCodeCommand, VerifyRecoveryCodeResult>
 {
-    public async Task<Result<VerifyRecoveryCodeResult>> HandleAsync(VerifyRecoveryCodeCommand command, CancellationToken ct)
+    public async Task<Result<VerifyRecoveryCodeResult>> HandleAsync(VerifyRecoveryCodeCommand command, CancellationToken cancellationToken)
     {
         var emailResult = Email.Create(command.Email);
         if (emailResult.IsFailure)
@@ -28,7 +28,7 @@ internal sealed class VerifyRecoveryCodeCommandHandler(
         Email email = emailResult.Value;
 
         DateTimeOffset now = clock.UtcNow();
-        var codeOption = await recoveryCodeRepo.FindActiveByEmailAsync(email, RecoveryCodePurpose.AccountRecovery, now, ct);
+        var codeOption = await recoveryCodeRepo.FindActiveByEmailAsync(email, RecoveryCodePurpose.AccountRecovery, now, cancellationToken);
         if (codeOption.IsNone)
         {
             return Error.Validation("recovery_code.invalid", "Invalid or expired recovery code.");
@@ -48,11 +48,11 @@ internal sealed class VerifyRecoveryCodeCommandHandler(
             return markResult.Error;
         }
 
-        await recoveryCodeRepo.SaveChangesAsync(ct);
+        await recoveryCodeRepo.SaveChangesAsync(cancellationToken);
 
         string recoveryToken = Convert.ToHexStringLower(Guid.NewGuid().ToByteArray());
         byte[] emailBytes = System.Text.Encoding.UTF8.GetBytes(email.Value);
-        await challengeStore.SetAsync($"recovery:{recoveryToken}", emailBytes, TimeSpan.FromMinutes(5), ct);
+        await challengeStore.SetAsync($"recovery:{recoveryToken}", emailBytes, TimeSpan.FromMinutes(5), cancellationToken);
 
         return new VerifyRecoveryCodeResult(recoveryToken);
     }

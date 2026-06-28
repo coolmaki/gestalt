@@ -12,7 +12,7 @@ internal sealed class RemoveCredentialCommandHandler(
     IDateTimeProvider clock
 ) : ICommandHandler<RemoveCredentialCommand, Unit>
 {
-    public async Task<Result<Unit>> HandleAsync(RemoveCredentialCommand command, CancellationToken ct)
+    public async Task<Result<Unit>> HandleAsync(RemoveCredentialCommand command, CancellationToken cancellationToken)
     {
         var emailResult = Email.Create(command.Email);
         if (emailResult.IsFailure)
@@ -20,7 +20,7 @@ internal sealed class RemoveCredentialCommandHandler(
             return emailResult.Error;
         }
 
-        var userOption = await userRepo.FindByEmailAsync(emailResult.Value, ct);
+        var userOption = await userRepo.FindByEmailAsync(emailResult.Value, cancellationToken);
         if (userOption.IsNone)
         {
             return Error.NotFound("user.not_found", "User not found.");
@@ -39,7 +39,7 @@ internal sealed class RemoveCredentialCommandHandler(
             return result;
         }
 
-        await userRepo.SaveChangesAsync(ct);
+        await userRepo.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

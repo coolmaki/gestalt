@@ -11,10 +11,10 @@ public interface IEmailSender
     /// <summary>
     /// Sends an email verification code to the user.
     /// </summary>
-    Task SendVerificationCodeAsync(Email to, string code, CancellationToken ct);
+    Task SendVerificationCodeAsync(Email to, string code, CancellationToken cancellationToken);
 
     /// <summary>
     /// Sends an account recovery code to the user.
     /// </summary>
-    Task SendRecoveryCodeAsync(Email to, string code, CancellationToken ct);
+    Task SendRecoveryCodeAsync(Email to, string code, CancellationToken cancellationToken);
 }

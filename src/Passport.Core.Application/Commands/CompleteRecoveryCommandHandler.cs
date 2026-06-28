@@ -19,9 +19,9 @@ internal sealed class CompleteRecoveryCommandHandler(
     IDateTimeProvider clock
 ) : ICommandHandler<CompleteRecoveryCommand, Unit>
 {
-    public async Task<Result<Unit>> HandleAsync(CompleteRecoveryCommand command, CancellationToken ct)
+    public async Task<Result<Unit>> HandleAsync(CompleteRecoveryCommand command, CancellationToken cancellationToken)
     {
-        var tokenData = await challengeStore.GetAndRemoveAsync($"recovery:{command.RecoveryToken}", ct);
+        var tokenData = await challengeStore.GetAndRemoveAsync($"recovery:{command.RecoveryToken}", cancellationToken);
         if (tokenData.IsNone)
         {
             return Error.Validation("recovery_token.invalid", "Invalid or expired recovery token.");
@@ -37,7 +37,7 @@ internal sealed class CompleteRecoveryCommandHandler(
 
         Email email = emailResult.Value;
 
-        var userOption = await userRepo.FindByEmailAsync(email, ct);
+        var userOption = await userRepo.FindByEmailAsync(email, cancellationToken);
         if (userOption.IsNone)
         {
             return Error.NotFound("user.not_found", "User not found.");
@@ -45,7 +45,7 @@ internal sealed class CompleteRecoveryCommandHandler(
 
         User user = userOption.Value;
 
-        var challengeOption = await challengeStore.GetAndRemoveAsync(email.Value, ct);
+        var challengeOption = await challengeStore.GetAndRemoveAsync(email.Value, cancellationToken);
         if (challengeOption.IsNone)
         {
             return Error.Validation("challenge.expired", "Recovery registration challenge expired. Please start again.");
@@ -53,7 +53,7 @@ internal sealed class CompleteRecoveryCommandHandler(
 
         byte[] challenge = challengeOption.Value;
 
-        var attestationResult = await fido2.CompleteRegistrationAsync(challenge, command.AttestationJson, ct);
+        var attestationResult = await fido2.CompleteRegistrationAsync(challenge, command.AttestationJson, cancellationToken);
         if (attestationResult.IsFailure)
         {
             return attestationResult.Error;
@@ -78,7 +78,7 @@ internal sealed class CompleteRecoveryCommandHandler(
             return passkeyResult.Error;
         }
 
-        await userRepo.SaveChangesAsync(ct);
+        await userRepo.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

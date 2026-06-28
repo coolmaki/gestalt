@@ -24,7 +24,7 @@ internal sealed class BeginRecoveryCommandHandler(
 {
     private static readonly TimeSpan RecoveryCodeTtl = TimeSpan.FromMinutes(10);
 
-    public async Task<Result<Unit>> HandleAsync(BeginRecoveryCommand command, CancellationToken ct)
+    public async Task<Result<Unit>> HandleAsync(BeginRecoveryCommand command, CancellationToken cancellationToken)
     {
         var emailResult = Email.Create(command.Email);
         if (emailResult.IsFailure)
@@ -34,7 +34,7 @@ internal sealed class BeginRecoveryCommandHandler(
 
         Email email = emailResult.Value;
 
-        var userOption = await userQueryRepo.FindByEmailAsync(email.Value, ct);
+        var userOption = await userQueryRepo.FindByEmailAsync(email.Value, cancellationToken);
         if (userOption.IsNone || !userOption.Value.EmailVerified)
         {
             return Unit.Value;
@@ -51,10 +51,10 @@ internal sealed class BeginRecoveryCommandHandler(
             return recoveryCodeResult.Error;
         }
 
-        await recoveryCodeRepo.AddAsync(recoveryCodeResult.Value, ct);
-        await recoveryCodeRepo.SaveChangesAsync(ct);
+        await recoveryCodeRepo.AddAsync(recoveryCodeResult.Value, cancellationToken);
+        await recoveryCodeRepo.SaveChangesAsync(cancellationToken);
 
-        await emailSender.SendRecoveryCodeAsync(email, code, ct);
+        await emailSender.SendRecoveryCodeAsync(email, code, cancellationToken);
 
         return Unit.Value;
     }

@@ -11,7 +11,7 @@ internal sealed class BeginRegistrationCommandHandler(
     IChallengeStore challengeStore
 ) : ICommandHandler<BeginRegistrationCommand, BeginRegistrationResult>
 {
-    public async Task<Result<BeginRegistrationResult>> HandleAsync(BeginRegistrationCommand command, CancellationToken ct)
+    public async Task<Result<BeginRegistrationResult>> HandleAsync(BeginRegistrationCommand command, CancellationToken cancellationToken)
     {
         var emailResult = Domain.ValueObjects.Email.Create(command.Email);
         if (emailResult.IsFailure)
@@ -21,13 +21,13 @@ internal sealed class BeginRegistrationCommandHandler(
 
         var email = emailResult.Value;
 
-        var existing = await userQueryRepo.FindByEmailAsync(email.Value, ct);
+        var existing = await userQueryRepo.FindByEmailAsync(email.Value, cancellationToken);
         if (existing.IsSome)
         {
             return Error.Conflict("email.already_registered", "A user with this email already exists.");
         }
 
-        var optionsResult = await fido2.CreateRegistrationOptionsAsync(email, ct);
+        var optionsResult = await fido2.CreateRegistrationOptionsAsync(email, cancellationToken);
         if (optionsResult.IsFailure)
         {
             return optionsResult.Error;
@@ -35,7 +35,7 @@ internal sealed class BeginRegistrationCommandHandler(
 
         (string optionsJson, byte[] challenge) = optionsResult.Value;
 
-        await challengeStore.SetAsync(email.Value, challenge, TimeSpan.FromMinutes(5), ct);
+        await challengeStore.SetAsync(email.Value, challenge, TimeSpan.FromMinutes(5), cancellationToken);
 
         return new BeginRegistrationResult(optionsJson);
     }

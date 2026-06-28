@@ -22,7 +22,7 @@ internal sealed class CompleteRegistrationCommandHandler(
 {
     private static readonly TimeSpan VerificationCodeTtl = TimeSpan.FromMinutes(10);
 
-    public async Task<Result<Unit>> HandleAsync(CompleteRegistrationCommand command, CancellationToken ct)
+    public async Task<Result<Unit>> HandleAsync(CompleteRegistrationCommand command, CancellationToken cancellationToken)
     {
         var emailResult = Email.Create(command.Email);
         if (emailResult.IsFailure)
@@ -32,13 +32,13 @@ internal sealed class CompleteRegistrationCommandHandler(
 
         Email email = emailResult.Value;
 
-        var existing = await userQueryRepo.FindByEmailAsync(email.Value, ct);
+        var existing = await userQueryRepo.FindByEmailAsync(email.Value, cancellationToken);
         if (existing.IsSome)
         {
             return Error.Conflict("email.already_registered", "A user with this email already exists.");
         }
 
-        var challengeOption = await challengeStore.GetAndRemoveAsync(email.Value, ct);
+        var challengeOption = await challengeStore.GetAndRemoveAsync(email.Value, cancellationToken);
         if (challengeOption.IsNone)
         {
             return Error.Validation("challenge.expired", "Registration challenge expired or not found. Please start again.");
@@ -46,7 +46,7 @@ internal sealed class CompleteRegistrationCommandHandler(
 
         byte[] challenge = challengeOption.Value;
 
-        var attestationResult = await fido2.CompleteRegistrationAsync(challenge, command.AttestationJson, ct);
+        var attestationResult = await fido2.CompleteRegistrationAsync(challenge, command.AttestationJson, cancellationToken);
         if (attestationResult.IsFailure)
         {
             return attestationResult.Error;
@@ -78,11 +78,11 @@ internal sealed class CompleteRegistrationCommandHandler(
             return recoveryCodeResult.Error;
         }
 
-        await userRepo.AddAsync(user, ct);
-        await recoveryCodeRepo.AddAsync(recoveryCodeResult.Value, ct);
-        await userRepo.SaveChangesAsync(ct);
+        await userRepo.AddAsync(user, cancellationToken);
+        await recoveryCodeRepo.AddAsync(recoveryCodeResult.Value, cancellationToken);
+        await userRepo.SaveChangesAsync(cancellationToken);
 
-        await emailSender.SendVerificationCodeAsync(email, code, ct);
+        await emailSender.SendVerificationCodeAsync(email, code, cancellationToken);
 
         return Unit.Value;
     }

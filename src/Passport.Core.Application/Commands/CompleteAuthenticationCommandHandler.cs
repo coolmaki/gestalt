@@ -19,7 +19,7 @@ internal sealed class CompleteAuthenticationCommandHandler(
     IFido2 fido2
 ) : ICommandHandler<CompleteAuthenticationCommand, Unit>
 {
-    public async Task<Result<Unit>> HandleAsync(CompleteAuthenticationCommand command, CancellationToken ct)
+    public async Task<Result<Unit>> HandleAsync(CompleteAuthenticationCommand command, CancellationToken cancellationToken)
     {
         var emailResult = Email.Create(command.Email);
         if (emailResult.IsFailure)
@@ -29,7 +29,7 @@ internal sealed class CompleteAuthenticationCommandHandler(
 
         Email email = emailResult.Value;
 
-        var userOption = await userRepo.FindByEmailAsync(email, ct);
+        var userOption = await userRepo.FindByEmailAsync(email, cancellationToken);
         if (userOption.IsNone)
         {
             return Error.NotFound("user.not_found", "No user found with this email.");
@@ -37,7 +37,7 @@ internal sealed class CompleteAuthenticationCommandHandler(
 
         User user = userOption.Value;
 
-        var challengeOption = await challengeStore.GetAndRemoveAsync(email.Value, ct);
+        var challengeOption = await challengeStore.GetAndRemoveAsync(email.Value, cancellationToken);
         if (challengeOption.IsNone)
         {
             return Error.Validation("challenge.expired", "Authentication challenge expired or not found. Please start again.");
@@ -56,7 +56,7 @@ internal sealed class CompleteAuthenticationCommandHandler(
 
         foreach (var passkey in passkeys)
         {
-            assertionResult = await fido2.CompleteAssertionAsync(challenge, command.AssertionJson, passkey.PublicKey, passkey.SignCount, ct);
+            assertionResult = await fido2.CompleteAssertionAsync(challenge, command.AssertionJson, passkey.PublicKey, passkey.SignCount, cancellationToken);
             if (assertionResult.IsSuccess)
             {
                 matchedCredential = passkey;
@@ -71,7 +71,7 @@ internal sealed class CompleteAuthenticationCommandHandler(
 
         matchedCredential.UpdateSignCount(assertionResult.Value);
 
-        await userRepo.SaveChangesAsync(ct);
+        await userRepo.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

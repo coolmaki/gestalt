@@ -13,7 +13,7 @@ internal sealed class VerifyEmailCommandHandler(
     IDateTimeProvider clock
 ) : ICommandHandler<VerifyEmailCommand, Unit>
 {
-    public async Task<Result<Unit>> HandleAsync(VerifyEmailCommand command, CancellationToken ct)
+    public async Task<Result<Unit>> HandleAsync(VerifyEmailCommand command, CancellationToken cancellationToken)
     {
         var emailResult = Email.Create(command.Email);
         if (emailResult.IsFailure)
@@ -23,7 +23,7 @@ internal sealed class VerifyEmailCommandHandler(
 
         Email email = emailResult.Value;
 
-        var userOption = await userRepo.FindByEmailAsync(email, ct);
+        var userOption = await userRepo.FindByEmailAsync(email, cancellationToken);
         if (userOption.IsNone)
         {
             return Error.NotFound("user.not_found", "User not found.");
@@ -32,7 +32,7 @@ internal sealed class VerifyEmailCommandHandler(
         User user = userOption.Value;
 
         DateTimeOffset now = clock.UtcNow();
-        var codeOption = await recoveryCodeRepo.FindActiveByEmailAsync(email, RecoveryCodePurpose.EmailVerification, now, ct);
+        var codeOption = await recoveryCodeRepo.FindActiveByEmailAsync(email, RecoveryCodePurpose.EmailVerification, now, cancellationToken);
         if (codeOption.IsNone)
         {
             return Error.Validation("verification_code.invalid", "Invalid or expired verification code.");
@@ -58,7 +58,7 @@ internal sealed class VerifyEmailCommandHandler(
             return verifyResult.Error;
         }
 
-        await userRepo.SaveChangesAsync(ct);
+        await userRepo.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }
