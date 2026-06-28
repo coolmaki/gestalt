@@ -15,7 +15,7 @@ internal sealed class PassportDbContext(DbContextOptions<PassportDbContext> opti
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        if (string.Equals(_provider, "Postgres", StringComparison.OrdinalIgnoreCase))
+        if (_provider == PersistenceProvider.Postgres)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new PasskeyCredentialConfiguration());
