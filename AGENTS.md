@@ -125,11 +125,21 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
 - **Types are `internal` and `sealed` by default.** Only make a type `public` when it is explicitly needed by another package. Only make a type `unsealed` when inheritance is explicitly part of its design. Prefer composition over inheritance.
 - **Result, not exceptions.** Domain and Application methods return `Result<T>` for expected failures. Exceptions are for truly unexpected conditions only.
 - **Option<T> for optional parameters and returns.** Use `Option<T>` in method signatures when a value may legitimately be absent. Use `string?` (nullable reference types) for entity properties that map to nullable DB columns.
+- **Primary constructors for DI.** All dependency-injected types (handlers, services, repositories) use primary constructors.
+- **Handlers are internal.** Command and query handlers are `internal sealed` and registered via `ServiceCollectionExtensions` in the same project.
 
 ### Domain Projects (`{Project}.Core.Domain`)
 - **Entities** → `Entities/` (namespace: `{Project}.Core.Domain.Entities`)
 - **Value objects** → `ValueObjects/` (namespace: `{Project}.Core.Domain.ValueObjects`)
 - **Domain events** → `Events/` (namespace: `{Project}.Core.Domain.Events`)
+
+### Application Projects (`{Project}.Core.Application`)
+- **Commands** → `Commands/` flat (namespace: `{Project}.Core.Application.Commands`) — one directory, no sub-folders
+- **Queries** → `Queries/` flat (namespace: `{Project}.Core.Application.Queries`)
+- **Ports** → `Ports/Repositories/` + `Ports/Services/`
+- **Read models** → `ReadModels/`
+- **Result types** → same file as command/query, `{Name}Result.cs` for non-Unit returns
+- **Handler registration** → `ServiceCollectionExtensions.Add{Project}Commands()` / `Add{Project}Queries()`
 
 ### SolidJS / TypeScript
 - See [`docs/FRONTEND.md`](./docs/FRONTEND.md).
