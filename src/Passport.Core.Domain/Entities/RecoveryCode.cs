@@ -13,10 +13,10 @@ public sealed class RecoveryCode : Entity, IEquatable<RecoveryCode>
     private RecoveryCode() { }
 
     /// <summary>
-    /// Issues a new recovery code. The caller is responsible for generating the
-    /// plaintext code, hashing it, and passing <paramref name="codeHash"/>.
+    /// Issues a new recovery code for the given email. The caller is responsible
+    /// for generating the plaintext code, hashing it, and passing <paramref name="codeHash"/>.
     /// </summary>
-    public static Result<RecoveryCode> Issue(RecoveryCodeId id, string codeHash, RecoveryCodePurpose purpose, DateTimeOffset now, TimeSpan ttl)
+    public static Result<RecoveryCode> Issue(RecoveryCodeId id, Email email, string codeHash, RecoveryCodePurpose purpose, DateTimeOffset now, TimeSpan ttl)
     {
         if (string.IsNullOrWhiteSpace(codeHash))
         {
@@ -31,6 +31,7 @@ public sealed class RecoveryCode : Entity, IEquatable<RecoveryCode>
         return new RecoveryCode
         {
             Id = id,
+            Email = email,
             CodeHash = codeHash,
             Purpose = purpose,
             ExpiresAt = now + ttl,
@@ -43,6 +44,8 @@ public sealed class RecoveryCode : Entity, IEquatable<RecoveryCode>
     // ------------------------------------------------------------
 
     public RecoveryCodeId Id { get; private set; }
+
+    public Email Email { get; private set; } = null!;
 
     public string CodeHash { get; private set; } = string.Empty;
 

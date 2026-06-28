@@ -6,5 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
   </PropertyGroup>
 </Project>

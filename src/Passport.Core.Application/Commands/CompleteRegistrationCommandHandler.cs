@@ -72,7 +72,7 @@ internal sealed class CompleteRegistrationCommandHandler(
         string code = Helpers.GenerateCode();
         string codeHash = Helpers.HashCode(code);
         var recoveryCodeId = new RecoveryCodeId(guids.NewGuid());
-        var recoveryCodeResult = RecoveryCode.Issue(recoveryCodeId, codeHash, RecoveryCodePurpose.EmailVerification, now, VerificationCodeTtl);
+        var recoveryCodeResult = RecoveryCode.Issue(recoveryCodeId, email, codeHash, RecoveryCodePurpose.EmailVerification, now, VerificationCodeTtl);
         if (recoveryCodeResult.IsFailure)
         {
             return recoveryCodeResult.Error;

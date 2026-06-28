@@ -45,7 +45,7 @@ internal sealed class BeginRecoveryCommandHandler(
         string codeHash = Helpers.HashCode(code);
         var recoveryCodeId = new RecoveryCodeId(guids.NewGuid());
 
-        var recoveryCodeResult = Domain.Entities.RecoveryCode.Issue(recoveryCodeId, codeHash, RecoveryCodePurpose.AccountRecovery, now, RecoveryCodeTtl);
+        var recoveryCodeResult = Domain.Entities.RecoveryCode.Issue(recoveryCodeId, email, codeHash, RecoveryCodePurpose.AccountRecovery, now, RecoveryCodeTtl);
         if (recoveryCodeResult.IsFailure)
         {
             return recoveryCodeResult.Error;
