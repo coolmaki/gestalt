@@ -9,4 +9,7 @@
   <Project Path="../../src/Passport.Infrastructure/Passport.Infrastructure.csproj" />
   <Project Path="../../src/Passport.Presentation.Http/Passport.Presentation.Http.csproj" />
   <Project Path="../../src/Passport/Passport.csproj" />
+  <Project Path="../../tests/Passport.Core.Domain.Tests/Passport.Core.Domain.Tests.csproj" />
+  <Project Path="../../tests/Passport.Core.Application.Tests/Passport.Core.Application.Tests.csproj" />
+  <Project Path="../../tests/Passport.IntegrationTests/Passport.IntegrationTests.csproj" />
 </Solution>
