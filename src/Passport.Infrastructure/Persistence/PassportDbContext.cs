@@ -4,18 +4,13 @@ using Passport.Infrastructure.Persistence.Configurations.Postgres;
 
 namespace Passport.Infrastructure.Persistence;
 
-public sealed class PassportDbContext : DbContext
+internal sealed class PassportDbContext(DbContextOptions<PassportDbContext> options, PassportInfrastructureConfiguration config)
+    : DbContext(options)
 {
-    private readonly string _provider;
+    private readonly string _provider = config.Provider;
 
-    public PassportDbContext(DbContextOptions<PassportDbContext> options, PassportInfrastructureConfiguration config)
-        : base(options)
-    {
-        _provider = config.Provider;
-    }
-
-    public DbSet<User> Users => Set<User>();
-    public DbSet<RecoveryCode> RecoveryCodes => Set<RecoveryCode>();
+    internal DbSet<User> Users => Set<User>();
+    internal DbSet<RecoveryCode> RecoveryCodes => Set<RecoveryCode>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
