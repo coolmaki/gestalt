@@ -1,6 +1,6 @@
 namespace Supercluster.Lib.Primitives;
 
-public sealed record Option<T>
+public sealed class Option<T>
 {
     // ------------------------------------------------------------
     // Constructors & Factories
@@ -15,6 +15,7 @@ public sealed record Option<T>
     internal Option(T value, bool isSome)
     {
         _value = value;
+        IsSome = isSome;
     }
 
     public static Option<T> Some(T value) => new(value, isSome: true);
@@ -33,7 +34,7 @@ public sealed record Option<T>
     // Properties
     // ------------------------------------------------------------
 
-    public bool IsSome { get; private init; }
+    public bool IsSome { get; }
 
     public bool IsNone => !IsSome;
 

@@ -1,6 +1,6 @@
 namespace Supercluster.Lib.Primitives;
 
-public sealed record Result<T>
+public sealed class Result<T>
 {
     // ------------------------------------------------------------
     // Constructors & Factories
@@ -39,7 +39,7 @@ public sealed record Result<T>
     // Properties
     // ------------------------------------------------------------
 
-    public bool IsSuccess { get; private init; }
+    public bool IsSuccess { get; }
 
     public bool IsFailure => !IsSuccess;
 
