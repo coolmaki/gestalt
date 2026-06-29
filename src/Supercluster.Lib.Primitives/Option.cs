@@ -1,6 +1,6 @@
 namespace Supercluster.Lib.Primitives;
 
-public sealed class Option<T>
+public sealed class Option<T> : IEquatable<Option<T>>
 {
     // ------------------------------------------------------------
     // Constructors & Factories
@@ -64,4 +64,20 @@ public sealed class Option<T>
             ? bind(_value)
             : Option<TNext>.None;
     }
+
+    // ------------------------------------------------------------
+    // Equality
+    // ------------------------------------------------------------
+
+    public bool Equals(Option<T>? other)
+    {
+        if (other is null) return false;
+        if (IsNone && other.IsNone) return true;
+        if (IsSome && other.IsSome) return EqualityComparer<T>.Default.Equals(_value, other._value);
+        return false;
+    }
+
+    public override bool Equals(object? obj) => obj is Option<T> other && Equals(other);
+
+    public override int GetHashCode() => IsSome ? _value?.GetHashCode() ?? 0 : 0;
 }

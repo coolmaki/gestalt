@@ -1,6 +1,6 @@
 namespace Supercluster.Lib.Primitives;
 
-public sealed class Result<T>
+public sealed class Result<T> : IEquatable<Result<T>>
 {
     // ------------------------------------------------------------
     // Constructors & Factories
@@ -71,4 +71,20 @@ public sealed class Result<T>
             ? bind(_value)
             : _error;
     }
+
+    // ------------------------------------------------------------
+    // Equality
+    // ------------------------------------------------------------
+
+    public bool Equals(Result<T>? other)
+    {
+        if (other is null) return false;
+        if (IsSuccess && other.IsSuccess) return EqualityComparer<T>.Default.Equals(_value, other._value);
+        if (IsFailure && other.IsFailure) return _error == other._error;
+        return false;
+    }
+
+    public override bool Equals(object? obj) => obj is Result<T> other && Equals(other);
+
+    public override int GetHashCode() => IsSuccess ? _value?.GetHashCode() ?? 0 : _error.GetHashCode();
 }
