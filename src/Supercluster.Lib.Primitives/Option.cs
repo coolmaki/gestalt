@@ -71,9 +71,21 @@ public sealed class Option<T> : IEquatable<Option<T>>
 
     public bool Equals(Option<T>? other)
     {
-        if (other is null) return false;
-        if (IsNone && other.IsNone) return true;
-        if (IsSome && other.IsSome) return EqualityComparer<T>.Default.Equals(_value, other._value);
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (IsNone && other.IsNone)
+        {
+            return true;
+        }
+
+        if (IsSome && other.IsSome)
+        {
+            return EqualityComparer<T>.Default.Equals(_value, other._value);
+        }
+
         return false;
     }
 

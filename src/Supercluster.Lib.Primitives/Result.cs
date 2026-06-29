@@ -78,9 +78,21 @@ public sealed class Result<T> : IEquatable<Result<T>>
 
     public bool Equals(Result<T>? other)
     {
-        if (other is null) return false;
-        if (IsSuccess && other.IsSuccess) return EqualityComparer<T>.Default.Equals(_value, other._value);
-        if (IsFailure && other.IsFailure) return _error == other._error;
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (IsSuccess && other.IsSuccess)
+        {
+            return EqualityComparer<T>.Default.Equals(_value, other._value);
+        }
+
+        if (IsFailure && other.IsFailure)
+        {
+            return _error == other._error;
+        }
+
         return false;
     }
 
