@@ -17,13 +17,11 @@ internal sealed class PassportDbContext(DbContextOptions<PassportDbContext> opti
             configureSqlite: () =>
             {
                 modelBuilder.ApplyConfiguration(new Configurations.Sqlite.UserConfiguration());
-                modelBuilder.ApplyConfiguration(new Configurations.Sqlite.PasskeyCredentialConfiguration());
                 modelBuilder.ApplyConfiguration(new Configurations.Sqlite.RecoveryCodeConfiguration());
             },
             configurePostgres: () =>
             {
                 modelBuilder.ApplyConfiguration(new Configurations.Postgres.UserConfiguration());
-                modelBuilder.ApplyConfiguration(new Configurations.Postgres.PasskeyCredentialConfiguration());
                 modelBuilder.ApplyConfiguration(new Configurations.Postgres.RecoveryCodeConfiguration());
             });
     }

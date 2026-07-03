@@ -18,7 +18,7 @@ public class BeginRegistrationCommandHandlerTests
 
         var command = new BeginRegistrationCommand("test@example.com");
         userQueryRepo.FindByEmailAsync("test@example.com", Arg.Any<CancellationToken>())
-            .Returns(Option<UserReadModel>.Some(new UserReadModel("test@example.com", true, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow)));
+            .Returns(Option<UserReadModel>.Some(new UserReadModel("test@example.com", 1, "2026-01-01", "2026-01-01")));
 
         var result = await handler.HandleAsync(command, CancellationToken.None);
 

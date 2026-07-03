@@ -33,9 +33,16 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserQueryRepository, UserQueryRepository>();
         services.AddScoped<IRecoveryCodeRepository, RecoveryCodeRepository>();
 
+        // Dapper requires DbConnection — resolve from EF Core DbContext
+        services.AddScoped(provider =>
+        {
+            var dbContext = provider.GetRequiredService<PassportDbContext>();
+            return dbContext.Database.GetDbConnection();
+        });
+
         // Services
         services.AddScoped<IFido2, Fido2Service>();
-        services.AddScoped<IChallengeStore, MemoryChallengeStore>();
+        services.AddSingleton<IChallengeStore, MemoryChallengeStore>();
         services.AddScoped<IEmailSender, LoggingEmailSender>();
 
         return services;

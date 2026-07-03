@@ -25,7 +25,7 @@ public class BeginRecoveryCommandHandlerTests
 
         userQueryRepo.FindByEmailAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Option<UserReadModel>.Some(
-                new UserReadModel("test@example.com", true, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow))));
+                new UserReadModel("test@example.com", 1, "2026-01-01", "2026-01-01"))));
 
         var result = await handler.HandleAsync(new BeginRecoveryCommand("test@example.com"), CancellationToken.None);
 
@@ -58,7 +58,7 @@ public class BeginRecoveryCommandHandlerTests
         var userQueryRepo = Substitute.For<IUserQueryRepository>();
         userQueryRepo.FindByEmailAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Option<UserReadModel>.Some(
-                new UserReadModel("test@example.com", false, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow))));
+                new UserReadModel("test@example.com", 0, "2026-01-01", "2026-01-01"))));
 
         var handler = new BeginRecoveryCommandHandler(
             userQueryRepo, Substitute.For<IRecoveryCodeRepository>(), Substitute.For<IEmailSender>(),

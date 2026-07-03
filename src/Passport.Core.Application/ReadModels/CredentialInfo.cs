@@ -1,3 +1,3 @@
 namespace Passport.Core.Application.ReadModels;
 
-public sealed record CredentialInfo(byte[] CredentialId, string? DeviceName, DateTimeOffset CreatedAt);
+public sealed record CredentialInfo(byte[] CredentialId, string? DeviceName, string CreatedAt);

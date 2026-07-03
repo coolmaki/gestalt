@@ -1,5 +1,6 @@
 using Supercluster.Lib.Application.Mediator;
 using Supercluster.Lib.Presentation.Http;
+using Microsoft.AspNetCore.Mvc;
 using Supercluster.Lib.Presentation.Http.Extensions;
 using Passport.Core.Application.Queries;
 

@@ -10,4 +10,8 @@
     <ProjectReference Include="../Passport.Core.Application/Passport.Core.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Passport.IntegrationTests" />
+  </ItemGroup>
+
 </Project>

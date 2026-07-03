@@ -26,9 +26,9 @@ public class BeginAuthenticationCommandHandlerTests
         var command = new BeginAuthenticationCommand("test@example.com");
         _userQueryRepo.FindByEmailAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Option<UserReadModel>.Some(
-                new UserReadModel("test@example.com", true, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow))));
+                new UserReadModel("test@example.com", 1, "2026-01-01", "2026-01-01"))));
         _userQueryRepo.GetCredentialsAsync("test@example.com", Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<IReadOnlyList<CredentialInfo>>([new CredentialInfo([1], null, DateTimeOffset.UtcNow)]));
+            .Returns(Task.FromResult<IReadOnlyList<CredentialInfo>>([new CredentialInfo([1], null, "2026-01-01")]));
         _fido2.CreateAssertionOptionsAsync(Arg.Any<byte[][]>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result<(string, byte[])>.Success(("{\"opts\":true}", [1, 2, 3]))));
 
@@ -57,7 +57,7 @@ public class BeginAuthenticationCommandHandlerTests
         var command = new BeginAuthenticationCommand("test@example.com");
         _userQueryRepo.FindByEmailAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Option<UserReadModel>.Some(
-                new UserReadModel("test@example.com", true, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow))));
+                new UserReadModel("test@example.com", 1, "2026-01-01", "2026-01-01"))));
         _userQueryRepo.GetCredentialsAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<CredentialInfo>>([]));
 

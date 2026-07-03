@@ -4,6 +4,7 @@ using Passport.Infrastructure.Configuration;
 using Passport.Infrastructure.Extensions;
 using Passport.Presentation.Http.Extensions;
 using Supercluster.Lib.Application.Extensions;
+using Supercluster.Lib.Infrastructure.Extensions;
 using Supercluster.Lib.Presentation.Http.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,7 @@ builder.Services.AddSingleton(appConfig);
 // ------------------------------------------------------------
 
 builder.Services.AddMediator();
+builder.Services.AddProviders();
 builder.Services.AddPassportCommandsAndQueries();
 builder.Services.AddPassportInfrastructure(infraConfig.Persistence);
 builder.Services.AddPassportEndpoints();

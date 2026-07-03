@@ -35,7 +35,7 @@ internal sealed class BeginRecoveryCommandHandler(
         Email email = emailResult.Value;
 
         var userOption = await userQueryRepo.FindByEmailAsync(email.Value, cancellationToken);
-        if (userOption.IsNone || !userOption.Value.EmailVerified)
+        if (userOption.IsNone || userOption.Value.EmailVerified == 0)
         {
             return Unit.Value;
         }

@@ -9,8 +9,7 @@ internal sealed class PasskeyCredentialConfiguration : IEntityTypeConfiguration<
 {
     public void Configure(EntityTypeBuilder<PasskeyCredential> builder)
     {
-        builder.Property<Guid>("Id")
-            .ValueGeneratedOnAdd();
+        builder.Property<Guid>("Id");
 
         builder.HasKey("Id");
 

@@ -1,3 +1,3 @@
 namespace Passport.Core.Application.ReadModels;
 
-public sealed record UserReadModel(string Email, bool EmailVerified, DateTimeOffset CreatedAt, DateTimeOffset UpdatedAt);
+public sealed record UserReadModel(string Email, long EmailVerified, string CreatedAt, string UpdatedAt);

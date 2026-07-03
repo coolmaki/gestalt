@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Passport.Core.Domain.Entities;
 using Passport.Core.Domain.ValueObjects;
+using Passport.Infrastructure.Persistence.Generators;
 
 namespace Passport.Infrastructure.Persistence.Configurations.Postgres;
 
@@ -9,13 +10,12 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        // Shadow PK since User has no domain ID
         builder.Property<Guid>("Id")
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasValueGenerator<ShadowIdGenerator>();
 
         builder.HasKey("Id");
 
-        // Email value object → string column
         builder.Property(u => u.Email)
             .HasConversion(e => e.Value, s => Email.Create(s).Value)
             .HasMaxLength(254)
@@ -33,13 +33,13 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.UpdatedAt)
             .IsRequired();
 
-        // Owned collection of passkeys
         builder.OwnsMany(u => u.Passkeys, pb =>
         {
             pb.WithOwner().HasForeignKey("UserId");
 
             pb.Property<Guid>("Id")
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAdd()
+                .HasValueGenerator<ShadowIdGenerator>();
 
             pb.HasKey("Id");
 
@@ -55,11 +55,8 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
             pb.Property(p => p.CreatedAt)
                 .IsRequired();
-
-            // Ignore PublicKey length validation at the DB level — it's validated in domain
         });
 
-        // Ignore domain events
         builder.Ignore(u => u.Events);
     }
 }
