@@ -9,12 +9,15 @@ public class RegistrationFlowTests : IAsyncLifetime
     private readonly TestHost _host;
     private HttpClient _client = null!;
 
+    private string _dbPath;
+
     public RegistrationFlowTests()
     {
+        _dbPath = $"test_passport_{Guid.NewGuid():N}.db";
         var config = new PersistenceConfiguration
         {
             Provider = PersistenceProvider.Sqlite,
-            ConnectionString = $"Data Source=test_passport_{Guid.NewGuid():N}.db",
+            ConnectionString = $"Data Source={_dbPath}",
         };
 
         _host = new TestHost(config);
@@ -30,16 +33,22 @@ public class RegistrationFlowTests : IAsyncLifetime
     {
         _client.Dispose();
         _host.Dispose();
+        if (File.Exists(_dbPath))
+        {
+            File.Delete(_dbPath);
+        }
     }
 
     [Fact]
     public async Task RegisterFlow_ValidInput_ReturnsSuccess()
     {
         var beginResponse = await _client.PostAsJsonAsync("/api/v1/auth/register/begin", new { Email = "test@example.com" });
-        Assert.True(beginResponse.IsSuccessStatusCode);
+        var beginBody = await beginResponse.Content.ReadAsStringAsync();
+        Assert.True(beginResponse.IsSuccessStatusCode, $"Begin returned {beginResponse.StatusCode}: {beginBody}");
 
         var completeResponse = await _client.PostAsJsonAsync("/api/v1/auth/register/complete", new { Email = "test@example.com", AttestationJson = "{}" });
-        Assert.True(completeResponse.IsSuccessStatusCode, $"Complete returned {completeResponse.StatusCode}");
+        var completeBody = await completeResponse.Content.ReadAsStringAsync();
+        Assert.True(completeResponse.IsSuccessStatusCode, $"Complete returned {completeResponse.StatusCode}: {completeBody}");
     }
 
     [Fact]

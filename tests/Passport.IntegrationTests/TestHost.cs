@@ -21,6 +21,7 @@ internal sealed class TestHost : WebApplicationFactory<Program>
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<PassportDbContext>();
+        await db.Database.EnsureDeletedAsync();
         await db.Database.EnsureCreatedAsync();
     }
 
