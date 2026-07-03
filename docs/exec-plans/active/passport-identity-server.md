@@ -1,7 +1,7 @@
 # Plan: Passport Identity Server
 
 **Created:** 2026-06-27
-**Status:** 🔧 Draft
+**Status:** 🚀 Active — Phase 1 complete, Phase 2 next
 **Project:** Passport
 **Driving Agent:** human
 
@@ -39,7 +39,17 @@ Frontend: SolidJS SPA in `apps/passport/` for login, signup, passkey management,
 
 The minimum viable identity server: register with passkey, authenticate with passkey, recover via email.
 
-**Status:** 🚀 Active
+**Status:** ✅ Completed
+
+**What was built (actual):**
+
+- Domain: `User` (AR), `PasskeyCredential`, `RecoveryCode` entities; `Email`, `DeviceName` value objects; 4 domain events
+- Application: 10 commands + 2 queries; CQRS with `ICommandHandler`/`IQueryHandler`; assembly-scanned handlers; `ISender` mediator
+- Infrastructure: EF Core with Postgres + SQLite configs; `ShadowIdGenerator` for client-side PKs; Dapper query repos; `PersistenceProvider` enum with dispatch helper
+- Presentation: 11 minimal API endpoints implementing `IEndpoint`; `EndpointVersion` enum with `v1` default; RFC 7807 Problem Details via `Result<T>.ToHttpResponse()`
+- Host: ASP.NET Core minimal API host; DI wired with `AddMediator()`, `AddPassportCommandsAndQueries()`, `AddPassportInfrastructure()`, `AddPassportEndpoints()`
+- Tests: 42 domain + 21 application + 3 integration = 66 tests passing
+- Shared libs added: `Supercluster.Lib.Application` (CQRS, mediator, providers), `Supercluster.Lib.Infrastructure` (provider impls), `Supercluster.Lib.Presentation.Http` (IEndpoint, versioning, RFC 7807)
 
 ---
 

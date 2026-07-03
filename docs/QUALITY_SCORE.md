@@ -43,7 +43,7 @@ Per-project quality grades. Updated by the doc-gardening agent and during code r
 
 | Project | Status | Backend | Frontend |
 |---------|--------|---------|----------|
-| Passport | 🚀 Phase 1 Active | `src/Passport.Core.*` | `apps/passport/` |
+| Passport | 🚀 Phase 1 Complete | `src/Passport.Core.*` — 66 tests | `apps/passport/` |
 | Training | 🔜 Planned | — | — |
 | Budgeting | 🔜 Planned | — | — |
 
@@ -57,6 +57,6 @@ Per-project quality grades. Updated by the doc-gardening agent and during code r
 
 ### Notes
 
-- **Primitives**: Code quality is excellent. No tests exist. Add test project before adding more code.
+- **Primitives**: Now has 42 domain tests passing. Internal constructors on Option<T>/Result<T> for mock compat.
 - **Domain**: Doc coverage slightly lower (no XML comments on Entity/AggregateRoot/DomainEvent). AggreggateRoot typo was fixed.
 - **shared-ui**: Not yet scaffolded.

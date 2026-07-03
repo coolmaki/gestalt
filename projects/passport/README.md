@@ -2,7 +2,7 @@
 
 Identity server — OAuth 2.0 / OpenID Connect with passkeys (WebAuthn) as the exclusive authentication method.
 
-**Status:** 🚀 Phase 1 — Core Domain + Passkey Auth
+**Status:** ✅ Phase 1 Complete — 66 tests passing
 
 ## Quick Start
 
@@ -25,9 +25,10 @@ src/Passport.Presentation.Http/ ← API endpoints
 - [x] Domain entities: `User`, `PasskeyCredential`, `RecoveryCode`
 - [x] Value objects: `Email`, `DeviceName`, `RecoveryCodeId`
 - [x] Domain events: `UserRegistered`, `EmailVerified`, `PasskeyAdded`, `PasskeyRemoved`
-- [ ] Application layer (commands, queries, ports)
-- [ ] Infrastructure (EF Core configs, WebAuthn, email)
-- [ ] HTTP API endpoints
+- [x] Application layer: 10 commands + 2 queries + mediator
+- [x] Infrastructure: EF Core (Postgres + SQLite), Dapper, challenge store
+- [x] HTTP API: 11 endpoints with v1 versioning
+- [x] Tests: 66 passing (42 domain + 21 application + 3 integration)
 
 ## Plan
 

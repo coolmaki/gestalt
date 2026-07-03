@@ -157,7 +157,7 @@ These are mechanically enforced (linters, structural tests, build checks):
 
 | Project | Status | Backend | Frontend |
 |---------|--------|---------|----------|
-| Passport | 🚀 Phase 1 Active | `src/Passport.Core.*` | `apps/passport/` |
+| Passport | 🚀 Phase 1 Complete | `src/Passport.Core.*` | `apps/passport/` |
 | Training | 🔜 Planned | — | — |
 | Budgeting | 🔜 Planned | — | — |
 
