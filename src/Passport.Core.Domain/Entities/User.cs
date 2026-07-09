@@ -37,6 +37,7 @@ public sealed class User : AggregateRoot, IEquatable<User>
     // ------------------------------------------------------------
 
     private readonly List<PasskeyCredential> _passkeys = [];
+    private readonly List<RefreshToken> _refreshTokens = [];
 
     // ------------------------------------------------------------
     // Properties
@@ -51,6 +52,8 @@ public sealed class User : AggregateRoot, IEquatable<User>
     public DateTimeOffset UpdatedAt { get; private set; }
 
     public IReadOnlyCollection<PasskeyCredential> Passkeys => _passkeys.AsReadOnly();
+
+    public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
 
     // ------------------------------------------------------------
     // Equality
@@ -123,6 +126,59 @@ public sealed class User : AggregateRoot, IEquatable<User>
         EmailVerified = true;
         UpdatedAt = now;
         RaiseEvent(new EmailVerified(Email, now));
+        return Unit.Value;
+    }
+
+    /// <summary>
+    /// Issues a new refresh token for this user. The caller hashes the raw token
+    /// and passes the hash for storage.
+    /// </summary>
+    public RefreshToken IssueRefreshToken(string tokenHash, DateTimeOffset now, TimeSpan ttl, string? clientId = null)
+    {
+        var token = RefreshToken.Issue(tokenHash, now, ttl, clientId);
+        _refreshTokens.Add(token);
+        UpdatedAt = now;
+        RaiseEvent(new RefreshTokenIssued(Email, now));
+        return token;
+    }
+
+    /// <summary>
+    /// Revokes a single refresh token by its hash. Returns an error if not found.
+    /// </summary>
+    public Result<Unit> RevokeRefreshToken(string tokenHash, DateTimeOffset now)
+    {
+        var token = _refreshTokens.FirstOrDefault(t => t.TokenHash == tokenHash);
+        if (token is null)
+        {
+            return Error.NotFound("token.not_found", "Refresh token not found.");
+        }
+
+        var revokeResult = token.Revoke(now);
+        if (revokeResult.IsFailure)
+        {
+            return revokeResult.Error;
+        }
+
+        UpdatedAt = now;
+        return Unit.Value;
+    }
+
+    /// <summary>
+    /// Revokes all non-revoked refresh tokens for this user.
+    /// </summary>
+    public Result<Unit> RevokeAllRefreshTokens(DateTimeOffset now)
+    {
+        foreach (var token in _refreshTokens.Where(t => !t.IsRevoked))
+        {
+            var revokeResult = token.Revoke(now);
+            // Revoke always succeeds here since we filtered for !IsRevoked
+            if (revokeResult.IsFailure)
+            {
+                return revokeResult.Error;
+            }
+        }
+
+        UpdatedAt = now;
         return Unit.Value;
     }
 }

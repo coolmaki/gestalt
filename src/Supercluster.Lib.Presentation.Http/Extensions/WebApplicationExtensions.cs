@@ -19,12 +19,22 @@ public static class WebApplicationExtensions
 
         foreach (var group in versionGroups)
         {
-            string versionPrefix = $"/api/{group.Key.ToPathSegment()}";
-            var versionGroup = builder.MapGroup(versionPrefix);
-
-            foreach (var endpoint in group)
+            if (group.Key == EndpointVersion.None)
             {
-                endpoint.MapEndpoint(versionGroup);
+                foreach (var endpoint in group)
+                {
+                    endpoint.MapEndpoint(builder);
+                }
+            }
+            else
+            {
+                string versionPrefix = $"/api/{group.Key.ToPathSegment()}";
+                var versionGroup = builder.MapGroup(versionPrefix);
+
+                foreach (var endpoint in group)
+                {
+                    endpoint.MapEndpoint(versionGroup);
+                }
             }
         }
 

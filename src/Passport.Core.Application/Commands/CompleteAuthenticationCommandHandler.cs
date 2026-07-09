@@ -1,6 +1,7 @@
 using Supercluster.Lib.Application.Commands;
 using Supercluster.Lib.Application.Providers;
 using Supercluster.Lib.Primitives;
+using Passport.Core.Application.Configuration;
 using Passport.Core.Application.Repositories;
 using Passport.Core.Application.Services;
 using Passport.Core.Domain.Entities;
@@ -11,15 +12,18 @@ namespace Passport.Core.Application.Commands;
 /// <summary>
 /// Completes the authentication flow. Validates the WebAuthn assertion against
 /// the user's registered passkeys. Tries each credential until one matches.
-/// Updates the sign count on success.
+/// Updates the sign count on success and returns a session (access token + refresh token).
 /// </summary>
 internal sealed class CompleteAuthenticationCommandHandler(
     IUserCommandRepository userRepo,
     IChallengeStore challengeStore,
-    IFido2 fido2
-) : ICommandHandler<CompleteAuthenticationCommand, Unit>
+    IFido2 fido2,
+    ITokenService tokenService,
+    IDateTimeProvider clock,
+    ApplicationConfiguration appConfig
+) : ICommandHandler<CompleteAuthenticationCommand, SessionResult>
 {
-    public async Task<Result<Unit>> HandleAsync(CompleteAuthenticationCommand command, CancellationToken cancellationToken)
+    public async Task<Result<SessionResult>> HandleAsync(CompleteAuthenticationCommand command, CancellationToken cancellationToken)
     {
         var emailResult = Email.Create(command.Email);
         if (emailResult.IsFailure)
@@ -71,8 +75,23 @@ internal sealed class CompleteAuthenticationCommandHandler(
 
         matchedCredential.UpdateSignCount(assertionResult.Value);
 
+        var now = clock.UtcNow();
+
+        var accessToken = tokenService.GenerateAccessToken(user.Email.Value);
+
+        var (rawToken, tokenHash) = tokenService.GenerateRefreshToken();
+        var refreshTtl = TimeSpan.FromDays(appConfig.RefreshToken.LifetimeDays);
+
+        user.IssueRefreshToken(tokenHash, now, refreshTtl);
+
         await userRepo.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        var result = new SessionResult(
+            accessToken,
+            rawToken,
+            appConfig.AccessToken.LifetimeMinutes * 60
+        );
+
+        return result;
     }
 }

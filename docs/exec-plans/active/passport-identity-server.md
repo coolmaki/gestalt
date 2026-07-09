@@ -1,7 +1,7 @@
 # Plan: Passport Identity Server
 
 **Created:** 2026-06-27
-**Status:** 🚀 Active — Phase 1 complete, Phase 2 next
+**Status:** 🚀 Active — Phase 2 complete, Phase 3 next
 **Project:** Passport
 **Driving Agent:** human
 
@@ -500,18 +500,18 @@ WebAuthn mocking strategy: `fido2-net-lib` provides test helpers. Alternatively,
 
 #### Acceptance Criteria (Phase 1)
 
-- [ ] User can register with email + passkey
-- [ ] User receives verification email; clicking link / entering code verifies email
-- [ ] Unverified users cannot authenticate
-- [ ] User can authenticate with passkey
-- [ ] User can list and remove passkeys (but not the last one)
-- [ ] User can recover account: email → code → create new passkey (old passkeys removed)
-- [ ] Recovery silently succeeds if email not found (no user enumeration)
-- [ ] Recovery code has 6 digits, 10-min TTL, max 3 attempts
-- [ ] WebAuthn ceremony works in Chrome, Firefox, Safari
-- [ ] EF Core migrations run against Postgres and SQLite
-- [ ] All command and query handlers have tests covering happy path + error cases
-- [ ] Domain entities enforce their invariants at construction time
+- [x] User can register with email + passkey
+- [x] User receives verification email; clicking link / entering code verifies email
+- [x] Unverified users cannot authenticate
+- [x] User can authenticate with passkey
+- [x] User can list and remove passkeys (but not the last one)
+- [x] User can recover account: email → code → create new passkey (old passkeys removed)
+- [x] Recovery silently succeeds if email not found (no user enumeration)
+- [x] Recovery code has 6 digits, 10-min TTL, max 3 attempts
+- [x] WebAuthn ceremony works in Chrome, Firefox, Safari
+- [x] EF Core migrations run against Postgres and SQLite
+- [x] All command and query handlers have tests covering happy path + error cases
+- [x] Domain entities enforce their invariants at construction time
 
 ---
 
@@ -519,7 +519,17 @@ WebAuthn mocking strategy: `fido2-net-lib` provides test helpers. Alternatively,
 
 JWTs and refresh tokens, turning authentication into lasting sessions.
 
-**Status:** 🔜 Not started (blocked by Phase 1)
+**Status:** ✅ Completed (2026-07-09)
+
+**What was built:**
+
+- Domain: `RefreshToken` entity (TokenHash equality, expiry, revocation); added to `User` aggregate (`RefreshTokens` collection, `IssueRefreshToken`, `RevokeRefreshToken`, `RevokeAllRefreshTokens`); `RefreshTokenIssued` domain event
+- Application: `CreateSession`, `RefreshAccessToken`, `RevokeRefreshToken`, `RevokeAllUserTokens` commands + handlers; `ITokenService` port (JWT generation, refresh token generation, signing key exposure); `IRefreshTokenQueryRepository` port; `SessionResult` read model; updated `CompleteAuthenticationCommand` to return tokens
+- Configuration: `AccessTokenConfiguration`, `RefreshTokenConfiguration`, `SigningKeyConfiguration` nested under `Passport:Application`
+- Infrastructure: `TokenService` (ECDSA P-256 signing, JWT creation, refresh token generation, JWKS key export); `RefreshTokenQueryRepository` (Dapper); EF Core `OwnsMany` config for `RefreshToken` (shadow `Id` with `ShadowIdGenerator`)
+- Presentation: `POST /api/v1/auth/token/refresh`, `DELETE /api/v1/auth/tokens`, `DELETE /api/v1/auth/tokens/{tokenHash}` endpoints; `GET /.well-known/jwks.json` (root-level, registered in `Program.cs`)
+- Host: `AddAuthentication().AddJwtBearer()` with ECDSA key validation; `UseAuthentication()`/`UseAuthorization()`
+- Tests: 9 new domain + 8 new application = +17 tests; existing 3 tests updated for changed handler signature
 
 ---
 
@@ -714,11 +724,11 @@ Deferred features — not planned in detail yet.
 - [ ] Domain model enforces: at least one passkey per user (unless in recovery); email must be unique
 
 ### Phase 2
-- [ ] Access token (JWT) issued after authentication
-- [ ] Refresh token stored and exchangeable for new access token
-- [ ] JWKS endpoint serves public keys for local token validation
-- [ ] Refresh token rotation (optional but recommended)
-- [ ] Token expiry configurable
+- [x] Access token (JWT) issued after authentication
+- [x] Refresh token stored and exchangeable for new access token
+- [x] JWKS endpoint serves public keys for local token validation
+- [x] Refresh token rotation (optional but recommended)
+- [x] Token expiry configurable
 
 ### Phase 3
 - [ ] Signup, login, recovery flows functional in browser

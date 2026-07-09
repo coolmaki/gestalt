@@ -126,4 +126,75 @@ public class UserTests
 
         Assert.NotEqual(a, b);
     }
+
+    // --- RefreshToken tests ---
+
+    [Fact]
+    public void IssueRefreshToken_AddsToCollection()
+    {
+        var user = User.Register(_email, _now).Value;
+
+        user.IssueRefreshToken("hash1", _now, TimeSpan.FromDays(30));
+
+        Assert.Single(user.RefreshTokens);
+        Assert.Equal("hash1", user.RefreshTokens.First().TokenHash);
+    }
+
+    [Fact]
+    public void IssueRefreshToken_RaisesRefreshTokenIssuedEvent()
+    {
+        var user = User.Register(_email, _now).Value;
+        user.ClearEvents();
+
+        user.IssueRefreshToken("hash1", _now, TimeSpan.FromDays(30));
+
+        Assert.Single(user.Events);
+        Assert.IsType<Events.RefreshTokenIssued>(user.Events.First());
+    }
+
+    [Fact]
+    public void RevokeRefreshToken_ValidHash_RevokesAndReturnsSuccess()
+    {
+        var user = User.Register(_email, _now).Value;
+        user.IssueRefreshToken("hash1", _now, TimeSpan.FromDays(30));
+
+        var result = user.RevokeRefreshToken("hash1", _now);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(user.RefreshTokens.First().IsRevoked);
+    }
+
+    [Fact]
+    public void RevokeRefreshToken_InvalidHash_ReturnsNotFound()
+    {
+        var user = User.Register(_email, _now).Value;
+
+        var result = user.RevokeRefreshToken("nonexistent", _now);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("token.not_found", result.Error.Code);
+    }
+
+    [Fact]
+    public void RevokeAllRefreshTokens_RevokesAll()
+    {
+        var user = User.Register(_email, _now).Value;
+        user.IssueRefreshToken("hash1", _now, TimeSpan.FromDays(30));
+        user.IssueRefreshToken("hash2", _now, TimeSpan.FromDays(30));
+
+        user.RevokeAllRefreshTokens(_now);
+
+        Assert.All(user.RefreshTokens, t => Assert.True(t.IsRevoked));
+    }
+
+    [Fact]
+    public void IssueRefreshToken_UpdatesUpdatedAt()
+    {
+        var user = User.Register(_email, _now).Value;
+        var later = _now.AddDays(1);
+
+        user.IssueRefreshToken("hash", later, TimeSpan.FromDays(30));
+
+        Assert.Equal(later, user.UpdatedAt);
+    }
 }

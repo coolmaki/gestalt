@@ -3,6 +3,7 @@ using Xunit;
 using Supercluster.Lib.Application.Providers;
 using Supercluster.Lib.Primitives;
 using Passport.Core.Application.Commands;
+using Passport.Core.Application.Configuration;
 using Passport.Core.Application.Repositories;
 using Passport.Core.Application.Services;
 using Passport.Core.Domain.Entities;
@@ -15,15 +16,26 @@ public class CompleteAuthenticationCommandHandlerTests
     private readonly IUserCommandRepository _userRepo = Substitute.For<IUserCommandRepository>();
     private readonly IChallengeStore _challengeStore = Substitute.For<IChallengeStore>();
     private readonly IFido2 _fido2 = Substitute.For<IFido2>();
+    private readonly ITokenService _tokenService = Substitute.For<ITokenService>();
+    private readonly IDateTimeProvider _clock = Substitute.For<IDateTimeProvider>();
+    private readonly ApplicationConfiguration _appConfig = new()
+    {
+        BaseUrl = "https://localhost:5001",
+        AccessToken = new AccessTokenConfiguration { LifetimeMinutes = 15 },
+        RefreshToken = new RefreshTokenConfiguration { LifetimeDays = 30, RotationEnabled = true },
+    };
     private readonly CompleteAuthenticationCommandHandler _handler;
 
     public CompleteAuthenticationCommandHandlerTests()
     {
-        _handler = new CompleteAuthenticationCommandHandler(_userRepo, _challengeStore, _fido2);
+        _clock.UtcNow().Returns(new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero));
+        _tokenService.GenerateAccessToken(Arg.Any<string>()).Returns("fake-access-token");
+        _tokenService.GenerateRefreshToken().Returns(("fake-refresh-token", "fake-hash"));
+        _handler = new CompleteAuthenticationCommandHandler(_userRepo, _challengeStore, _fido2, _tokenService, _clock, _appConfig);
     }
 
     [Fact]
-    public async Task HandleAsync_ValidAssertion_ReturnsSuccess()
+    public async Task HandleAsync_ValidAssertion_ReturnsSessionResult()
     {
         var command = new CompleteAuthenticationCommand("test@example.com", "fake-assertion");
         var user = CreateUserWithPasskey();
@@ -37,6 +49,9 @@ public class CompleteAuthenticationCommandHandlerTests
         var result = await _handler.HandleAsync(command, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
+        var session = result.Value;
+        Assert.Equal("fake-access-token", session.AccessToken);
+        Assert.Equal("fake-refresh-token", session.RefreshToken);
         await _userRepo.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 

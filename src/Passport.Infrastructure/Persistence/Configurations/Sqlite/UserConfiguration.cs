@@ -57,6 +57,35 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
                 .IsRequired();
         });
 
+        builder.OwnsMany(u => u.RefreshTokens, rb =>
+        {
+            rb.WithOwner().HasForeignKey("UserId");
+
+            rb.Property<Guid>("Id")
+                .ValueGeneratedOnAdd()
+                .HasValueGenerator<ShadowIdGenerator>();
+
+            rb.HasKey("Id");
+
+            rb.Property("TokenHash")
+                .HasMaxLength(64)
+                .IsRequired();
+
+            rb.HasIndex("TokenHash")
+                .IsUnique();
+
+            rb.Property("ClientId")
+                .HasMaxLength(200);
+
+            rb.Property("ExpiresAt")
+                .IsRequired();
+
+            rb.Property("IssuedAt")
+                .IsRequired();
+
+            rb.Property("RevokedAt");
+        });
+
         builder.Ignore(u => u.Events);
     }
 }

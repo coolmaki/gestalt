@@ -404,6 +404,9 @@ FodyWeavers.xsd
 *.sln.iml
 .idea/
 
+# Signing keys
+signing-key.pem
+
 ##
 ## Visual studio for Mac
 ##

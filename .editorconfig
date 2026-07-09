@@ -387,6 +387,10 @@ dotnet_diagnostic.CA1000.severity = none
 # Unit.Value = new() is an intentional singleton, not default initialization
 dotnet_diagnostic.CA1805.severity = none
 
+# Auto-generated EF Core migrations
+[**/Migrations/*.cs]
+dotnet_diagnostic.CA1861.severity = none
+
 # Test method names use underscores (Method_Scenario_ExpectedResult)
 [tests/**/*.cs]
 dotnet_diagnostic.CA1707.severity = none

@@ -3,4 +3,4 @@ using Supercluster.Lib.Primitives;
 
 namespace Passport.Core.Application.Commands;
 
-public sealed record CompleteAuthenticationCommand(string Email, string AssertionJson) : ICommand<SessionResult>;
+public sealed record RevokeRefreshTokenCommand(string Email, string TokenHash) : ICommand<Unit>;

@@ -8,4 +8,10 @@ public sealed class ApplicationConfiguration
     /// Base URL for the Passport service (used in email links, issuer claims, etc.).
     /// </summary>
     public string BaseUrl { get; set; } = "https://localhost:5001";
+
+    public AccessTokenConfiguration AccessToken { get; set; } = new();
+
+    public RefreshTokenConfiguration RefreshToken { get; set; } = new();
+
+    public SigningKeyConfiguration SigningKey { get; set; } = new();
 }
