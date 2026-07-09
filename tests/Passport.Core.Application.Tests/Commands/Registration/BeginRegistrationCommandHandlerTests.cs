@@ -10,17 +10,23 @@ namespace Passport.Core.Application.Tests.Commands.Registration;
 
 public class BeginRegistrationCommandHandlerTests
 {
+    private readonly IUserQueryRepository _userQueryRepo = Substitute.For<IUserQueryRepository>();
+    private readonly IFido2 _fido2 = Substitute.For<IFido2>();
+    private readonly IChallengeStore _challengeStore = Substitute.For<IChallengeStore>();
+    private readonly BeginRegistrationCommandHandler _handler;
+
+    public BeginRegistrationCommandHandlerTests()
+    {
+        _handler = new BeginRegistrationCommandHandler(_userQueryRepo, _fido2, _challengeStore);
+    }
+
     [Fact]
     public async Task HandleAsync_DuplicateEmail_ReturnsConflict()
     {
-        var userQueryRepo = Substitute.For<IUserQueryRepository>();
-        var handler = new BeginRegistrationCommandHandler(userQueryRepo, Substitute.For<IFido2>(), Substitute.For<IChallengeStore>());
-
-        var command = new BeginRegistrationCommand("test@example.com");
-        userQueryRepo.FindByEmailAsync("test@example.com", Arg.Any<CancellationToken>())
+        _userQueryRepo.FindByEmailAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Option<UserReadModel>.Some(new UserReadModel("test@example.com", 1, "2026-01-01", "2026-01-01")));
 
-        var result = await handler.HandleAsync(command, CancellationToken.None);
+        var result = await _handler.HandleAsync(new BeginRegistrationCommand("test@example.com"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("email.already_registered", result.Error.Code);
@@ -29,17 +35,12 @@ public class BeginRegistrationCommandHandlerTests
     [Fact]
     public async Task HandleAsync_NewEmail_ReturnsOptionsJson()
     {
-        var userQueryRepo = Substitute.For<IUserQueryRepository>();
-        var fido2 = Substitute.For<IFido2>();
-        var handler = new BeginRegistrationCommandHandler(userQueryRepo, fido2, Substitute.For<IChallengeStore>());
-
-        var command = new BeginRegistrationCommand("test@example.com");
-        userQueryRepo.FindByEmailAsync("test@example.com", Arg.Any<CancellationToken>())
+        _userQueryRepo.FindByEmailAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Option<UserReadModel>.None);
-        fido2.CreateRegistrationOptionsAsync(Arg.Any<Domain.ValueObjects.Email>(), Arg.Any<CancellationToken>())
+        _fido2.CreateRegistrationOptionsAsync(Arg.Any<Domain.ValueObjects.Email>(), Arg.Any<CancellationToken>())
             .Returns(Result<(string, byte[])>.Success(("{\"options\":true}", new byte[] { 1, 2, 3 })));
 
-        var result = await handler.HandleAsync(command, CancellationToken.None);
+        var result = await _handler.HandleAsync(new BeginRegistrationCommand("test@example.com"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
     }
@@ -47,12 +48,7 @@ public class BeginRegistrationCommandHandlerTests
     [Fact]
     public async Task HandleAsync_InvalidEmail_ReturnsValidationError()
     {
-        var handler = new BeginRegistrationCommandHandler(
-            Substitute.For<IUserQueryRepository>(),
-            Substitute.For<IFido2>(),
-            Substitute.For<IChallengeStore>());
-
-        var result = await handler.HandleAsync(new BeginRegistrationCommand("not-an-email"), CancellationToken.None);
+        var result = await _handler.HandleAsync(new BeginRegistrationCommand("not-an-email"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
