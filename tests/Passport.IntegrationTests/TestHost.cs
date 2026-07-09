@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Passport.Core.Application.Services;
 using Passport.Core.Domain.ValueObjects;
 using Passport.Infrastructure.Configuration;
+using Passport.Infrastructure.Extensions;
 using Passport.Infrastructure.Persistence;
 
 namespace Passport.IntegrationTests;
@@ -19,10 +21,21 @@ internal sealed class TestHost : WebApplicationFactory<Program>
 
     public async Task EnsureDatabaseAsync()
     {
-        using var scope = Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<PassportDbContext>();
-        await db.Database.EnsureDeletedAsync();
-        await db.Database.EnsureCreatedAsync();
+        // Use a separate DbContext to ensure clean database creation
+        var options = new DbContextOptionsBuilder<PassportDbContext>();
+        _persistenceConfig.Provider.Configure(
+            configureSqlite: () => options.UseSqlite(_persistenceConfig.ConnectionString),
+            configurePostgres: () => options.UseNpgsql(_persistenceConfig.ConnectionString));
+
+        using var cleanDb = new PassportDbContext(options.Options, _persistenceConfig);
+        await cleanDb.Database.EnsureDeletedAsync();
+        await cleanDb.Database.EnsureCreatedAsync();
+    }
+
+    public string? GetLastCode()
+    {
+        var codeDelivery = Services.GetRequiredService<ICodeDeliveryService>();
+        return codeDelivery is CapturingCodeDeliveryService capturer ? capturer.LastCode : null;
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -55,7 +68,7 @@ internal sealed class TestHost : WebApplicationFactory<Program>
 
             // Replace with test implementations
             services.AddScoped<IFido2, TestFido2Service>();
-            services.AddScoped<ICodeDeliveryService, CapturingCodeDeliveryService>();
+            services.AddSingleton<ICodeDeliveryService, CapturingCodeDeliveryService>();
             services.AddSingleton(_persistenceConfig);
         });
     }

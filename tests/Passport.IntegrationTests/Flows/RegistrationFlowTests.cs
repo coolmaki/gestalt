@@ -1,6 +1,5 @@
 using System.Net.Http.Json;
 using Xunit;
-using Passport.Infrastructure.Configuration;
 
 namespace Passport.IntegrationTests.Flows;
 
@@ -9,34 +8,21 @@ public class RegistrationFlowTests : IAsyncLifetime
     private readonly TestHost _host;
     private HttpClient _client = null!;
 
-    private string _dbPath;
-
     public RegistrationFlowTests()
     {
-        _dbPath = $"test_passport_{Guid.NewGuid():N}.db";
-        var config = new PersistenceConfiguration
-        {
-            Provider = PersistenceProvider.Sqlite,
-            ConnectionString = $"Data Source={_dbPath}",
-        };
-
-        _host = new TestHost(config);
+        _host = TestHostFactory.Create();
     }
 
     public async Task InitializeAsync()
     {
-        _client = _host.CreateDefaultClient();
         await _host.EnsureDatabaseAsync();
+        _client = _host.CreateDefaultClient();
     }
 
     public async Task DisposeAsync()
     {
         _client.Dispose();
         _host.Dispose();
-        if (File.Exists(_dbPath))
-        {
-            File.Delete(_dbPath);
-        }
     }
 
     [Fact]

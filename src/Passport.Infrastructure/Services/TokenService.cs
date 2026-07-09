@@ -5,7 +5,7 @@ using Passport.Core.Application.Services;
 
 namespace Passport.Infrastructure.Services;
 
-internal sealed class TokenService : ITokenService, IDisposable
+internal sealed class TokenService : ITokenService
 {
     private readonly ECDsa _ecdsa;
     private readonly ECDsaSecurityKey _securityKey;

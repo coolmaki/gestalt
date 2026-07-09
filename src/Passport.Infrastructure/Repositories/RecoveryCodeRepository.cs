@@ -12,15 +12,17 @@ internal sealed class RecoveryCodeRepository(PassportDbContext dbContext) : IRec
     public async Task<Option<RecoveryCode>> FindActiveByEmailAsync(
         Email email, RecoveryCodePurpose purpose, DateTimeOffset now, CancellationToken cancellationToken)
     {
-        var code = await dbContext.RecoveryCodes
-            .FirstOrDefaultAsync(rc =>
-                rc.Email == email &&
-                rc.Purpose == purpose &&
-                rc.UsedAt == null &&
-                rc.ExpiresAt > now,
-                cancellationToken);
+        var codes = await dbContext.RecoveryCodes
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
-        return code is null ? Option<RecoveryCode>.None : code;
+        var matched = codes.FirstOrDefault(rc =>
+            string.Equals(rc.Email.Value, email.Value, StringComparison.OrdinalIgnoreCase) &&
+            rc.Purpose == purpose &&
+            rc.UsedAt == null &&
+            rc.ExpiresAt > now);
+
+        return matched is null ? Option<RecoveryCode>.None : matched;
     }
 
     public async Task AddAsync(RecoveryCode code, CancellationToken cancellationToken)
