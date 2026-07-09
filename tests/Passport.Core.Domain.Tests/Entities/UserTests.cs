@@ -197,4 +197,22 @@ public class UserTests
 
         Assert.Equal(later, user.UpdatedAt);
     }
+
+    // --- Null guard tests ---
+
+    [Fact]
+    public void AddPasskey_NullCredentialId_ThrowsArgumentNullException()
+    {
+        var user = User.Register(_email, _now).Value;
+
+        Assert.Throws<ArgumentNullException>(() => user.AddPasskey(null!, [1], 0, _now));
+    }
+
+    [Fact]
+    public void AddPasskey_NullPublicKey_ThrowsArgumentNullException()
+    {
+        var user = User.Register(_email, _now).Value;
+
+        Assert.Throws<ArgumentNullException>(() => user.AddPasskey([1], null!, 0, _now));
+    }
 }

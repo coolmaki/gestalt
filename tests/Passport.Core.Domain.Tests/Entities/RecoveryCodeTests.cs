@@ -98,4 +98,32 @@ public class RecoveryCodeTests
 
         Assert.Equal(a, b);
     }
+
+    [Fact]
+    public void Issue_WhitespaceCodeHash_ReturnsValidationError()
+    {
+        var result = RecoveryCode.Issue(new RecoveryCodeId(Guid.NewGuid()), _email, "   ", RecoveryCodePurpose.EmailVerification, _now, _ttl);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("code_hash.empty", result.Error.Code);
+    }
+
+    [Fact]
+    public void Equality_DifferentId_AreNotEqual()
+    {
+        var a = RecoveryCode.Issue(new RecoveryCodeId(Guid.NewGuid()), _email, "hash1", RecoveryCodePurpose.EmailVerification, _now, _ttl).Value;
+        var b = RecoveryCode.Issue(new RecoveryCodeId(Guid.NewGuid()), _email, "hash2", RecoveryCodePurpose.EmailVerification, _now, _ttl).Value;
+
+        Assert.NotEqual(a, b);
+    }
+
+    [Fact]
+    public void GetHashCode_SameId_ReturnsSameValue()
+    {
+        var id = new RecoveryCodeId(Guid.NewGuid());
+        var a = RecoveryCode.Issue(id, _email, "hash1", RecoveryCodePurpose.EmailVerification, _now, _ttl).Value;
+        var b = RecoveryCode.Issue(id, _email, "hash2", RecoveryCodePurpose.EmailVerification, _now, _ttl).Value;
+
+        Assert.Equal(a.GetHashCode(), b.GetHashCode());
+    }
 }

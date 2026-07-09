@@ -98,4 +98,21 @@ public class RefreshTokenTests
 
         Assert.False(token1.Equals(token2));
     }
+
+    [Fact]
+    public void Equals_NonRefreshTokenObject_ReturnsFalse()
+    {
+        var token = RefreshToken.Issue("hash", _now, _ttl);
+
+        Assert.False(token.Equals("not-a-token"));
+    }
+
+    [Fact]
+    public void GetHashCode_SameHash_ReturnsSameValue()
+    {
+        var token1 = RefreshToken.Issue("hash", _now, _ttl);
+        var token2 = RefreshToken.Issue("hash", _now.AddDays(1), _ttl);
+
+        Assert.Equal(token1.GetHashCode(), token2.GetHashCode());
+    }
 }

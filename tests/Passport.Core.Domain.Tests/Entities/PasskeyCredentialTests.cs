@@ -74,4 +74,21 @@ public class PasskeyCredentialTests
 
         Assert.NotEqual(a, b);
     }
+
+    [Fact]
+    public void Equals_NonPasskeyCredentialObject_ReturnsFalse()
+    {
+        var credential = PD.Entities.PasskeyCredential.Create([1], [1], 0, _now).Value;
+
+        Assert.False(credential.Equals("not-a-credential"));
+    }
+
+    [Fact]
+    public void GetHashCode_SameCredentialId_ReturnsSameValue()
+    {
+        var a = PD.Entities.PasskeyCredential.Create([1, 2], [1], 0, _now).Value;
+        var b = PD.Entities.PasskeyCredential.Create([1, 2], [9], 0, _now).Value;
+
+        Assert.Equal(a.GetHashCode(), b.GetHashCode());
+    }
 }
