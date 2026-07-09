@@ -66,7 +66,19 @@ internal sealed class TestHost : WebApplicationFactory<Program>
                 services.Remove(configDescriptor);
             }
 
+            var dbContextDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(PassportDbContext));
+            if (dbContextDescriptor != null)
+            {
+                services.Remove(dbContextDescriptor);
+            }
+
             // Replace with test implementations
+            services.AddDbContext<PassportDbContext>(options =>
+            {
+                _persistenceConfig.Provider.Configure(
+                    configureSqlite: () => options.UseSqlite(_persistenceConfig.ConnectionString),
+                    configurePostgres: () => options.UseNpgsql(_persistenceConfig.ConnectionString));
+            });
             services.AddScoped<IFido2, TestFido2Service>();
             services.AddSingleton<ICodeDeliveryService, CapturingCodeDeliveryService>();
             services.AddSingleton(_persistenceConfig);

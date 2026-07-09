@@ -34,6 +34,11 @@ internal sealed class BeginAuthenticationCommandHandler(
             return Error.NotFound("user.not_found", "No user found with this email.");
         }
 
+        if (userOption.Value.EmailVerified == 0)
+        {
+            return Error.Unauthorized("email.not_verified", "Email not verified. Please verify your email before authenticating.");
+        }
+
         var credentials = await userQueryRepo.GetCredentialsAsync(email.Value, cancellationToken);
         if (credentials.Count == 0)
         {
