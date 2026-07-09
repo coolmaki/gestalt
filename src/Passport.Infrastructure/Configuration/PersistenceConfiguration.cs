@@ -1,5 +1,6 @@
 namespace Passport.Infrastructure.Configuration;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class PersistenceConfiguration
 {
     public PersistenceProvider Provider { get; set; } = PersistenceProvider.Sqlite;

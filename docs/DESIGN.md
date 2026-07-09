@@ -371,5 +371,5 @@ See [`docs/FRONTEND.md`](./FRONTEND.md) for all frontend conventions.
 | Immutability | `{ get; private set; }` on properties; `readonly` fields |
 | Error handling | `Result<T>` for fallible ops; `Option<T>` for optional values |
 | CQRS | All state changes via commands; all reads via queries |
-| Test coverage | Target >80% on Domain and Application layers |
+| Test coverage | Target >80% on Domain and Application layers. See [TESTING.md](./TESTING.md) for conventions and coverage exclusion policy. |
 | Frontend types | TypeScript throughout; typed API client layer |

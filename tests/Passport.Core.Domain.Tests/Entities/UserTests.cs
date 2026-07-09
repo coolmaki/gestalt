@@ -76,6 +76,21 @@ public class UserTests
     }
 
     [Fact]
+    public void RemovePasskey_RaisesPasskeyRemovedEvent()
+    {
+        var user = User.Register(_email, _now).Value;
+        var credentialId = new byte[] { 1, 2, 3 };
+        user.AddPasskey(credentialId, [4], 0, _now);
+        user.ClearEvents();
+
+        user.RemovePasskey(credentialId, _now);
+
+        Assert.Single(user.Events);
+        var evt = Assert.IsType<Events.PasskeyRemoved>(user.Events.First());
+        Assert.Equal(_email, evt.Email);
+    }
+
+    [Fact]
     public void RemovePasskey_NotFound_ReturnsNotFound()
     {
         var user = User.Register(_email, _now).Value;
@@ -106,6 +121,19 @@ public class UserTests
         user.VerifyEmail(_now);
 
         Assert.Empty(user.Events);
+    }
+
+    [Fact]
+    public void VerifyEmail_RaisesEmailVerifiedEvent()
+    {
+        var user = User.Register(_email, _now).Value;
+        user.ClearEvents();
+
+        user.VerifyEmail(_now);
+
+        Assert.Single(user.Events);
+        var evt = Assert.IsType<Events.EmailVerified>(user.Events.First());
+        Assert.Equal(_email, evt.Email);
     }
 
     [Fact]
