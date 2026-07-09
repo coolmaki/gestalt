@@ -15,7 +15,7 @@ internal sealed class CompleteRegistrationCommandHandler(
     IRecoveryCodeRepository recoveryCodeRepo,
     IChallengeStore challengeStore,
     IFido2 fido2,
-    IEmailSender emailSender,
+    ICodeDeliveryService codeDelivery,
     IGuidProvider guids,
     IDateTimeProvider clock
 ) : ICommandHandler<CompleteRegistrationCommand, Unit>
@@ -82,7 +82,7 @@ internal sealed class CompleteRegistrationCommandHandler(
         await recoveryCodeRepo.AddAsync(recoveryCodeResult.Value, cancellationToken);
         await userRepo.SaveChangesAsync(cancellationToken);
 
-        await emailSender.SendVerificationCodeAsync(email, code, cancellationToken);
+        await codeDelivery.SendVerificationCodeAsync(email, code, cancellationToken);
 
         return Unit.Value;
     }

@@ -17,7 +17,7 @@ namespace Passport.Core.Application.Commands;
 internal sealed class BeginRecoveryCommandHandler(
     IUserQueryRepository userQueryRepo,
     IRecoveryCodeRepository recoveryCodeRepo,
-    IEmailSender emailSender,
+    ICodeDeliveryService codeDelivery,
     IGuidProvider guids,
     IDateTimeProvider clock
 ) : ICommandHandler<BeginRecoveryCommand, Unit>
@@ -54,7 +54,7 @@ internal sealed class BeginRecoveryCommandHandler(
         await recoveryCodeRepo.AddAsync(recoveryCodeResult.Value, cancellationToken);
         await recoveryCodeRepo.SaveChangesAsync(cancellationToken);
 
-        await emailSender.SendRecoveryCodeAsync(email, code, cancellationToken);
+        await codeDelivery.SendRecoveryCodeAsync(email, code, cancellationToken);
 
         return Unit.Value;
     }

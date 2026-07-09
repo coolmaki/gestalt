@@ -35,10 +35,10 @@ internal sealed class TestHost : WebApplicationFactory<Program>
         builder.ConfigureServices(services =>
         {
             // Remove the production registrations
-            var emailSenderDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(IEmailSender));
-            if (emailSenderDescriptor != null)
+            var codeDeliveryDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(ICodeDeliveryService));
+            if (codeDeliveryDescriptor != null)
             {
-                services.Remove(emailSenderDescriptor);
+                services.Remove(codeDeliveryDescriptor);
             }
 
             var fidoDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(IFido2));
@@ -55,14 +55,28 @@ internal sealed class TestHost : WebApplicationFactory<Program>
 
             // Replace with test implementations
             services.AddScoped<IFido2, TestFido2Service>();
-            services.AddScoped<IEmailSender, NoOpEmailSender>();
+            services.AddScoped<ICodeDeliveryService, CapturingCodeDeliveryService>();
             services.AddSingleton(_persistenceConfig);
         });
     }
 }
 
-internal sealed class NoOpEmailSender : IEmailSender
+internal sealed class CapturingCodeDeliveryService : ICodeDeliveryService
 {
-    public Task SendVerificationCodeAsync(Email to, string code, CancellationToken cancellationToken) => Task.CompletedTask;
-    public Task SendRecoveryCodeAsync(Email to, string code, CancellationToken cancellationToken) => Task.CompletedTask;
+    public Email? LastEmail { get; private set; }
+    public string? LastCode { get; private set; }
+
+    public Task SendVerificationCodeAsync(Email to, string code, CancellationToken cancellationToken)
+    {
+        LastEmail = to;
+        LastCode = code;
+        return Task.CompletedTask;
+    }
+
+    public Task SendRecoveryCodeAsync(Email to, string code, CancellationToken cancellationToken)
+    {
+        LastEmail = to;
+        LastCode = code;
+        return Task.CompletedTask;
+    }
 }

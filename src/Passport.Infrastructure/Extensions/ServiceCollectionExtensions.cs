@@ -10,6 +10,7 @@ using Passport.Infrastructure.Extensions;
 using Passport.Infrastructure.Persistence;
 using Passport.Infrastructure.Repositories;
 using Passport.Infrastructure.Services;
+using Supercluster.Lib.Infrastructure.Email;
 
 namespace Passport.Infrastructure.Extensions;
 
@@ -56,6 +57,7 @@ public static class ServiceCollectionExtensions
         // Services
         services.AddScoped<IFido2, Fido2Service>();
         services.AddSingleton<IChallengeStore, MemoryChallengeStore>();
+        services.AddScoped<ICodeDeliveryService, CodeDeliveryService>();
         services.AddScoped<IEmailSender, LoggingEmailSender>();
         services.AddSingleton<ITokenService, TokenService>();
 

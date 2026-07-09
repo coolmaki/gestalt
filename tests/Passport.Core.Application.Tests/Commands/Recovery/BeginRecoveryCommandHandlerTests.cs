@@ -15,13 +15,13 @@ public class BeginRecoveryCommandHandlerTests
     public async Task HandleAsync_ValidVerifiedEmail_SendsCode()
     {
         var userQueryRepo = Substitute.For<IUserQueryRepository>();
-        var emailSender = Substitute.For<IEmailSender>();
+        var codeDelivery = Substitute.For<ICodeDeliveryService>();
         var guids = Substitute.For<IGuidProvider>();
         var clock = Substitute.For<IDateTimeProvider>();
         clock.UtcNow().Returns(new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero));
         guids.NewGuid().Returns(Guid.NewGuid());
 
-        var handler = new BeginRecoveryCommandHandler(userQueryRepo, Substitute.For<IRecoveryCodeRepository>(), emailSender, guids, clock);
+        var handler = new BeginRecoveryCommandHandler(userQueryRepo, Substitute.For<IRecoveryCodeRepository>(), codeDelivery, guids, clock);
 
         userQueryRepo.FindByEmailAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Option<UserReadModel>.Some(
@@ -30,7 +30,7 @@ public class BeginRecoveryCommandHandlerTests
         var result = await handler.HandleAsync(new BeginRecoveryCommand("test@example.com"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        await emailSender.Received(1).SendRecoveryCodeAsync(Arg.Any<Domain.ValueObjects.Email>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await codeDelivery.Received(1).SendRecoveryCodeAsync(Arg.Any<Domain.ValueObjects.Email>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class BeginRecoveryCommandHandlerTests
         var handler = new BeginRecoveryCommandHandler(
             userQueryRepo,
             Substitute.For<IRecoveryCodeRepository>(),
-            Substitute.For<IEmailSender>(),
+Substitute.For<ICodeDeliveryService>(),
             Substitute.For<IGuidProvider>(),
             Substitute.For<IDateTimeProvider>());
 
@@ -61,7 +61,7 @@ public class BeginRecoveryCommandHandlerTests
                 new UserReadModel("test@example.com", 0, "2026-01-01", "2026-01-01"))));
 
         var handler = new BeginRecoveryCommandHandler(
-            userQueryRepo, Substitute.For<IRecoveryCodeRepository>(), Substitute.For<IEmailSender>(),
+            userQueryRepo, Substitute.For<IRecoveryCodeRepository>(), Substitute.For<ICodeDeliveryService>(),
             Substitute.For<IGuidProvider>(), Substitute.For<IDateTimeProvider>());
 
         var result = await handler.HandleAsync(new BeginRecoveryCommand("test@example.com"), CancellationToken.None);

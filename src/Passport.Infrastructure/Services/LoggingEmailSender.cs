@@ -1,21 +1,14 @@
 using Microsoft.Extensions.Logging;
-using Passport.Core.Application.Services;
-using Passport.Core.Domain.ValueObjects;
+using Supercluster.Lib.Infrastructure.Email;
 
 namespace Passport.Infrastructure.Services;
 
 #pragma warning disable CA1848 // Dev logger is intentionally simple
 internal sealed class LoggingEmailSender(ILogger<LoggingEmailSender> logger) : IEmailSender
 {
-    public Task SendVerificationCodeAsync(Email to, string code, CancellationToken cancellationToken)
+    public Task SendAsync(string to, string subject, string body, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Verification code for {Email}: {Code}", to.Value, code);
-        return Task.CompletedTask;
-    }
-
-    public Task SendRecoveryCodeAsync(Email to, string code, CancellationToken cancellationToken)
-    {
-        logger.LogInformation("Recovery code for {Email}: {Code}", to.Value, code);
+        logger.LogInformation("Email to {To}: {Subject}", to, subject);
         return Task.CompletedTask;
     }
 }

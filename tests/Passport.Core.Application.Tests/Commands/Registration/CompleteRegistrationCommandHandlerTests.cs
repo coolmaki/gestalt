@@ -17,7 +17,7 @@ public class CompleteRegistrationCommandHandlerTests
     private readonly IRecoveryCodeRepository _recoveryCodeRepo = Substitute.For<IRecoveryCodeRepository>();
     private readonly IChallengeStore _challengeStore = Substitute.For<IChallengeStore>();
     private readonly IFido2 _fido2 = Substitute.For<IFido2>();
-    private readonly IEmailSender _emailSender = Substitute.For<IEmailSender>();
+    private readonly ICodeDeliveryService _codeDelivery = Substitute.For<ICodeDeliveryService>();
     private readonly IGuidProvider _guids = Substitute.For<IGuidProvider>();
     private readonly IDateTimeProvider _clock = Substitute.For<IDateTimeProvider>();
     private readonly CompleteRegistrationCommandHandler _handler;
@@ -26,7 +26,7 @@ public class CompleteRegistrationCommandHandlerTests
     {
         _clock.UtcNow().Returns(new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero));
         _guids.NewGuid().Returns(Guid.NewGuid());
-        _handler = new CompleteRegistrationCommandHandler(_userRepo, _userQueryRepo, _recoveryCodeRepo, _challengeStore, _fido2, _emailSender, _guids, _clock);
+        _handler = new CompleteRegistrationCommandHandler(_userRepo, _userQueryRepo, _recoveryCodeRepo, _challengeStore, _fido2, _codeDelivery, _guids, _clock);
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class CompleteRegistrationCommandHandlerTests
         Assert.True(result.IsSuccess);
         await _userRepo.Received(1).AddAsync(Arg.Any<User>(), Arg.Any<CancellationToken>());
         await _userRepo.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
-        await _emailSender.Received(1).SendVerificationCodeAsync(Arg.Any<Domain.ValueObjects.Email>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _codeDelivery.Received(1).SendVerificationCodeAsync(Arg.Any<Domain.ValueObjects.Email>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
