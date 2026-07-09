@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <!-- Output format for report generation -->
+          <Format>cobertura</Format>
+
+          <!-- Exclude auto-generated and non-logic code -->
+          <Exclude>
+            <Exclude>[Passport.Infrastructure]*Migrations*</Exclude>
+            <Exclude>[*]*Program</Exclude>
+          </Exclude>
+
+          <!-- Exclude pure data carriers (DDD value objects, patterns, conventions) -->
+          <ExcludeByFile>
+            <ExcludeByFile>**/Commands/*Command.cs</ExcludeByFile>
+            <ExcludeByFile>**/Commands/*Result.cs</ExcludeByFile>
+            <ExcludeByFile>**/Queries/*Query.cs</ExcludeByFile>
+            <ExcludeByFile>**/Queries/*Result.cs</ExcludeByFile>
+            <ExcludeByFile>**/ReadModels/*.cs</ExcludeByFile>
+            <ExcludeByFile>**/Endpoints/*Request.cs</ExcludeByFile>
+            <ExcludeByFile>**/RecoveryCodePurpose.cs</ExcludeByFile>
+            <ExcludeByFile>**/PersistenceProvider.cs</ExcludeByFile>
+          </ExcludeByFile>
+
+          <!-- Exclude types with this attribute -->
+          <ExcludeByAttribute>GeneratedCodeAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
+
+          <!-- Minimum line coverage threshold (overall) -->
+          <Threshold>75</Threshold>
+          <ThresholdType>line</ThresholdType>
+
+          <!--
+            Per-layer targets (tracked manually via report):
+            Domain:          >= 95%
+            Application:     >= 75%
+            Infrastructure:  >= 60%
+            Presentation:    >= 70%
+          -->
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
