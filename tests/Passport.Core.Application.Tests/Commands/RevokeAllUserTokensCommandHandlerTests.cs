@@ -50,4 +50,13 @@ public class RevokeAllUserTokensCommandHandlerTests
         Assert.True(result.IsFailure);
         Assert.Equal("user.not_found", result.Error.Code);
     }
+
+    [Fact]
+    public async Task HandleAsync_InvalidEmail_ReturnsValidationError()
+    {
+        var result = await _handler.HandleAsync(
+            new RevokeAllUserTokensCommand("not-an-email"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+    }
 }

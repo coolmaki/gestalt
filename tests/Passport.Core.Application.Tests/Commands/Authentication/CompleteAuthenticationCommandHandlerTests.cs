@@ -84,6 +84,24 @@ public class CompleteAuthenticationCommandHandlerTests
         Assert.Equal("challenge.expired", result.Error.Code);
     }
 
+    [Fact]
+    public async Task HandleAsync_NoPasskeyMatches_ReturnsValidationError()
+    {
+        var command = new CompleteAuthenticationCommand("test@example.com", "fake-assertion");
+        var user = CreateUserWithPasskey();
+        _userRepo.FindByEmailAsync(Arg.Any<Email>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<User>.Some(user)));
+        _challengeStore.GetAndRemoveAsync("test@example.com", Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<byte[]>.Some([1])));
+        _fido2.CompleteAssertionAsync(Arg.Any<byte[]>(), "fake-assertion", Arg.Any<byte[]>(), Arg.Any<uint>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result<uint>.Failure(Error.Validation("assertion.invalid", "Bad assertion."))));
+
+        var result = await _handler.HandleAsync(command, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("assertion.invalid", result.Error.Code);
+    }
+
     private static User CreateUserWithPasskey()
     {
         var user = User.Register(Email.Create("test@example.com").Value, new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero)).Value;

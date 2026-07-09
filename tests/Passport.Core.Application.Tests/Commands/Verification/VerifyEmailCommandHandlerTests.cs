@@ -54,4 +54,40 @@ public class VerifyEmailCommandHandlerTests
         Assert.True(result.IsFailure);
         Assert.Equal("user.not_found", result.Error.Code);
     }
+
+    [Fact]
+    public async Task HandleAsync_WrongCode_ReturnsValidationError()
+    {
+        var email = Email.Create("test@example.com").Value;
+        var user = User.Register(email, _clock.UtcNow()).Value;
+        string codeHash = Helpers.HashCode("654321");
+        var recoveryCode = RecoveryCode.Issue(new RecoveryCodeId(Guid.NewGuid()), email, codeHash, RecoveryCodePurpose.EmailVerification, _clock.UtcNow(), TimeSpan.FromMinutes(10)).Value;
+
+        _userRepo.FindByEmailAsync(email, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<User>.Some(user)));
+        _recoveryCodeRepo.FindActiveByEmailAsync(email, RecoveryCodePurpose.EmailVerification, Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<RecoveryCode>.Some(recoveryCode)));
+
+        var result = await _handler.HandleAsync(new VerifyEmailCommand("test@example.com", "000000"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("verification_code.invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task HandleAsync_NoCodeFound_ReturnsValidationError()
+    {
+        var email = Email.Create("test@example.com").Value;
+        var user = User.Register(email, _clock.UtcNow()).Value;
+
+        _userRepo.FindByEmailAsync(email, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<User>.Some(user)));
+        _recoveryCodeRepo.FindActiveByEmailAsync(email, RecoveryCodePurpose.EmailVerification, Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<RecoveryCode>.None));
+
+        var result = await _handler.HandleAsync(new VerifyEmailCommand("test@example.com", "123456"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("verification_code.invalid", result.Error.Code);
+    }
 }

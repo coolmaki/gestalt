@@ -51,4 +51,32 @@ public class RemoveCredentialCommandHandlerTests
         Assert.True(result.IsFailure);
         Assert.Equal("passkey.last_credential", result.Error.Code);
     }
+
+    [Fact]
+    public async Task HandleAsync_UserNotFound_ReturnsNotFound()
+    {
+        _userRepo.FindByEmailAsync(Arg.Any<Email>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<User>.None));
+
+        var result = await _handler.HandleAsync(new RemoveCredentialCommand("test@example.com", [1]), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("user.not_found", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task HandleAsync_CredentialNotFound_ReturnsNotFound()
+    {
+        var user = User.Register(Email.Create("test@example.com").Value, _clock.UtcNow()).Value;
+        user.AddPasskey([1], [1], 0, _clock.UtcNow());
+        user.AddPasskey([2], [2], 0, _clock.UtcNow());
+
+        _userRepo.FindByEmailAsync(Arg.Any<Email>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<User>.Some(user)));
+
+        var result = await _handler.HandleAsync(new RemoveCredentialCommand("test@example.com", [9, 9]), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("passkey.not_found", result.Error.Code);
+    }
 }

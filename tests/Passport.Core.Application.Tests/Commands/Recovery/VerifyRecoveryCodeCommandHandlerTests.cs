@@ -54,4 +54,18 @@ public class VerifyRecoveryCodeCommandHandlerTests
         Assert.True(result.IsFailure);
         Assert.Equal("recovery_code.invalid", result.Error.Code);
     }
+
+    [Fact]
+    public async Task HandleAsync_NoCodeFound_ReturnsValidationError()
+    {
+        var email = Email.Create("test@example.com").Value;
+
+        _recoveryCodeRepo.FindActiveByEmailAsync(email, RecoveryCodePurpose.AccountRecovery, Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<RecoveryCode>.None));
+
+        var result = await _handler.HandleAsync(new VerifyRecoveryCodeCommand("test@example.com", "123456"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("recovery_code.invalid", result.Error.Code);
+    }
 }

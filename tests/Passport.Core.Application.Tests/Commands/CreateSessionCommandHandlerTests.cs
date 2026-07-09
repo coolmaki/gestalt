@@ -69,5 +69,6 @@ public class CreateSessionCommandHandlerTests
         var result = await _handler.HandleAsync(command, CancellationToken.None);
 
         Assert.True(result.IsFailure);
+        Assert.Equal("email.invalid_format", result.Error.Code);
     }
 }

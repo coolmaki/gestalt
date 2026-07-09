@@ -68,4 +68,53 @@ public class RefreshAccessTokenCommandHandlerTests
         Assert.True(result.IsFailure);
         Assert.Equal("token.not_found", result.Error.Code);
     }
+
+    [Fact]
+    public async Task HandleAsync_RevokedToken_ReturnsValidationError()
+    {
+        var rawToken = "test-refresh-token";
+        var tokenHash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(rawToken)));
+
+        var user = User.Register(Email.Create("test@example.com").Value, _clock.UtcNow()).Value;
+        var token = user.IssueRefreshToken(tokenHash, _clock.UtcNow(), TimeSpan.FromDays(30));
+        token.Revoke(_clock.UtcNow());
+
+        _refreshTokenQueryRepo.FindEmailByHashAsync(tokenHash, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<string>.Some("test@example.com")));
+        _userRepo.FindByEmailAsync(Arg.Any<Email>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<User>.Some(user)));
+
+        var result = await _handler.HandleAsync(
+            new RefreshAccessTokenCommand(rawToken), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("token.revoked", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task HandleAsync_ExpiredToken_ReturnsValidationError()
+    {
+        var rawToken = "test-refresh-token";
+        var tokenHash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(rawToken)));
+
+        var expired = new DateTimeOffset(2026, 2, 1, 0, 0, 0, TimeSpan.Zero);
+        var expiredClock = Substitute.For<IDateTimeProvider>();
+        expiredClock.UtcNow().Returns(expired);
+
+        var user = User.Register(Email.Create("test@example.com").Value, expired).Value;
+        user.IssueRefreshToken(tokenHash, expired - TimeSpan.FromDays(31), TimeSpan.FromDays(30));
+
+        _refreshTokenQueryRepo.FindEmailByHashAsync(tokenHash, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<string>.Some("test@example.com")));
+        _userRepo.FindByEmailAsync(Arg.Any<Email>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<User>.Some(user)));
+
+        var expiredHandler = new RefreshAccessTokenCommandHandler(_userRepo, _refreshTokenQueryRepo, _tokenService, expiredClock, _appConfig);
+
+        var result = await expiredHandler.HandleAsync(
+            new RefreshAccessTokenCommand(rawToken), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("token.expired", result.Error.Code);
+    }
 }

@@ -49,4 +49,28 @@ public class RevokeRefreshTokenCommandHandlerTests
         Assert.True(result.IsFailure);
         Assert.Equal("user.not_found", result.Error.Code);
     }
+
+    [Fact]
+    public async Task HandleAsync_InvalidEmail_ReturnsValidationError()
+    {
+        var result = await _handler.HandleAsync(
+            new RevokeRefreshTokenCommand("not-an-email", "hash1"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+    }
+
+    [Fact]
+    public async Task HandleAsync_TokenNotFoundOnUser_ReturnsNotFound()
+    {
+        var user = User.Register(Email.Create("test@example.com").Value, _clock.UtcNow()).Value;
+        user.IssueRefreshToken("hash1", _clock.UtcNow(), TimeSpan.FromDays(30));
+        _userRepo.FindByEmailAsync(Arg.Any<Email>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Option<User>.Some(user)));
+
+        var result = await _handler.HandleAsync(
+            new RevokeRefreshTokenCommand("test@example.com", "nonexistent-hash"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("token.not_found", result.Error.Code);
+    }
 }
