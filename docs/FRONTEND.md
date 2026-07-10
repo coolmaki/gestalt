@@ -26,9 +26,9 @@ web/{app-name}/
 │   ├── hooks/             ← custom reactive hooks (createResource, createEffect wrappers)
 │   ├── signals/           ← global reactive state (createSignal, createStore)
 │   ├── api/               ← typed fetch wrappers, API client
-│   └── index.tsx          ← app entry point, router setup
+│   ├── index.tsx          ← app entry point, router setup
+│   └── styles.css         ← local Tailwind entry (imports @supercluster/core styles, adds app-specific @theme overrides)
 ├── public/                ← static assets, PWA manifest, icons
-├── tailwind.config.ts     ← extends shared config from @supercluster/core
 ├── vite.config.ts
 ├── tsconfig.json
 └── package.json
@@ -163,29 +163,35 @@ web/@supercluster/core/
 ├── src/
 │   ├── design/
 │   │   ├── tokens.ts       ← colors, fonts, spacing, breakpoints
-│   │   └── preset.ts       ← shared Tailwind preset
+│   │   ├── themes.ts       ← named themes, CSS variable mappings
+│   │   └── plugin.ts       ← Tailwind v4 plugin (reads tokens, injects CSS)
 │   ├── components/         ← shared components (Button, Input, Modal, etc.)
 │   ├── navigation/         ← custom stack navigator
 │   ├── pwa/                ← service worker registration, manifest helpers
 │   ├── auth/               ← token storage, API client, auth signal
 │   ├── i18n/               ← internationalization utilities
-│   └── index.ts            ← public API barrel export
-├── tailwind.config.ts
+│   ├── index.ts            ← public API barrel export
+│   └── styles.css          ← shared Tailwind v4 entry (@import "tailwindcss" + @plugin)
 └── package.json
 ```
 
 ### Using @supercluster/core
 
-Apps extend the shared Tailwind config:
+Apps import the shared CSS and can extend with app-specific theme overrides:
 
-```ts
-// web/passport/tailwind.config.ts
-import { preset } from "@supercluster/core";
+```css
+/* web/passport/src/styles.css */
+@import "@supercluster/core/styles.css";
 
-export default {
-  presets: [preset],
-  content: ["./src/**/*.{ts,tsx}", "../@supercluster/core/src/**/*.{ts,tsx}"],
-};
+@theme {
+  /* override or extend shared tokens here */
+}
+```
+
+```tsx
+// web/passport/src/index.tsx
+import "./styles.css";
+// ...
 ```
 
 ---

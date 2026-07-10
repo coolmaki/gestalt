@@ -1,0 +1,29 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@theme",
+      "description": "Tailwind v4 theme configuration"
+    },
+    {
+      "name": "@plugin",
+      "description": "Tailwind v4 plugin reference"
+    },
+    {
+      "name": "@source",
+      "description": "Tailwind v4 source glob"
+    },
+    {
+      "name": "@custom-variant",
+      "description": "Tailwind v4 custom variant"
+    },
+    {
+      "name": "@tailwind",
+      "description": "Tailwind directive (base/components/utilities)"
+    },
+    {
+      "name": "@reference",
+      "description": "Tailwind v4 reference"
+    }
+  ]
+}

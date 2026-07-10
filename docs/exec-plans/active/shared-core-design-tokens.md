@@ -8,14 +8,14 @@
 
 ## Goal
 
-Define the visual foundation of all Supercluster apps: design tokens, multi-theme CSS variable system, Geist Mono font, Tailwind preset, and ThemeProvider. By the end of this plan, importing the Tailwind preset gives any app a consistent visual baseline.
+Define the visual foundation of all Supercluster apps: design tokens, multi-theme CSS variable system, Geist Mono font, Tailwind v4 plugin for theme injection, and ThemeProvider. By the end of this plan, importing `@supercluster/core/styles.css` gives any app a consistent visual baseline.
 
 ## Design Decisions
 
 | Decision | Rationale |
 |----------|-----------|
 | CSS custom properties for theming | `data-theme` attribute on `<html>` switches CSS variables. No JS needed for theme change — instant, no flash. |
-| Token layer in TypeScript | `tokens.ts` is the single source of truth. Tailwind preset reads it. Components reference tokens via Tailwind classes. One file to change, everything updates. |
+| Token layer in TypeScript | `tokens.ts` is the single source of truth. A Tailwind v4 plugin reads token values and injects CSS custom properties via `addBase` + registers theme keys for utility class generation. Components reference tokens via Tailwind classes. One file to change, everything updates. |
 | Light/dark built-in, named themes extensible | Tailwind's `dark:` prefix handles light/dark. Named themes (`terminal`, `high-contrast`) via `data-theme` are app-extensible. |
 | Geist Mono via `@fontsource/geist-mono` | Variable weight font, open source, one package. Apps get the font through core's dependency. |
 | Theme persist in localStorage | `ThemeProvider` writes to `localStorage` on change, reads on mount. No flash of wrong theme. |
@@ -36,17 +36,18 @@ Define the visual foundation of all Supercluster apps: design tokens, multi-them
    - Built-in: `dark` (maps to `[data-theme="dark"]`)
    - Example second named theme: `terminal` (green-on-black aesthetic)
    - Export `ThemeConfig` type for type-safe theme definitions
-4. [ ] Create `src/design/preset.ts`:
-   - Import `tokens.ts`, generate Tailwind config from tokens
-   - Export as `TailwindConfig` preset
+4. [ ] Create `src/design/plugin.ts`:
+    - Tailwind v4 plugin that imports `tokens.ts`
+    - Uses `addBase` to inject CSS custom properties for `:root` (light), `[data-theme="dark"]`, and named themes like `[data-theme="terminal"]`
+    - Registers theme keys (colors, spacing, radii, fonts, shadows) so Tailwind utility classes are generated from token values
 5. [ ] Install `@fontsource/geist-mono` as dependency
 6. [ ] Create `src/theme-provider.tsx`:
-   - `<ThemeProvider>` context — passes `{ theme, setTheme, availableThemes }` to children
-   - Reads initial theme from `localStorage`, defaults to `"light"`
-   - Writes `data-theme="..."` attribute on `<html>` element
-   - Listens for `storage` events (syncs across tabs)
-7. [ ] Update `tailwind.config.ts` to reference `preset.ts`
-8. [ ] Update `src/index.ts` barrel to export `tokens`, `preset`, `ThemeProvider`, theme types
+    - `<ThemeProvider>` context — passes `{ theme, setTheme, availableThemes }` to children
+    - Reads initial theme from `localStorage`, defaults to `"light"`
+    - Writes `data-theme="..."` attribute on `<html>` element
+    - Listens for `storage` events (syncs across tabs)
+7. [ ] Update `src/styles.css` — add `@import "tailwindcss"` and `@plugin "@supercluster/core/plugin"` to load the token plugin
+8. [ ] Update `src/index.ts` barrel to export `tokens`, `plugin`, `ThemeProvider`, theme types
 9. [ ] Write Vitest test: `ThemeProvider` sets `data-theme` on html, persists to localStorage
 
 ## Token Schema
@@ -72,7 +73,8 @@ tokens.ts
 
 ## Acceptance Criteria
 
-- [ ] `import { tokens, preset } from "@supercluster/core"` works
+- [ ] `import "@supercluster/core/styles.css"` imports shared Tailwind theme
+- [ ] `import { tokens } from "@supercluster/core"` exposes token values for programmatic use
 - [ ] `ThemeProvider` sets `data-theme` attribute, persists to localStorage
 - [ ] `dark` theme switches colors via Tailwind's `dark:` prefix
 - [ ] `terminal` theme applied via `data-theme="terminal"` with CSS vars
