@@ -20,7 +20,7 @@ Passport.Core.Domain         ← User, PasskeyCredential, Client, AuthorizationC
 Passport.Infrastructure      ← EF Core with Postgres + SQLite adapters, WebAuthn (FIDO2) library
 ```
 
-Frontend: SolidJS SPA in `apps/passport/` for login, signup, passkey management, and account recovery.
+Frontend: SolidJS SPA in `web/passport/` for login, signup, passkey management, and account recovery.
 
 ## Design Decisions
 
@@ -656,7 +656,7 @@ GET /.well-known/jwks.json          # → JWKS endpoint (public key for token va
 
 ### Phase 3: Frontend (SolidJS SPA)
 
-Login, signup, and account management in `apps/passport/`.
+Login, signup, and account management in `web/passport/`.
 
 **Pages:**
 - Signup flow: enter email → create passkey (WebAuthn) → email verification
@@ -666,7 +666,7 @@ Login, signup, and account management in `apps/passport/`.
 - (Post-Phase 4): OAuth consent screen
 
 **Shared UI dependencies:**
-- `apps/shared-ui/` must be scaffolded first (design tokens, Button, Input, Modal)
+- `web/@supercluster/core/` must be scaffolded first (design tokens, Button, Input, Modal)
 
 **Status:** 🔜 Not started (blocked by Phase 2, partially parallelizable with Phase 2 for signup/login/recovery flows)
 

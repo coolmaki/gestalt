@@ -13,10 +13,11 @@
 - Package manager: NuGet (standard .NET SDK)
 
 ### Frontend (SolidJS + Tailwind CSS)
-- Located in `apps/`
+- Located in `web/`
 - Package manager: `pnpm`
 - Build: `pnpm build` (from the app directory)
 - Dev: `pnpm dev`
+- Shared package: `web/@supercluster/core/`
 
 ---
 
@@ -34,9 +35,10 @@ supercluster/                     ← monorepo root
     {Project}.Core.Application/   ← per-project: commands/queries, ports/interfaces
     {Project}.Infrastructure/     ← per-project: DB, external APIs, file I/O
     {Project}.Presentation.Http/  ← per-project: ASP.NET controllers, middleware
-  apps/
-    shared-ui/                    ← shared: design system, navigation, PWA utils
-    {app}/                        ← per-app SolidJS SPA/PWA
+  web/
+    @supercluster/
+      core/                        ← shared: design system, components, PWA, auth, nav, i18n
+    {app-name}/                    ← per-app SolidJS SPA/PWA (kebab-case)
   tests/
     Supercluster.Lib.Primitives.Tests/
     {Project}.Core.Domain.Tests/
@@ -104,7 +106,7 @@ See [`docs/FRONTEND.md`](./docs/FRONTEND.md) for frontend conventions.
    - `{ProjectName}.Core.Application`
    - `{ProjectName}.Infrastructure`
    - `{ProjectName}.Presentation.Http`
-3. If the project has a frontend, scaffold it in `apps/{project-name}/` (kebab-case) with SolidJS + Tailwind.
+3. If the project has a frontend, scaffold it in `web/{project-name}/` (kebab-case) with SolidJS + Tailwind.
 4. Create test projects in `tests/` mirroring the backend project structure.
 5. Create an execution plan in `docs/exec-plans/active/` if the work spans multiple steps.
 

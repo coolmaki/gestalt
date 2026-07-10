@@ -1,6 +1,6 @@
 # FRONTEND.md
 
-Frontend conventions for the Supercluster monorepo. All apps in `apps/` follow these rules.
+Frontend conventions for the Supercluster monorepo. All apps in `web/` follow these rules.
 
 ---
 
@@ -11,14 +11,14 @@ Frontend conventions for the Supercluster monorepo. All apps in `apps/` follow t
 - **Language**: TypeScript (strict mode)
 - **Package manager**: pnpm
 - **Build tool**: Vite
-- **PWA**: Custom service worker via `apps/shared-ui/`
+- **PWA**: Custom service worker via `web/@supercluster/core/`
 
 ---
 
 ## Project Structure
 
 ```
-apps/{app-name}/
+web/{app-name}/
 ├── src/
 │   ├── components/        ← reusable UI components
 │   ├── pages/             ← route-level page components
@@ -28,7 +28,7 @@ apps/{app-name}/
 │   ├── api/               ← typed fetch wrappers, API client
 │   └── index.tsx          ← app entry point, router setup
 ├── public/                ← static assets, PWA manifest, icons
-├── tailwind.config.ts     ← extends shared config from shared-ui
+├── tailwind.config.ts     ← extends shared config from @supercluster/core
 ├── vite.config.ts
 ├── tsconfig.json
 └── package.json
@@ -100,7 +100,7 @@ All network calls go through a typed API client. No raw `fetch` in components.
 
 ```tsx
 // src/api/users.ts
-import { Result } from "shared-ui/results"; // or Supercluster primitives mirror
+import { Result } from "@supercluster/core";
 import { apiClient } from "./client";
 
 export interface UserDto {
@@ -154,35 +154,37 @@ export const App = () => (
 
 ---
 
-## Shared UI Package (`apps/shared-ui/`)
+## Shared UI Package (`web/@supercluster/core/`)
 
-All design tokens and shared components live here:
+All design tokens, components, PWA utilities, auth, navigation, and i18n live here in a single package:
 
 ```
-apps/shared-ui/
+web/@supercluster/core/
 ├── src/
 │   ├── design/
 │   │   ├── tokens.ts       ← colors, fonts, spacing, breakpoints
-│   │   └── tailwind.ts     ← shared Tailwind preset
+│   │   └── preset.ts       ← shared Tailwind preset
 │   ├── components/         ← shared components (Button, Input, Modal, etc.)
 │   ├── navigation/         ← custom stack navigator
 │   ├── pwa/                ← service worker registration, manifest helpers
+│   ├── auth/               ← token storage, API client, auth signal
+│   ├── i18n/               ← internationalization utilities
 │   └── index.ts            ← public API barrel export
 ├── tailwind.config.ts
 └── package.json
 ```
 
-### Using Shared UI
+### Using @supercluster/core
 
 Apps extend the shared Tailwind config:
 
 ```ts
-// apps/passport/tailwind.config.ts
-import sharedPreset from "shared-ui/design/tailwind";
+// web/passport/tailwind.config.ts
+import { preset } from "@supercluster/core";
 
 export default {
-  presets: [sharedPreset],
-  content: ["./src/**/*.{ts,tsx}", "../shared-ui/src/**/*.{ts,tsx}"],
+  presets: [preset],
+  content: ["./src/**/*.{ts,tsx}", "../@supercluster/core/src/**/*.{ts,tsx}"],
 };
 ```
 
@@ -191,15 +193,15 @@ export default {
 ## Styling Rules
 
 1. **Tailwind-first.** No inline styles, no CSS modules. Utility classes only.
-2. **Design tokens from `shared-ui`.** Colors, spacing, typography are defined once.
+2. **Design tokens from `@supercluster/core`.** Colors, spacing, typography are defined once.
 3. **Responsive by default.** Use `sm:`, `md:`, `lg:` breakpoints.
-4. **Dark mode.** All apps support dark mode via Tailwind's `dark:` variant. Toggle via a signal in `shared-ui`.
+4. **Dark mode.** All apps support dark mode via Tailwind's `dark:` variant. Toggle via ThemeProvider in `@supercluster/core`.
 
 ---
 
 ## PWA Requirements
 
-All frontend apps are PWAs. Shared PWA utilities in `apps/shared-ui/pwa/` provide:
+All frontend apps are PWAs. Shared PWA utilities in `web/@supercluster/core/pwa/` provide:
 
 - Service worker registration with update prompts
 - Offline fallback page

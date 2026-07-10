@@ -51,7 +51,7 @@ Per-project quality grades. Updated by the doc-gardening agent and during code r
 
 | Package | Tests | Docs | Component Arch. | API Discipline | Design Tokens | Overall |
 |---------|:---:|:---:|:---:|:---:|:---:|:---:|
-| `shared-ui` | ⚫ F | ⚫ F | ⚫ F | N/A | ⚫ F | ⚫ F |
+| `@supercluster/core` | ⚫ F | ⚫ F | ⚫ F | N/A | ⚫ F | ⚫ F |
 
 ---
 
@@ -59,4 +59,4 @@ Per-project quality grades. Updated by the doc-gardening agent and during code r
 
 - **Primitives**: Now has 42 domain tests passing. Internal constructors on Option<T>/Result<T> for mock compat.
 - **Domain**: Doc coverage slightly lower (no XML comments on Entity/AggregateRoot/DomainEvent). AggreggateRoot typo was fixed.
-- **shared-ui**: Not yet scaffolded.
+- **@supercluster/core**: Not yet scaffolded.

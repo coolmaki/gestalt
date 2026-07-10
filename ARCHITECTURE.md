@@ -17,9 +17,10 @@ supercluster/
 │   ├── Passport.Core.Application/         ← project: application layer
 │   ├── Passport.Infrastructure/           ← project: infrastructure layer
 │   └── Passport.Presentation.Http/        ← project: presentation layer
-├── apps/
-│   ├── shared-ui/                         ← shared: design system, nav, PWA
-│   └── passport/                          ← project: SolidJS SPA/PWA
+├── web/
+│   ├── @supercluster/
+│   │   └── core/               ← shared: design system, components, PWA, auth, nav, i18n
+│   └── passport/               ← project: SolidJS SPA/PWA
 ├── tests/
 │   ├── Supercluster.Lib.Primitives.Tests/
 │   ├── Passport.Core.Domain.Tests/
@@ -91,7 +92,7 @@ Per-project namespaces use the pattern `{ProjectName}.{Layer}`:
 
 ---
 
-## Frontend Architecture (`apps/`)
+## Frontend Architecture (`web/`)
 
 ### Technology Stack
 - **Framework**: SolidJS
@@ -99,7 +100,7 @@ Per-project namespaces use the pattern `{ProjectName}.{Layer}`:
 - **Package manager**: pnpm
 - **Build tool**: Vite
 
-### Shared Frontend Packages (`apps/shared-ui/`)
+### Shared Frontend Packages (`web/@supercluster/core/`)
 
 Reusable across all frontend apps:
 
@@ -109,10 +110,10 @@ Reusable across all frontend apps:
 | Navigation | Custom stack navigator for SPA/PWA routing |
 | PWA utilities | Service worker, manifest, offline support |
 
-### Per-App Structure (`apps/{app-name}/`)
+### Per-App Structure (`web/{app-name}/`)
 
 ```
-apps/passport/
+web/passport/
 ├── src/
 │   ├── components/        ← UI components
 │   ├── pages/             ← route-level page components
@@ -144,7 +145,7 @@ These are mechanically enforced (linters, structural tests, build checks):
 
 ### Frontend
 1. **API calls go through the `api/` layer.** No raw `fetch` in components.
-2. **Shared design tokens in `shared-ui/`.** No duplicated colors/fonts/spacing across apps.
+2. **Shared design tokens in `@supercluster/core/`.** No duplicated colors/fonts/spacing across apps.
 3. **Components are self-contained.** One component per file; co-locate styles with Tailwind classes.
 
 ### Cross-Cutting
@@ -157,7 +158,7 @@ These are mechanically enforced (linters, structural tests, build checks):
 
 | Project | Status | Backend | Frontend |
 |---------|--------|---------|----------|
-| Passport | 🚀 Phase 1 Complete | `src/Passport.Core.*` | `apps/passport/` |
+| Passport | 🚀 Phase 2 Complete | `src/Passport.Core.*` | `web/passport/` |
 | Training | 🔜 Planned | — | — |
 | Budgeting | 🔜 Planned | — | — |
 
@@ -171,3 +172,4 @@ These are mechanically enforced (linters, structural tests, build checks):
 | `Supercluster.Lib.Domain` | Primitives | `Entity`, `AggregateRoot`, `DomainEvent` |
 | `Supercluster.Lib.Application` | Primitives | `ICommand<T>`, `ICommandHandler`, `IQuery<T>`, `IQueryHandler`, providers |
 | `Supercluster.Lib.Infrastructure` | Application | `DateTimeProvider`, `GuidProvider`, DI extensions |
+| `@supercluster/core` | solid-js | Design system, components, PWA, auth, nav, i18n |
