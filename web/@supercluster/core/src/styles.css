@@ -1,3 +1,28 @@
 @import "tailwindcss";
+@import "@fontsource/geist-mono";
+@plugin "./design/plugin.ts";
 
-@theme {}
+@theme inline {
+  --color-surface: var(--theme-color-surface);
+  --color-surface-content: var(--theme-color-surface-content);
+  --color-surface-alt: var(--theme-color-surface-alt);
+  --color-surface-alt-content: var(--theme-color-surface-alt-content);
+  --color-primary: var(--theme-color-primary);
+  --color-primary-content: var(--theme-color-primary-content);
+  --color-primary-hover: var(--theme-color-primary-hover);
+  --color-primary-hover-content: var(--theme-color-primary-hover-content);
+  --color-info: var(--theme-color-info);
+  --color-info-content: var(--theme-color-info-content);
+  --color-success: var(--theme-color-success);
+  --color-success-content: var(--theme-color-success-content);
+  --color-warning: var(--theme-color-warning);
+  --color-warning-content: var(--theme-color-warning-content);
+  --color-danger: var(--theme-color-danger);
+  --color-danger-content: var(--theme-color-danger-content);
+  --color-danger-hover: var(--theme-color-danger-hover);
+  --color-danger-hover-content: var(--theme-color-danger-hover-content);
+  --color-high-emphasis: var(--theme-color-high-emphasis);
+  --color-medium-emphasis: var(--theme-color-medium-emphasis);
+  --color-low-emphasis: var(--theme-color-low-emphasis);
+  --color-border: var(--theme-color-border);
+}
