@@ -21,6 +21,6 @@
       "@supercluster/core/*": ["./src/*"]
     }
   },
-  "include": ["src", "tests"],
+  "include": ["src", "tests", "dev"],
   "exclude": ["node_modules", "dist"]
 }

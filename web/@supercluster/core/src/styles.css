@@ -1,8 +1,36 @@
 @import "tailwindcss";
 @import "@fontsource/geist-mono";
+@source "../src";
 @plugin "./design/plugin.ts";
 
-@theme inline {
+:root {
+  --app-field-height: 2.5rem;
+}
+
+[data-radius="none"] {
+  --app-radius-field: 0rem;
+  --app-radius-card: 0rem;
+}
+
+[data-radius="sm"] {
+  --app-radius-field: 0.25rem;
+  --app-radius-card: 0.375rem;
+}
+
+[data-radius="md"],
+:root:not([data-radius]) {
+  --app-radius-field: 0.5rem;
+  --app-radius-card: 0.75rem;
+}
+
+[data-radius="lg"] {
+  --app-radius-field: calc(var(--app-field-height) / 2);
+  --app-radius-card: calc(var(--app-field-height) / 2);
+}
+
+@theme {
+  --radius-field: var(--app-radius-field);
+  --radius-card: var(--app-radius-card);
   --color-surface: var(--theme-color-surface);
   --color-surface-content: var(--theme-color-surface-content);
   --color-surface-alt: var(--theme-color-surface-alt);
@@ -25,4 +53,6 @@
   --color-medium-emphasis: var(--theme-color-medium-emphasis);
   --color-low-emphasis: var(--theme-color-low-emphasis);
   --color-border: var(--theme-color-border);
+  --color-disabled: var(--theme-color-disabled);
+  --color-disabled-content: var(--theme-color-disabled-content);
 }

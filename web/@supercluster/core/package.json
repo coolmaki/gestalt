@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "build": "vite build",
-    "dev": "vite build --watch",
+    "dev": "vite --config vite.dev.config.ts",
     "test": "vitest run"
   },
   "peerDependencies": {
@@ -34,6 +34,8 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
-    "@fontsource/geist-mono": "^5.2.8"
+    "@fontsource/geist-mono": "^5.2.8",
+    "lucide-solid": "^1.24.0",
+    "solid-focus-trap": "^0.1.9"
   }
 }

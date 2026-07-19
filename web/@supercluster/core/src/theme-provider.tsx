@@ -2,12 +2,17 @@ import { createSignal, createContext, useContext, type JSX } from "solid-js";
 import { type ThemeConfig, type ThemeKey, themes, availableThemes } from "./design/themes";
 
 const THEME_STORAGE_KEY = "supercluster-theme";
+const RADIUS_STORAGE_KEY = "supercluster-radius";
+
+export type Radius = "none" | "sm" | "md" | "lg";
 
 interface ThemeContextValue {
   theme: ThemeConfig;
   themeKey: ThemeKey;
   setTheme: (key: ThemeKey) => void;
   availableThemes: ThemeConfig[];
+  radius: Radius;
+  setRadius: (r: Radius) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue>();
@@ -15,10 +20,15 @@ const ThemeContext = createContext<ThemeContextValue>();
 export interface ThemeProviderProps {
   children: JSX.Element;
   defaultTheme?: ThemeKey;
+  defaultRadius?: Radius;
 }
 
 function applyTheme(key: ThemeKey): void {
   document.documentElement.setAttribute("data-theme", key);
+}
+
+function applyRadius(r: Radius): void {
+  document.documentElement.setAttribute("data-radius", r);
 }
 
 export function ThemeProvider(props: ThemeProviderProps) {
@@ -28,21 +38,24 @@ export function ThemeProvider(props: ThemeProviderProps) {
     : (props.defaultTheme ?? "obsidian");
 
   const [themeKey, setThemeKey] = createSignal<ThemeKey>(initialKey);
+  const initialRadius: Radius = (localStorage.getItem(RADIUS_STORAGE_KEY) as Radius | null) ?? props.defaultRadius ?? "md";
+  const [radius, setRadiusSignal] = createSignal<Radius>(initialRadius);
 
   const themeList = availableThemes.map((key) => themes[key]);
 
   applyTheme(initialKey);
+  applyRadius(initialRadius);
 
   if (typeof window !== "undefined") {
     window.addEventListener("storage", (event) => {
-      if (
-        event.key === THEME_STORAGE_KEY &&
-        event.newValue &&
-        event.newValue in themes
-      ) {
+      if (event.key === THEME_STORAGE_KEY && event.newValue && event.newValue in themes) {
         const newKey = event.newValue as ThemeKey;
         setThemeKey(newKey);
         applyTheme(newKey);
+      }
+      if (event.key === RADIUS_STORAGE_KEY && event.newValue) {
+        setRadiusSignal(event.newValue as Radius);
+        applyRadius(event.newValue as Radius);
       }
     });
   }
@@ -53,6 +66,12 @@ export function ThemeProvider(props: ThemeProviderProps) {
     applyTheme(key);
   };
 
+  const setRadius = (r: Radius) => {
+    setRadiusSignal(r);
+    localStorage.setItem(RADIUS_STORAGE_KEY, r);
+    applyRadius(r);
+  };
+
   return (
     <ThemeContext.Provider
       value={{
@@ -60,6 +79,8 @@ export function ThemeProvider(props: ThemeProviderProps) {
         themeKey: themeKey(),
         setTheme,
         availableThemes: themeList,
+        radius: radius(),
+        setRadius,
       }}
     >
       {props.children}

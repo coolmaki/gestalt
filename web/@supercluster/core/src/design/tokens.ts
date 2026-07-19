@@ -21,4 +21,6 @@ export interface ColorTokens {
   mediumEmphasis: string;
   lowEmphasis: string;
   border: string;
+  disabled: string;
+  disabledContent: string;
 }

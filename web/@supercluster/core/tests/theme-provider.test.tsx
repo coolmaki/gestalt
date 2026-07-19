@@ -26,6 +26,7 @@ describe("ThemeProvider", () => {
   beforeEach(() => {
     localStorage.clear();
     document.documentElement.removeAttribute("data-theme");
+    document.documentElement.removeAttribute("data-radius");
   });
 
   it("sets data-theme on html element on mount", () => {
@@ -86,5 +87,46 @@ describe("ThemeProvider", () => {
 
     expect(localStorage.getItem("supercluster-theme")).toBe("vapor");
     expect(document.documentElement.getAttribute("data-theme")).toBe("vapor");
+  });
+
+  it("sets default data-radius to md on mount", () => {
+    render(() => (
+      <ThemeProvider>
+        <TestConsumer />
+      </ThemeProvider>
+    ));
+
+    expect(document.documentElement.getAttribute("data-radius")).toBe("md");
+  });
+
+  it("uses defaultRadius prop", () => {
+    render(() => (
+      <ThemeProvider defaultRadius="lg">
+        <TestConsumer />
+      </ThemeProvider>
+    ));
+
+    expect(document.documentElement.getAttribute("data-radius")).toBe("lg");
+  });
+
+  it("persists radius to localStorage on change", () => {
+    const ref = { setR: (() => {}) as (r: "none" | "sm" | "md" | "lg") => void };
+
+    const RadiusSetter = () => {
+      const c = useTheme();
+      ref.setR = c.setRadius;
+      return <div data-testid="r">{c.radius}</div>;
+    };
+
+    render(() => (
+      <ThemeProvider>
+        <RadiusSetter />
+      </ThemeProvider>
+    ));
+
+    ref.setR("lg");
+
+    expect(localStorage.getItem("supercluster-radius")).toBe("lg");
+    expect(document.documentElement.getAttribute("data-radius")).toBe("lg");
   });
 });
