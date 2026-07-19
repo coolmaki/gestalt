@@ -1,5 +1,5 @@
-import { createSignal, createContext, useContext, type JSX } from "solid-js";
-import { type ThemeConfig, type ThemeKey, themes, availableThemes } from "./design/themes";
+import { createContext, createMemo, createSignal, useContext, type Accessor, type JSX } from "solid-js";
+import { availableThemes, themes, type ThemeConfig, type ThemeKey } from "./design/themes";
 
 const THEME_STORAGE_KEY = "supercluster-theme";
 const RADIUS_STORAGE_KEY = "supercluster-radius";
@@ -7,11 +7,11 @@ const RADIUS_STORAGE_KEY = "supercluster-radius";
 export type Radius = "none" | "sm" | "md" | "lg";
 
 interface ThemeContextValue {
-  theme: ThemeConfig;
-  themeKey: ThemeKey;
+  theme: Accessor<ThemeConfig>;
+  themeKey: Accessor<ThemeKey>;
   setTheme: (key: ThemeKey) => void;
   availableThemes: ThemeConfig[];
-  radius: Radius;
+  radius: Accessor<Radius>;
   setRadius: (r: Radius) => void;
 }
 
@@ -72,17 +72,17 @@ export function ThemeProvider(props: ThemeProviderProps) {
     applyRadius(r);
   };
 
+  const theme = createMemo(() => themes[themeKey()]);
+
   return (
-    <ThemeContext.Provider
-      value={{
-        theme: themes[themeKey()],
-        themeKey: themeKey(),
-        setTheme,
-        availableThemes: themeList,
-        radius: radius(),
-        setRadius,
-      }}
-    >
+    <ThemeContext.Provider value={{
+      theme: theme,
+      themeKey: themeKey,
+      setTheme,
+      availableThemes: themeList,
+      radius: radius,
+      setRadius,
+    }}>
       {props.children}
     </ThemeContext.Provider>
   );

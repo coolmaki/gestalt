@@ -3,5 +3,6 @@ export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from ".
 export { Input, type InputProps } from "./Input";
 export { Text, type TextProps, type TextVariant } from "./Text";
 export { Card, type CardProps, type CardVariant } from "./Card";
+export { Select, type SelectOption, type SelectProps } from "./Select";
 export { FormField, type FormFieldProps } from "./FormField";
 export { Modal, type ModalProps } from "./Modal";

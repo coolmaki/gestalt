@@ -3,10 +3,25 @@ import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Text } from "@/components/Text";
 import { FormField } from "@/components/FormField";
+import { Select } from "@/components/Select";
 import type { ButtonVariant, ButtonSize } from "@/components/Button";
+import type { SelectOption } from "@/components/Select";
 
-const variantOpts: ButtonVariant[] = ["primary", "secondary", "ghost", "info", "success", "warning", "danger"];
-const sizeOpts: ButtonSize[] = ["sm", "md", "lg"];
+const variantOpts: SelectOption[] = [
+  { value: "primary", label: "Primary" },
+  { value: "secondary", label: "Secondary" },
+  { value: "ghost", label: "Ghost" },
+  { value: "info", label: "Info" },
+  { value: "success", label: "Success" },
+  { value: "warning", label: "Warning" },
+  { value: "danger", label: "Danger" },
+];
+
+const sizeOpts: SelectOption[] = [
+  { value: "sm", label: "Small" },
+  { value: "md", label: "Medium" },
+  { value: "lg", label: "Large" },
+];
 
 export function ButtonDemo() {
   const [variant, setVariant] = createSignal<ButtonVariant>("primary");
@@ -36,22 +51,20 @@ export function ButtonDemo() {
         <Card>
           <div class="flex flex-col gap-4 p-4">
             <FormField label="Variant" htmlFor="btn-variant">
-              <select
-                id="btn-variant"
-                class="w-full"
-                onChange={(e) => setVariant(e.currentTarget.value as ButtonVariant)}
-              >
-                {variantOpts.map((v) => <option value={v} selected={variant() === v}>{v}</option>)}
-              </select>
+              <Select
+                options={variantOpts}
+                placeholder="Variant"
+                value={variant()}
+                onChange={(v) => setVariant(v as ButtonVariant)}
+              />
             </FormField>
             <FormField label="Size" htmlFor="btn-size">
-              <select
-                id="btn-size"
-                class="w-full"
-                onChange={(e) => setSize(e.currentTarget.value as ButtonSize)}
-              >
-                {sizeOpts.map((s) => <option value={s} selected={size() === s}>{s}</option>)}
-              </select>
+              <Select
+                options={sizeOpts}
+                placeholder="Size"
+                value={size()}
+                onChange={(v) => setSize(v as ButtonSize)}
+              />
             </FormField>
             <label class="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={disabled()} onChange={(e) => setDisabled(e.currentTarget.checked)} />

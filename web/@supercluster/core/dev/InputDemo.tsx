@@ -32,20 +32,19 @@ export function InputDemo() {
         <Card>
           <div class="flex flex-col gap-4 p-4">
             <FormField label="Value" htmlFor="inp-value">
-              <input
+              <Input
                 id="inp-value"
-                class="w-full"
                 value={value()}
-                onInput={(e) => setValue(e.currentTarget.value)}
+                placeholder="Value"
+                onChange={setValue}
               />
             </FormField>
             <FormField label="Error message" htmlFor="inp-error">
-              <input
+              <Input
                 id="inp-error"
-                class="w-full"
-                placeholder="Leave empty for no error"
                 value={error()}
-                onInput={(e) => setError(e.currentTarget.value)}
+                placeholder="Leave empty for no error"
+                onChange={setError}
               />
             </FormField>
             <label class="flex items-center gap-2 cursor-pointer">

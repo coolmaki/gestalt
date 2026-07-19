@@ -3,7 +3,14 @@ import { Card } from "@/components/Card";
 import { Text } from "@/components/Text";
 import { Button } from "@/components/Button";
 import { FormField } from "@/components/FormField";
+import { Select } from "@/components/Select";
 import type { CardVariant } from "@/components/Card";
+import type { SelectOption } from "@/components/Select";
+
+const variantOpts: SelectOption[] = [
+  { value: "default", label: "Default" },
+  { value: "ghost", label: "Ghost" },
+];
 
 export function CardDemo() {
   const [variant, setVariant] = createSignal<CardVariant>("default");
@@ -27,14 +34,12 @@ export function CardDemo() {
         <Card>
           <div class="flex flex-col gap-4 p-4">
             <FormField label="Variant" htmlFor="card-variant">
-              <select
-                id="card-variant"
-                class="w-full"
-                onChange={(e) => setVariant(e.currentTarget.value as CardVariant)}
-              >
-                <option value="default" selected={variant() === "default"}>Default</option>
-                <option value="ghost" selected={variant() === "ghost"}>Ghost</option>
-              </select>
+              <Select
+                options={variantOpts}
+                placeholder="Variant"
+                value={variant()}
+                onChange={(v) => setVariant(v as CardVariant)}
+              />
             </FormField>
           </div>
         </Card>

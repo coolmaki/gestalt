@@ -29,12 +29,11 @@ export function FormFieldDemo() {
         <Card>
           <div class="flex flex-col gap-4 p-4">
             <FormField label="Error message" htmlFor="ff-error">
-              <input
+              <Input
                 id="ff-error"
-                class="w-full"
-                placeholder="Set error text"
                 value={error()}
-                onInput={(e) => setError(e.currentTarget.value)}
+                placeholder="Set error text"
+                onChange={setError}
               />
             </FormField>
             <label class="flex items-center gap-2 cursor-pointer">

@@ -3,7 +3,11 @@ import { Icon } from "@/components/Icon";
 import { Card } from "@/components/Card";
 import { Text } from "@/components/Text";
 import { FormField } from "@/components/FormField";
+import { Select } from "@/components/Select";
 import { Icons, type IconName } from "@/components/Icon";
+import type { SelectOption } from "@/components/Select";
+
+const nameOpts: SelectOption[] = Icons.map((n) => ({ value: n, label: n }));
 
 export function IconDemo() {
   const [name, setName] = createSignal<IconName>("check");
@@ -21,13 +25,12 @@ export function IconDemo() {
         <Card>
           <div class="flex flex-col gap-4 p-4">
             <FormField label="Name" htmlFor="icon-name">
-              <select
-                id="icon-name"
-                class="w-full"
-                onChange={(e) => setName(e.currentTarget.value as IconName)}
-              >
-                {Icons.map((n) => <option value={n} selected={name() === n}>{n}</option>)}
-              </select>
+              <Select
+                options={nameOpts}
+                placeholder="Choose an icon"
+                value={name()}
+                onChange={(v) => setName(v as IconName)}
+              />
             </FormField>
             <FormField label="Size" htmlFor="icon-size">
               <input

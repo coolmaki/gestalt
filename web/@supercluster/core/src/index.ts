@@ -12,6 +12,7 @@ export {
   Input,
   Text,
   Card,
+  Select,
   FormField,
   Modal,
 } from "./components";
@@ -26,6 +27,8 @@ export type {
   TextVariant,
   CardProps,
   CardVariant,
+  SelectOption,
+  SelectProps,
   FormFieldProps,
   ModalProps,
 } from "./components";

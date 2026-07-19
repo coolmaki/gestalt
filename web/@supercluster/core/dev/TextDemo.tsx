@@ -2,16 +2,28 @@ import { createSignal } from "solid-js";
 import { Text } from "@/components/Text";
 import { Card } from "@/components/Card";
 import { FormField } from "@/components/FormField";
+import { Select } from "@/components/Select";
 import type { TextVariant } from "@/components/Text";
+import type { SelectOption } from "@/components/Select";
 
-const variantOpts: { key: TextVariant; label: string }[] = [
-  { key: "headline", label: "Headline" },
-  { key: "subhead", label: "Subhead" },
-  { key: "body", label: "Body" },
-  { key: "caption", label: "Caption" },
+const variantOpts: SelectOption[] = [
+  { value: "headline", label: "Headline" },
+  { value: "subhead", label: "Subhead" },
+  { value: "body", label: "Body" },
+  { value: "caption", label: "Caption" },
 ];
 
-const tagOpts = ["", "h1", "h2", "h3", "h4", "h5", "h6", "p", "span"] as const;
+const tagOpts: SelectOption[] = [
+  { value: "", label: "Auto (from variant)" },
+  { value: "h1", label: "h1" },
+  { value: "h2", label: "h2" },
+  { value: "h3", label: "h3" },
+  { value: "h4", label: "h4" },
+  { value: "h5", label: "h5" },
+  { value: "h6", label: "h6" },
+  { value: "p", label: "p" },
+  { value: "span", label: "span" },
+];
 
 const sample: Record<TextVariant, string> = {
   headline: "The quick brown fox jumps over the lazy dog",
@@ -38,23 +50,20 @@ export function TextDemo() {
         <Card>
           <div class="flex flex-col gap-4 p-4">
             <FormField label="Variant" htmlFor="text-variant">
-              <select
-                id="text-variant"
-                class="w-full"
-                onChange={(e) => setVariant(e.currentTarget.value as TextVariant)}
-              >
-                {variantOpts.map((v) => <option value={v.key} selected={variant() === v.key}>{v.label}</option>)}
-              </select>
+              <Select
+                options={variantOpts}
+                placeholder="Variant"
+                value={variant()}
+                onChange={(v) => setVariant(v as TextVariant)}
+              />
             </FormField>
             <FormField label="HTML tag override" htmlFor="text-tag">
-              <select
-                id="text-tag"
-                class="w-full"
-                onChange={(e) => setAsTag(e.currentTarget.value)}
-              >
-                <option value="" selected={asTag() === ""}>Auto (from variant)</option>
-                {tagOpts.filter(Boolean).map((t) => <option value={t} selected={asTag() === t}>{t}</option>)}
-              </select>
+              <Select
+                options={tagOpts}
+                placeholder="Tag"
+                value={asTag()}
+                onChange={setAsTag}
+              />
             </FormField>
           </div>
         </Card>
