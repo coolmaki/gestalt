@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Passport": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SpaProxyServerUrl": "http://localhost:5173"
+      }
+    }
+  }
+}

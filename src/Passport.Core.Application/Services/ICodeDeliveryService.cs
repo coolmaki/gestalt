@@ -17,4 +17,11 @@ public interface ICodeDeliveryService
     /// Sends an account recovery code to the user.
     /// </summary>
     Task SendRecoveryCodeAsync(Email to, string code, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Sends a device verification code to the user for the add-passkey-from-new-device flow.
+    /// This is Phase A (email verification) — the user must prove they own the email
+    /// before being allowed to add a new passkey to their account.
+    /// </summary>
+    Task SendDeviceVerificationCodeAsync(Email to, string code, CancellationToken cancellationToken);
 }

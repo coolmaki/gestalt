@@ -21,7 +21,7 @@ public class CompleteRecoveryCommandHandlerTests
     public CompleteRecoveryCommandHandlerTests()
     {
         _clock.UtcNow().Returns(new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero));
-        _fido2.CompleteRegistrationAsync(Arg.Any<byte[]>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+        _fido2.CompleteRegistrationAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result<(byte[], byte[], uint)>.Success(([1], [2], 0))));
         _handler = new CompleteRecoveryCommandHandler(_userRepo, _challengeStore, _fido2, _clock);
     }

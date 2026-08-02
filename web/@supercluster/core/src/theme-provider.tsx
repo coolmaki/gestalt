@@ -38,7 +38,7 @@ export function ThemeProvider(props: ThemeProviderProps) {
     : (props.defaultTheme ?? "obsidian");
 
   const [themeKey, setThemeKey] = createSignal<ThemeKey>(initialKey);
-  const initialRadius: Radius = (localStorage.getItem(RADIUS_STORAGE_KEY) as Radius | null) ?? props.defaultRadius ?? "md";
+  const initialRadius: Radius = (localStorage.getItem(RADIUS_STORAGE_KEY) as Radius | null) ?? props.defaultRadius ?? "sm";
   const [radius, setRadiusSignal] = createSignal<Radius>(initialRadius);
 
   const themeList = availableThemes.map((key) => themes[key]);

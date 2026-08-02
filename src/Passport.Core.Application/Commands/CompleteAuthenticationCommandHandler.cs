@@ -47,7 +47,7 @@ internal sealed class CompleteAuthenticationCommandHandler(
             return Error.Validation("challenge.expired", "Authentication challenge expired or not found. Please start again.");
         }
 
-        byte[] challenge = challengeOption.Value;
+        string internalState = System.Text.Encoding.UTF8.GetString(challengeOption.Value);
 
         var passkeys = user.Passkeys.ToArray();
         if (passkeys.Length == 0)
@@ -60,7 +60,7 @@ internal sealed class CompleteAuthenticationCommandHandler(
 
         foreach (var passkey in passkeys)
         {
-            assertionResult = await fido2.CompleteAssertionAsync(challenge, command.AssertionJson, passkey.PublicKey, passkey.SignCount, cancellationToken);
+            assertionResult = await fido2.CompleteAssertionAsync(internalState, command.AssertionJson, passkey.PublicKey, passkey.SignCount, cancellationToken);
             if (assertionResult.IsSuccess)
             {
                 matchedCredential = passkey;

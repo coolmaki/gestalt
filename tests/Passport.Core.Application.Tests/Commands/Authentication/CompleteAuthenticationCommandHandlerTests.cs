@@ -43,7 +43,7 @@ public class CompleteAuthenticationCommandHandlerTests
             .Returns(Task.FromResult(Option<User>.Some(user)));
         _challengeStore.GetAndRemoveAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Option<byte[]>.Some([1])));
-        _fido2.CompleteAssertionAsync(Arg.Any<byte[]>(), "fake-assertion", Arg.Any<byte[]>(), Arg.Any<uint>(), Arg.Any<CancellationToken>())
+        _fido2.CompleteAssertionAsync(Arg.Any<string>(), "fake-assertion", Arg.Any<byte[]>(), Arg.Any<uint>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result<uint>.Success(1)));
 
         var result = await _handler.HandleAsync(command, CancellationToken.None);
@@ -93,7 +93,7 @@ public class CompleteAuthenticationCommandHandlerTests
             .Returns(Task.FromResult(Option<User>.Some(user)));
         _challengeStore.GetAndRemoveAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Option<byte[]>.Some([1])));
-        _fido2.CompleteAssertionAsync(Arg.Any<byte[]>(), "fake-assertion", Arg.Any<byte[]>(), Arg.Any<uint>(), Arg.Any<CancellationToken>())
+        _fido2.CompleteAssertionAsync(Arg.Any<string>(), "fake-assertion", Arg.Any<byte[]>(), Arg.Any<uint>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result<uint>.Failure(Error.Validation("assertion.invalid", "Bad assertion."))));
 
         var result = await _handler.HandleAsync(command, CancellationToken.None);

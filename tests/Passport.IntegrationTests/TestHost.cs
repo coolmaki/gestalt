@@ -29,7 +29,7 @@ internal sealed class TestHost : WebApplicationFactory<Program>
 
         using var cleanDb = new PassportDbContext(options.Options, _persistenceConfig);
         await cleanDb.Database.EnsureDeletedAsync();
-        await cleanDb.Database.EnsureCreatedAsync();
+        await cleanDb.Database.MigrateAsync();
     }
 
     public string? GetLastCode()
@@ -40,7 +40,7 @@ internal sealed class TestHost : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Development");
+        builder.UseEnvironment("Test");
 
         // Disable DI validation — test environment swaps services at runtime
         builder.UseSetting("ValidateOnBuild", "false");
@@ -99,6 +99,13 @@ internal sealed class CapturingCodeDeliveryService : ICodeDeliveryService
     }
 
     public Task SendRecoveryCodeAsync(Email to, string code, CancellationToken cancellationToken)
+    {
+        LastEmail = to;
+        LastCode = code;
+        return Task.CompletedTask;
+    }
+
+    public Task SendDeviceVerificationCodeAsync(Email to, string code, CancellationToken cancellationToken)
     {
         LastEmail = to;
         LastCode = code;

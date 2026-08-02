@@ -1,35 +1,128 @@
+using System.Text;
+using System.Text.Json;
+using Fido2NetLib;
+using Fido2NetLib.Objects;
+using Microsoft.Extensions.Options;
 using Supercluster.Lib.Primitives;
 using Passport.Core.Application.Services;
 using Passport.Core.Domain.ValueObjects;
+using Passport.Infrastructure.Configuration;
 
 namespace Passport.Infrastructure.Services;
 
 /// <summary>
-/// Placeholder FIDO2 service. Replace with fido2-net-lib integration.
+/// Implements <see cref="IFido2"/> using the fido2-net-lib library.
+/// Handles WebAuthn credential creation, attestation verification,
+/// assertion options generation, and assertion verification.
 /// </summary>
-internal sealed class Fido2Service : IFido2
+internal sealed class Fido2Service : Passport.Core.Application.Services.IFido2
 {
-    public Task<Result<(string OptionsJson, byte[] Challenge)>> CreateRegistrationOptionsAsync(Email user, CancellationToken cancellationToken)
+    private readonly Fido2 _fido2;
+
+    public Fido2Service(IOptions<Fido2Config> options)
     {
-        return Task.FromResult(Result<(string, byte[])>.Failure(
-            Error.Unexpected("fido2.not_implemented", "FIDO2 service not yet implemented.")));
+        var config = options.Value;
+
+        _fido2 = new Fido2(new Fido2Configuration
+        {
+            ServerDomain = config.ServerDomain,
+            ServerName = config.ServerName,
+            Origins = new HashSet<string> { config.Origin },
+        });
     }
 
-    public Task<Result<(byte[] CredentialId, byte[] PublicKey, uint SignCount)>> CompleteRegistrationAsync(byte[] challenge, string attestationJson, CancellationToken cancellationToken)
+    // ------------------------------------------------------------
+    // Registration
+    // ------------------------------------------------------------
+
+    public Task<Result<(string OptionsJson, string InternalState)>> CreateRegistrationOptionsAsync(
+        Email user, CancellationToken cancellationToken)
     {
-        return Task.FromResult(Result<(byte[], byte[], uint)>.Failure(
-            Error.Unexpected("fido2.not_implemented", "FIDO2 service not yet implemented.")));
+        var options = _fido2.RequestNewCredential(new RequestNewCredentialParams
+        {
+            User = new Fido2User
+            {
+                Id = Encoding.UTF8.GetBytes(user.Value),
+                Name = user.Value,
+                DisplayName = user.Value,
+            },
+            ExcludeCredentials = [],
+            AuthenticatorSelection = new AuthenticatorSelection
+            {
+                UserVerification = UserVerificationRequirement.Preferred,
+            },
+            AttestationPreference = AttestationConveyancePreference.None,
+        });
+
+        var internalState = options.ToJson();
+        var clientJson = $"{{\"publicKey\":{internalState}}}";
+        return Task.FromResult(Result<(string, string)>.Success((clientJson, internalState)));
     }
 
-    public Task<Result<(string OptionsJson, byte[] Challenge)>> CreateAssertionOptionsAsync(IReadOnlyCollection<byte[]> allowedCredentials, CancellationToken cancellationToken)
+    public async Task<Result<(byte[] CredentialId, byte[] PublicKey, uint SignCount)>> CompleteRegistrationAsync(
+        string internalState, string attestationJson, CancellationToken cancellationToken)
     {
-        return Task.FromResult(Result<(string, byte[])>.Failure(
-            Error.Unexpected("fido2.not_implemented", "FIDO2 service not yet implemented.")));
+        var originalOptions = CredentialCreateOptions.FromJson(internalState);
+
+        var attestation = JsonSerializer.Deserialize<AuthenticatorAttestationRawResponse>(attestationJson)
+            ?? throw new InvalidOperationException("Failed to deserialize attestation response.");
+
+        var credential = await _fido2.MakeNewCredentialAsync(
+            new MakeNewCredentialParams
+            {
+                AttestationResponse = attestation,
+                OriginalOptions = originalOptions,
+                IsCredentialIdUniqueToUserCallback = (args, ct) => Task.FromResult(true),
+            },
+            cancellationToken);
+
+        if (credential is null)
+        {
+            return Error.Unexpected("fido2.registration_failed", "Credential verification failed.");
+        }
+
+        return (credential.Id, credential.PublicKey, credential.SignCount);
     }
 
-    public Task<Result<uint>> CompleteAssertionAsync(byte[] challenge, string assertionJson, byte[] storedPublicKey, uint currentSignCount, CancellationToken cancellationToken)
+    // ------------------------------------------------------------
+    // Authentication
+    // ------------------------------------------------------------
+
+    public Task<Result<(string OptionsJson, string InternalState)>> CreateAssertionOptionsAsync(
+        IReadOnlyCollection<byte[]> allowedCredentials, CancellationToken cancellationToken)
     {
-        return Task.FromResult(Result<uint>.Failure(
-            Error.Unexpected("fido2.not_implemented", "FIDO2 service not yet implemented.")));
+        var options = _fido2.GetAssertionOptions(new GetAssertionOptionsParams
+        {
+            AllowedCredentials = allowedCredentials
+                .Select(c => new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PublicKey, c))
+                .ToList(),
+            UserVerification = UserVerificationRequirement.Preferred,
+        });
+
+        var internalState = options.ToJson();
+        var clientJson = $"{{\"publicKey\":{internalState}}}";
+        return Task.FromResult(Result<(string, string)>.Success((clientJson, internalState)));
+    }
+
+    public async Task<Result<uint>> CompleteAssertionAsync(
+        string internalState, string assertionJson, byte[] storedPublicKey, uint currentSignCount, CancellationToken cancellationToken)
+    {
+        var originalOptions = AssertionOptions.FromJson(internalState);
+
+        var assertion = JsonSerializer.Deserialize<AuthenticatorAssertionRawResponse>(assertionJson)
+            ?? throw new InvalidOperationException("Failed to deserialize assertion response.");
+
+        var result = await _fido2.MakeAssertionAsync(
+            new MakeAssertionParams
+            {
+                AssertionResponse = assertion,
+                OriginalOptions = originalOptions,
+                StoredPublicKey = storedPublicKey,
+                StoredSignatureCounter = currentSignCount,
+                IsUserHandleOwnerOfCredentialIdCallback = (args, ct) => Task.FromResult(true),
+            },
+            cancellationToken);
+
+        return result.SignCount;
     }
 }

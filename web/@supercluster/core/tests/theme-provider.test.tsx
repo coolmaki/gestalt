@@ -89,14 +89,14 @@ describe("ThemeProvider", () => {
     expect(document.documentElement.getAttribute("data-theme")).toBe("vapor");
   });
 
-  it("sets default data-radius to md on mount", () => {
+  it("sets default data-radius to sm on mount", () => {
     render(() => (
       <ThemeProvider>
         <TestConsumer />
       </ThemeProvider>
     ));
 
-    expect(document.documentElement.getAttribute("data-radius")).toBe("md");
+    expect(document.documentElement.getAttribute("data-radius")).toBe("sm");
   });
 
   it("uses defaultRadius prop", () => {

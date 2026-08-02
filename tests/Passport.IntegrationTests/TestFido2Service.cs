@@ -10,7 +10,7 @@ namespace Passport.IntegrationTests;
 /// </summary>
 internal sealed class TestFido2Service : IFido2
 {
-    public Task<Result<(string OptionsJson, byte[] Challenge)>> CreateRegistrationOptionsAsync(Email user, CancellationToken cancellationToken)
+    public Task<Result<(string OptionsJson, string InternalState)>> CreateRegistrationOptionsAsync(Email user, CancellationToken cancellationToken)
     {
         var options = new
         {
@@ -20,12 +20,11 @@ internal sealed class TestFido2Service : IFido2
             pubKeyCredParams = new[] { new { type = "public-key", alg = -7 } },
         };
 
-        return Task.FromResult(Result<(string, byte[])>.Success((
-            System.Text.Json.JsonSerializer.Serialize(options),
-            Challenge)));
+        var json = System.Text.Json.JsonSerializer.Serialize(options);
+        return Task.FromResult(Result<(string, string)>.Success((json, json)));
     }
 
-    public Task<Result<(byte[] CredentialId, byte[] PublicKey, uint SignCount)>> CompleteRegistrationAsync(byte[] challenge, string attestationJson, CancellationToken cancellationToken)
+    public Task<Result<(byte[] CredentialId, byte[] PublicKey, uint SignCount)>> CompleteRegistrationAsync(string internalState, string attestationJson, CancellationToken cancellationToken)
     {
         return Task.FromResult(Result<(byte[], byte[], uint)>.Success((
             new byte[] { 0x01, 0x02, 0x03 },
@@ -33,7 +32,7 @@ internal sealed class TestFido2Service : IFido2
             0)));
     }
 
-    public Task<Result<(string OptionsJson, byte[] Challenge)>> CreateAssertionOptionsAsync(IReadOnlyCollection<byte[]> allowedCredentials, CancellationToken cancellationToken)
+    public Task<Result<(string OptionsJson, string InternalState)>> CreateAssertionOptionsAsync(IReadOnlyCollection<byte[]> allowedCredentials, CancellationToken cancellationToken)
     {
         var options = new
         {
@@ -41,12 +40,11 @@ internal sealed class TestFido2Service : IFido2
             allowCredentials = allowedCredentials.Select(c => new { type = "public-key", id = Convert.ToBase64String(c) }),
         };
 
-        return Task.FromResult(Result<(string, byte[])>.Success((
-            System.Text.Json.JsonSerializer.Serialize(options),
-            Challenge)));
+        var json = System.Text.Json.JsonSerializer.Serialize(options);
+        return Task.FromResult(Result<(string, string)>.Success((json, json)));
     }
 
-    public Task<Result<uint>> CompleteAssertionAsync(byte[] challenge, string assertionJson, byte[] storedPublicKey, uint currentSignCount, CancellationToken cancellationToken)
+    public Task<Result<uint>> CompleteAssertionAsync(string internalState, string assertionJson, byte[] storedPublicKey, uint currentSignCount, CancellationToken cancellationToken)
     {
         return Task.FromResult(Result<uint>.Success(currentSignCount + 1));
     }

@@ -205,7 +205,50 @@ import "./styles.css";
 
 ---
 
-## PWA Requirements
+## SPA Serving Pattern
+
+When a .NET project also serves its SPA, follow this pattern to handle both development and production modes:
+
+### Development (Debug + Development environment)
+
+The SPA is served via `Microsoft.AspNetCore.SpaServices.Extensions`, which proxies non-API requests to the Vite dev server. This enables HMR and fast iteration.
+
+**Configuration:**
+- `launchSettings.json` sets `SpaProxyServerUrl` to `http://localhost:5173` and `ASPNETCORE_ENVIRONMENT` to `Development`
+- `Program.cs` conditionally registers `UseSpa` only in Debug builds when the environment is `Development`
+- The developer starts the Vite dev server separately with `pnpm --filter {app} dev`
+
+**Startup:**
+```bash
+# Terminal 1 — SPA dev server
+pnpm --filter passport dev
+
+# Terminal 2 — .NET app (proxies SPA to Vite, handles API directly)
+dotnet run --project src/Passport
+```
+
+### Production (Release)
+
+The SPA is pre-built and served as static files from `wwwroot/`. A conditional MSBuild target in the `.csproj` runs `pnpm build` automatically in Release configuration.
+
+**Startup (single command):**
+```bash
+dotnet run --project src/Passport -c Release
+```
+
+### Tests
+
+Integration tests use the `"Test"` environment and run in Debug mode. The `Program.cs` guards (`#if DEBUG` + `IsDevelopment()`) prevent the SpaProxy from being registered, so tests exercise only API endpoints. The `test` appsettings file provides explicit SQLite configuration for the test database context.
+
+### Required Conditions
+
+| Mode | Build Config | Environment | SPA Source |
+|------|-------------|-------------|------------|
+| Development | Debug | Development | Vite dev server (via proxy) |
+| Test | Debug | Test | None (API only) |
+| Production | Release | Production | `wwwroot/` (pre-built) |
+
+The `SpaProxyServerUrl` setting is required in Development mode and provided via `Properties/launchSettings.json`. It is absent in other environments, so the proxy is never activated unexpectedly.
 
 All frontend apps are PWAs. Shared PWA utilities in `web/@supercluster/core/pwa/` provide:
 

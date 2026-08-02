@@ -1,11 +1,19 @@
 packages:
   - 'web/*'
   - 'web/@supercluster/*'
-allowBuilds:
-  b: true
-  d: true
-  e: true
-  i: true
-  l: true
-  s: true
-  u: true
+
+catalog:
+  solid-js: ^1.9.0
+  '@solidjs/router': ^0.15.3
+  '@solidjs/testing-library': ^0.8.0
+  '@tailwindcss/vite': ^4.0.0
+  '@types/node': ^22.0.0
+  jsdom: ^29.1.1
+  typescript: ~5.8.0
+  vite: ^6.0.0
+  vite-plugin-dts: ^4.0.0
+  vite-plugin-solid: ^2.0.0
+  vitest: ^3.0.0
+  '@fontsource/geist-mono': ^5.2.8
+  lucide-solid: ^1.24.0
+  solid-focus-trap: ^0.1.9

@@ -44,9 +44,9 @@ internal sealed class CompleteRegistrationCommandHandler(
             return Error.Validation("challenge.expired", "Registration challenge expired or not found. Please start again.");
         }
 
-        byte[] challenge = challengeOption.Value;
+        string internalState = System.Text.Encoding.UTF8.GetString(challengeOption.Value);
 
-        var attestationResult = await fido2.CompleteRegistrationAsync(challenge, command.AttestationJson, cancellationToken);
+        var attestationResult = await fido2.CompleteRegistrationAsync(internalState, command.AttestationJson, cancellationToken);
         if (attestationResult.IsFailure)
         {
             return attestationResult.Error;

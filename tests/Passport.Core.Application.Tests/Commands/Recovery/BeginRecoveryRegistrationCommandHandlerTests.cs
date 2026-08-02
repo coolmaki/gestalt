@@ -15,7 +15,7 @@ public class BeginRecoveryRegistrationCommandHandlerTests
     public BeginRecoveryRegistrationCommandHandlerTests()
     {
         _fido2.CreateRegistrationOptionsAsync(Arg.Any<Domain.ValueObjects.Email>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result<(string, byte[])>.Success(("{}", new byte[] { 1, 2, 3 }))));
+            .Returns(Task.FromResult(Result<(string, string)>.Success(("{}", "internal-state"))));
         _handler = new BeginRecoveryRegistrationCommandHandler(_challengeStore, _fido2);
     }
 

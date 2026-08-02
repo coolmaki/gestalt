@@ -30,7 +30,7 @@ public class BeginAuthenticationCommandHandlerTests
         _userQueryRepo.GetCredentialsAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<CredentialInfo>>([new CredentialInfo([1], null, "2026-01-01")]));
         _fido2.CreateAssertionOptionsAsync(Arg.Any<byte[][]>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result<(string, byte[])>.Success(("{\"opts\":true}", [1, 2, 3]))));
+            .Returns(Task.FromResult(Result<(string, string)>.Success(("{\"opts\":true}", "internal-state"))));
 
         var result = await _handler.HandleAsync(command, CancellationToken.None);
 

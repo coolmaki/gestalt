@@ -37,7 +37,7 @@ public class CompleteRegistrationCommandHandlerTests
             .Returns(Task.FromResult(Option<UserReadModel>.None));
         _challengeStore.GetAndRemoveAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Option<byte[]>.Some(new byte[] { 1, 2, 3 })));
-        _fido2.CompleteRegistrationAsync(Arg.Any<byte[]>(), "fake-attestation", Arg.Any<CancellationToken>())
+        _fido2.CompleteRegistrationAsync(Arg.Any<string>(), "fake-attestation", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result<(byte[], byte[], uint)>.Success(([4], [5], 0))));
 
         var result = await _handler.HandleAsync(command, CancellationToken.None);

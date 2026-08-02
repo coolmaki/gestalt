@@ -38,7 +38,7 @@ public class BeginRegistrationCommandHandlerTests
         _userQueryRepo.FindByEmailAsync("test@example.com", Arg.Any<CancellationToken>())
             .Returns(Option<UserReadModel>.None);
         _fido2.CreateRegistrationOptionsAsync(Arg.Any<Domain.ValueObjects.Email>(), Arg.Any<CancellationToken>())
-            .Returns(Result<(string, byte[])>.Success(("{\"options\":true}", new byte[] { 1, 2, 3 })));
+            .Returns(Result<(string, string)>.Success(("{\"options\":true}", "internal-state")));
 
         var result = await _handler.HandleAsync(new BeginRegistrationCommand("test@example.com"), CancellationToken.None);
 

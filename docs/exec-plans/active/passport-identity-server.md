@@ -709,6 +709,7 @@ Deferred features — not planned in detail yet.
 - **Brute-force protection** — rate limiting on recovery, auth endpoints
 - **Audit logging** — security event logging (logins, recovery attempts, client registrations)
 - **Session management UI** — user can see/revoke active sessions
+- **Playwright E2E tests** — automate UAT checklists in `projects/passport/uat/` (see tech-debt-tracker TD-010)
 
 ---
 

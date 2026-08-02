@@ -13,6 +13,7 @@ Known technical debt items across the monorepo, their severity, and planned reme
 | TD-007 | 🟡 Medium | Backend | Passport | `RecoveryCodeRepository.FindActiveByEmailAsync` uses EF Core LINQ with value converters that SQLite provider can't translate. Uses client-evaluation via `ToListAsync` as workaround. | 2026-07-09 |
 | TD-008 | 🟢 Low | Backend | Passport | `BeginAuthenticationCommandHandler` doesn't check `EmailVerified` before returning options. Should return `403 Forbidden` for unverified users. | 2026-07-09 |
 | TD-009 | 🟡 Medium | Frontend | shared | Color tokens `info`, `success`, `warning` lack hover variants (`infoHover`, `successHover`, `warningHover`). Only `primary` and `danger` have hover states. | 2026-07-10 |
+| TD-010 | 🟡 Medium | E2E | Passport | No automated E2E tests. UAT checklists exist at `projects/passport/uat/` as manual tests. Automate using Playwright's .NET bindings in `tests/Passport.E2E/`. Requires Chromium virtual authenticator support for passkey flows. | 2026-08-02 |
 
 ## Severity Guide
 

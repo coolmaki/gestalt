@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
   </ItemGroup>
 
@@ -12,5 +13,9 @@
     <ProjectReference Include="../Passport.Presentation.Http/Passport.Presentation.Http.csproj" />
     <ProjectReference Include="../Supercluster.Lib.Infrastructure/Supercluster.Lib.Infrastructure.csproj" />
   </ItemGroup>
+
+  <Target Name="BuildSpa" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <Exec WorkingDirectory="$(MSBuildThisFileDirectory)../../web/passport" Command="pnpm build" />
+  </Target>
 
 </Project>

@@ -39,9 +39,9 @@ internal sealed class BeginRecoveryRegistrationCommandHandler(
             return optionsResult.Error;
         }
 
-        (string optionsJson, byte[] challenge) = optionsResult.Value;
+        (string optionsJson, string internalState) = optionsResult.Value;
 
-        await challengeStore.SetAsync(email.Value, challenge, TimeSpan.FromMinutes(5), cancellationToken);
+        await challengeStore.SetAsync(email.Value, System.Text.Encoding.UTF8.GetBytes(internalState), TimeSpan.FromMinutes(5), cancellationToken);
         byte[] emailBytes = System.Text.Encoding.UTF8.GetBytes(email.Value);
         await challengeStore.SetAsync($"recovery:{command.RecoveryToken}", emailBytes, TimeSpan.FromMinutes(5), cancellationToken);
 

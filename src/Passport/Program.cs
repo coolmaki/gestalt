@@ -26,6 +26,17 @@ var infraConfig = builder.Configuration
     .GetSection(InfrastructureConfiguration.SectionName)
     .Get<InfrastructureConfiguration>()!;
 
+#if DEBUG
+if (builder.Environment.IsDevelopment() && infraConfig.Persistence.Provider == PersistenceProvider.Sqlite)
+{
+    var dbDir = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+        ".supercluster", "passport");
+    Directory.CreateDirectory(dbDir);
+    infraConfig.Persistence.ConnectionString = $"Data Source={Path.Combine(dbDir, "passport.db")}";
+}
+#endif
+
 builder.Services.AddSingleton(appConfig);
 
 // ------------------------------------------------------------
@@ -69,9 +80,33 @@ builder.Services.AddPassportEndpoints();
 
 var app = builder.Build();
 
+await app.Services.InitializeDatabaseAsync();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapEndpoints();
+
+#if DEBUG
+if (app.Environment.IsDevelopment())
+{
+    var spaProxyUrl = builder.Configuration["SpaProxyServerUrl"]!;
+
+    app.MapWhen(
+        ctx => !ctx.Request.Path.StartsWithSegments("/api") &&
+               !ctx.Request.Path.StartsWithSegments("/.well-known"),
+        spaApp =>
+        {
+            spaApp.UseSpa(spa =>
+            {
+                spa.UseProxyToSpaDevelopmentServer(spaProxyUrl);
+            });
+        });
+}
+#else
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.MapFallbackToFile("index.html");
+#endif
 
 app.Run();
