@@ -1,7 +1,7 @@
 # Plan: Passport Identity Server
 
 **Created:** 2026-06-27
-**Status:** 🚀 Active — Phase 2 complete, Phase 3 next
+**Status:** 🚀 Active — Phase 3 completed, Phase 4 next
 **Project:** Passport
 **Driving Agent:** human
 
@@ -666,9 +666,25 @@ Login, signup, and account management in `web/passport/`.
 - (Post-Phase 4): OAuth consent screen
 
 **Shared UI dependencies:**
-- `web/@supercluster/core/` must be scaffolded first (design tokens, Button, Input, Modal)
+- `web/@supercluster/core/` scaffolded with design tokens, Button, Input, Modal, Card, Text, Icon, Select, FormField, 4 themes, ThemeProvider
 
-**Status:** 🔜 Not started (blocked by Phase 2, partially parallelizable with Phase 2 for signup/login/recovery flows)
+**Status:** ✅ Completed (2026-08-08)
+
+**What was built:**
+- Full SolidJS SPA in `web/passport/` with 6 pages (Login, Register, VerifyEmail, Recovery, Unsupported, Dashboard)
+- Auth signals with sessionStorage-backed token management, JWT decode, auto-refresh
+- API client with Bearer token injection, 401 interceptor, user-friendly error messages
+- WebAuthn utilities for credential create/get with base64url conversion
+- CodeInput component for 6-digit verification code entry
+- AppShell with full-viewport surface background and FOUC-free theme/radius init
+- AuthLayout (centered card) and DashboardLayout (header + content)
+- Real Fido2Service integration using fido2-net-lib v4
+- Database auto-initialization via MigrateAsync on startup
+- SpaProxy middleware for Vite dev server proxy in dev, static files in production
+- Add-passkey-from-new-device flow (4 endpoints + handlers + tests)
+- UAT checklists in `projects/passport/uat/`
+
+**Test results:** 141 backend tests + 50 core frontend tests passing
 
 ---
 
@@ -732,11 +748,11 @@ Deferred features — not planned in detail yet.
 - [x] Token expiry configurable
 
 ### Phase 3
-- [ ] Signup, login, recovery flows functional in browser
-- [ ] Passkey management (add/remove) functional
-- [ ] Email verification flow functional
-- [ ] All pages responsive and accessible
-- [ ] Design tokens come from `shared-ui`
+- [x] Signup, login, recovery flows functional in browser
+- [x] Passkey management (add/remove) functional
+- [x] Email verification flow functional
+- [x] All pages responsive and accessible
+- [x] Design tokens come from `shared-ui`
 
 ### Phase 4
 - [ ] Authorization Code + PKCE flow working end-to-end
