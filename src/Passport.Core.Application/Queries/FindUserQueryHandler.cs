@@ -1,5 +1,5 @@
-using Supercluster.Lib.Application.Queries;
-using Supercluster.Lib.Primitives;
+using Gestalt.Lib.Application.Queries;
+using Gestalt.Lib.Primitives;
 using Passport.Core.Application.Repositories;
 
 namespace Passport.Core.Application.Queries;

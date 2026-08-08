@@ -1,6 +1,6 @@
 # References
 
-External references, articles, and design inspirations that have shaped Supercluster.
+External references, articles, and design inspirations that have shaped Gestalt.
 
 | Reference | File | Summary |
 |-----------|------|---------|

@@ -1,6 +1,6 @@
 # FRONTEND.md
 
-Frontend conventions for the Supercluster monorepo. All apps in `web/` follow these rules.
+Frontend conventions for the Gestalt monorepo. All apps in `web/` follow these rules.
 
 ---
 
@@ -11,7 +11,7 @@ Frontend conventions for the Supercluster monorepo. All apps in `web/` follow th
 - **Language**: TypeScript (strict mode)
 - **Package manager**: pnpm
 - **Build tool**: Vite
-- **PWA**: Custom service worker via `web/@supercluster/core/`
+- **PWA**: Custom service worker via `web/@gestalt/core/`
 
 ---
 
@@ -27,7 +27,7 @@ web/{app-name}/
 │   ├── signals/           ← global reactive state (createSignal, createStore)
 │   ├── api/               ← typed fetch wrappers, API client
 │   ├── index.tsx          ← app entry point, router setup
-│   └── styles.css         ← local Tailwind entry (imports @supercluster/core styles, adds app-specific @theme overrides)
+│   └── styles.css         ← local Tailwind entry (imports @gestalt/core styles, adds app-specific @theme overrides)
 ├── public/                ← static assets, PWA manifest, icons
 ├── vite.config.ts
 ├── tsconfig.json
@@ -100,7 +100,7 @@ All network calls go through a typed API client. No raw `fetch` in components.
 
 ```tsx
 // src/api/users.ts
-import { Result } from "@supercluster/core";
+import { Result } from "@gestalt/core";
 import { apiClient } from "./client";
 
 export interface UserDto {
@@ -154,12 +154,12 @@ export const App = () => (
 
 ---
 
-## Shared UI Package (`web/@supercluster/core/`)
+## Shared UI Package (`web/@gestalt/core/`)
 
 All design tokens, components, PWA utilities, auth, navigation, and i18n live here in a single package:
 
 ```
-web/@supercluster/core/
+web/@gestalt/core/
 ├── src/
 │   ├── design/
 │   │   ├── tokens.ts       ← colors, fonts, spacing, breakpoints
@@ -175,13 +175,13 @@ web/@supercluster/core/
 └── package.json
 ```
 
-### Using @supercluster/core
+### Using @gestalt/core
 
 Apps import the shared CSS and can extend with app-specific theme overrides:
 
 ```css
 /* web/passport/src/styles.css */
-@import "@supercluster/core/styles.css";
+@import "@gestalt/core/styles.css";
 
 @theme {
   /* override or extend shared tokens here */
@@ -199,9 +199,9 @@ import "./styles.css";
 ## Styling Rules
 
 1. **Tailwind-first.** No inline styles, no CSS modules. Utility classes only.
-2. **Design tokens from `@supercluster/core`.** Colors, spacing, typography are defined once.
+2. **Design tokens from `@gestalt/core`.** Colors, spacing, typography are defined once.
 3. **Responsive by default.** Use `sm:`, `md:`, `lg:` breakpoints.
-4. **Dark mode.** All apps support dark mode via Tailwind's `dark:` variant. Toggle via ThemeProvider in `@supercluster/core`.
+4. **Dark mode.** All apps support dark mode via Tailwind's `dark:` variant. Toggle via ThemeProvider in `@gestalt/core`.
 
 ---
 
@@ -250,7 +250,7 @@ Integration tests use the `"Test"` environment and run in Debug mode. The `Progr
 
 The `SpaProxyServerUrl` setting is required in Development mode and provided via `Properties/launchSettings.json`. It is absent in other environments, so the proxy is never activated unexpectedly.
 
-All frontend apps are PWAs. Shared PWA utilities in `web/@supercluster/core/pwa/` provide:
+All frontend apps are PWAs. Shared PWA utilities in `web/@gestalt/core/pwa/` provide:
 
 - Service worker registration with update prompts
 - Offline fallback page

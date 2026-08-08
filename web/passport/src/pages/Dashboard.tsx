@@ -1,5 +1,5 @@
 import { Component, createSignal, createResource, For, Show } from "solid-js";
-import { Button, Text, Card, Modal, Icon } from "@supercluster/core";
+import { Button, Text, Card, Modal, Icon } from "@gestalt/core";
 import { getCredentials, removeCredential, type CredentialInfo } from "../api/auth";
 import { currentEmail, logout } from "../signals/auth";
 import { revokeAllTokens } from "../api/auth";

@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Supercluster.Lib.Application/Supercluster.Lib.Application.csproj" />
+    <ProjectReference Include="../Gestalt.Lib.Application/Gestalt.Lib.Application.csproj" />
     <ProjectReference Include="../Passport.Core.Domain/Passport.Core.Domain.csproj" />
   </ItemGroup>
 

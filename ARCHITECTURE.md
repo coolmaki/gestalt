@@ -7,22 +7,22 @@ Top-level map of the monorepo, dependency rules, and namespace conventions. This
 ## Monorepo Layout
 
 ```
-supercluster/
+gestalt/
 ├── src/
-│   ├── Supercluster.Lib.Primitives/       ← shared: foundational types
-│   ├── Supercluster.Lib.Domain/           ← shared: DDD base classes
-│   ├── Supercluster.Lib.Application/      ← shared: commands/queries interfaces, providers
-│   ├── Supercluster.Lib.Infrastructure/   ← shared: provider implementations
+│   ├── Gestalt.Lib.Primitives/       ← shared: foundational types
+│   ├── Gestalt.Lib.Domain/           ← shared: DDD base classes
+│   ├── Gestalt.Lib.Application/      ← shared: commands/queries interfaces, providers
+│   ├── Gestalt.Lib.Infrastructure/   ← shared: provider implementations
 │   ├── Passport.Core.Domain/              ← project: domain layer
 │   ├── Passport.Core.Application/         ← project: application layer
 │   ├── Passport.Infrastructure/           ← project: infrastructure layer
 │   └── Passport.Presentation.Http/        ← project: presentation layer
 ├── web/
-│   ├── @supercluster/
+│   ├── @gestalt/
 │   │   └── core/               ← shared: design system, components, PWA, auth, nav, i18n
 │   └── passport/               ← project: SolidJS SPA/PWA
 ├── tests/
-│   ├── Supercluster.Lib.Primitives.Tests/
+│   ├── Gestalt.Lib.Primitives.Tests/
 │   ├── Passport.Core.Domain.Tests/
 │   ├── Passport.Core.Application.Tests/
 │   └── ...
@@ -55,7 +55,7 @@ Every project follows the same layered architecture:
 
 **Source code dependencies point inward.** Outer layers depend on inner layers. Inner layers know nothing about outer layers.
 
-- `Domain` depends on **nothing** (except `Supercluster.Lib.Primitives` for `Result<T>`, `Option<T>`, etc.).
+- `Domain` depends on **nothing** (except `Gestalt.Lib.Primitives` for `Result<T>`, `Option<T>`, etc.).
 - `Application` depends on `Domain`. Defines interfaces (ports) that `Infrastructure` implements.
 - `Infrastructure` depends on `Application` (implements its interfaces). Also depends on external packages (EF Core, HttpClient, etc.).
 - `Presentation.Http` depends on `Application`. Wires up DI, maps HTTP to commands/queries.
@@ -76,8 +76,8 @@ Authentication, authorization, telemetry, and feature flags enter through:
 
 | Namespace | Purpose |
 |-----------|---------|
-| `Supercluster.Lib.Primitives` | `Result<T>`, `Option<T>`, `Error`, `ErrorType`, `Unit` |
-| `Supercluster.Lib.Domain` | `Entity`, `AggregateRoot`, `DomainEvent` |
+| `Gestalt.Lib.Primitives` | `Result<T>`, `Option<T>`, `Error`, `ErrorType`, `Unit` |
+| `Gestalt.Lib.Domain` | `Entity`, `AggregateRoot`, `DomainEvent` |
 
 ### Project Namespaces
 
@@ -100,7 +100,7 @@ Per-project namespaces use the pattern `{ProjectName}.{Layer}`:
 - **Package manager**: pnpm
 - **Build tool**: Vite
 
-### Shared Frontend Packages (`web/@supercluster/core/`)
+### Shared Frontend Packages (`web/@gestalt/core/`)
 
 Reusable across all frontend apps:
 
@@ -145,7 +145,7 @@ These are mechanically enforced (linters, structural tests, build checks):
 
 ### Frontend
 1. **API calls go through the `api/` layer.** No raw `fetch` in components.
-2. **Shared design tokens in `@supercluster/core/`.** No duplicated colors/fonts/spacing across apps.
+2. **Shared design tokens in `@gestalt/core/`.** No duplicated colors/fonts/spacing across apps.
 3. **Components are self-contained.** One component per file; co-locate styles with Tailwind classes.
 
 ### Cross-Cutting
@@ -168,8 +168,8 @@ These are mechanically enforced (linters, structural tests, build checks):
 
 | Library | Depends On | Provides |
 |---------|-----------|----------|
-| `Supercluster.Lib.Primitives` | *nothing* | `Result<T>`, `Option<T>`, `Error`, `ErrorType`, `Unit` |
-| `Supercluster.Lib.Domain` | Primitives | `Entity`, `AggregateRoot`, `DomainEvent` |
-| `Supercluster.Lib.Application` | Primitives | `ICommand<T>`, `ICommandHandler`, `IQuery<T>`, `IQueryHandler`, providers |
-| `Supercluster.Lib.Infrastructure` | Application | `DateTimeProvider`, `GuidProvider`, DI extensions |
-| `@supercluster/core` | solid-js | Design system, components, PWA, auth, nav, i18n |
+| `Gestalt.Lib.Primitives` | *nothing* | `Result<T>`, `Option<T>`, `Error`, `ErrorType`, `Unit` |
+| `Gestalt.Lib.Domain` | Primitives | `Entity`, `AggregateRoot`, `DomainEvent` |
+| `Gestalt.Lib.Application` | Primitives | `ICommand<T>`, `ICommandHandler`, `IQuery<T>`, `IQueryHandler`, providers |
+| `Gestalt.Lib.Infrastructure` | Application | `DateTimeProvider`, `GuidProvider`, DI extensions |
+| `@gestalt/core` | solid-js | Design system, components, PWA, auth, nav, i18n |

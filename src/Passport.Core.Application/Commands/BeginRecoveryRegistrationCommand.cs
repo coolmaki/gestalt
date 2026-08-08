@@ -1,4 +1,4 @@
-using Supercluster.Lib.Application.Commands;
+using Gestalt.Lib.Application.Commands;
 
 namespace Passport.Core.Application.Commands;
 

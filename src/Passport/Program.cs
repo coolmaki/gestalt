@@ -8,9 +8,9 @@ using Passport.Infrastructure.Configuration;
 using Passport.Infrastructure.Extensions;
 using Passport.Presentation.Http.Extensions;
 
-using Supercluster.Lib.Application.Extensions;
-using Supercluster.Lib.Infrastructure.Extensions;
-using Supercluster.Lib.Presentation.Http.Extensions;
+using Gestalt.Lib.Application.Extensions;
+using Gestalt.Lib.Infrastructure.Extensions;
+using Gestalt.Lib.Presentation.Http.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +31,7 @@ if (builder.Environment.IsDevelopment() && infraConfig.Persistence.Provider == P
 {
     var dbDir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-        ".supercluster", "passport");
+        ".gestalt", "passport");
     Directory.CreateDirectory(dbDir);
     infraConfig.Persistence.ConnectionString = $"Data Source={Path.Combine(dbDir, "passport.db")}";
 }

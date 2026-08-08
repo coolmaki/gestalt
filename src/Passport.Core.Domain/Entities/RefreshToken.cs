@@ -1,5 +1,5 @@
-using Supercluster.Lib.Domain;
-using Supercluster.Lib.Primitives;
+using Gestalt.Lib.Domain;
+using Gestalt.Lib.Primitives;
 
 namespace Passport.Core.Domain.Entities;
 

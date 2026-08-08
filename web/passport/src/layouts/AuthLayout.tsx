@@ -1,4 +1,4 @@
-import { Card, Text } from "@supercluster/core";
+import { Card, Text } from "@gestalt/core";
 import { Component, JSX } from "solid-js";
 import { isPasskeySupported } from "../utils/webauthn";
 
@@ -18,7 +18,7 @@ const AuthLayout: Component<AuthLayoutProps> = (props) => {
         <div class="text-center mb-8">
           <Text variant="headline" class="text-primary">Passport</Text>
           <Text variant="caption" class="text-medium-emphasis mt-1">
-            Identity server for Supercluster
+            Identity server for Gestalt
           </Text>
         </div>
         {props.children}

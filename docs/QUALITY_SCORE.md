@@ -36,8 +36,8 @@ Per-project quality grades. Updated by the doc-gardening agent and during code r
 
 | Library | Tests | Docs | Arch. Compliance | Error Handling | Immutability | Overall |
 |---------|:---:|:---:|:---:|:---:|:---:|:---:|
-| `Supercluster.Lib.Primitives` | ⚫ F | 🟢 A | 🟢 A | 🟢 A | 🟢 A | 🟠 C |
-| `Supercluster.Lib.Domain` | ⚫ F | 🟡 B | 🟢 A | 🟢 A | 🟢 A | 🟠 C |
+| `Gestalt.Lib.Primitives` | ⚫ F | 🟢 A | 🟢 A | 🟢 A | 🟢 A | 🟠 C |
+| `Gestalt.Lib.Domain` | ⚫ F | 🟡 B | 🟢 A | 🟢 A | 🟢 A | 🟠 C |
 
 ### Projects
 
@@ -51,7 +51,7 @@ Per-project quality grades. Updated by the doc-gardening agent and during code r
 
 | Package | Tests | Docs | Component Arch. | API Discipline | Design Tokens | Overall |
 |---------|:---:|:---:|:---:|:---:|:---:|:---:|
-| `@supercluster/core` | ⚫ F | ⚫ F | ⚫ F | N/A | ⚫ F | ⚫ F |
+| `@gestalt/core` | ⚫ F | ⚫ F | ⚫ F | N/A | ⚫ F | ⚫ F |
 
 ---
 
@@ -59,4 +59,4 @@ Per-project quality grades. Updated by the doc-gardening agent and during code r
 
 - **Primitives**: Now has 42 domain tests passing. Internal constructors on Option<T>/Result<T> for mock compat.
 - **Domain**: Doc coverage slightly lower (no XML comments on Entity/AggregateRoot/DomainEvent). AggreggateRoot typo was fixed.
-- **@supercluster/core**: Not yet scaffolded.
+- **@gestalt/core**: Not yet scaffolded.

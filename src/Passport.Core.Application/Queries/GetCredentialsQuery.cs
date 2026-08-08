@@ -1,4 +1,4 @@
-using Supercluster.Lib.Application.Queries;
+using Gestalt.Lib.Application.Queries;
 
 namespace Passport.Core.Application.Queries;
 

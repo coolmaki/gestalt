@@ -1,4 +1,4 @@
-import { Button, Text } from "@supercluster/core";
+import { Button, Text } from "@gestalt/core";
 import { Component, JSX, onMount } from "solid-js";
 import { revokeAllTokens } from "../api/auth";
 import {

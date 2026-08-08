@@ -1,6 +1,6 @@
 using System.Data.Common;
 using Dapper;
-using Supercluster.Lib.Primitives;
+using Gestalt.Lib.Primitives;
 using Passport.Core.Application.ReadModels;
 using Passport.Core.Application.Repositories;
 

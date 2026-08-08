@@ -1,6 +1,6 @@
 # SECURITY.md
 
-Security principles and practices for Supercluster.
+Security principles and practices for Gestalt.
 
 ## Core Principles
 

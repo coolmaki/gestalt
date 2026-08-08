@@ -1,7 +1,7 @@
 using NSubstitute;
 using Xunit;
-using Supercluster.Lib.Application.Providers;
-using Supercluster.Lib.Primitives;
+using Gestalt.Lib.Application.Providers;
+using Gestalt.Lib.Primitives;
 using Passport.Core.Application.Commands;
 using Passport.Core.Application.Repositories;
 using Passport.Core.Domain.Entities;

@@ -1,12 +1,12 @@
 # DESIGN.md
 
-Design philosophy, patterns, conventions, and quality standards for all projects in the Supercluster monorepo.
+Design philosophy, patterns, conventions, and quality standards for all projects in the Gestalt monorepo.
 
 ---
 
 ## Core Design Philosophy
 
-Supercluster follows **functional Clean Architecture**: Uncle Bob's dependency rule combined with functional-programming patterns in an object-oriented language. The goal is to make invalid states unrepresentable and failure modes explicit.
+Gestalt follows **functional Clean Architecture**: Uncle Bob's dependency rule combined with functional-programming patterns in an object-oriented language. The goal is to make invalid states unrepresentable and failure modes explicit.
 
 ### 1. Parse, Don't Validate
 
@@ -298,7 +298,7 @@ All domain entities (in `{Project}.Core.Domain`) follow these rules:
 - The containing class must be `static` and named `<TypeBeingExtended>Extensions`.
 
   ```csharp
-  // Supercluster.Lib.Infrastructure/Extensions/ServiceCollectionExtensions.cs
+  // Gestalt.Lib.Infrastructure/Extensions/ServiceCollectionExtensions.cs
   public static class ServiceCollectionExtensions
   {
       public static IServiceCollection AddProviders(this IServiceCollection services) { ... }

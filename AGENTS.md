@@ -17,30 +17,30 @@
 - Package manager: `pnpm`
 - Build: `pnpm build` (from the app directory)
 - Dev: `pnpm dev`
-- Shared package: `web/@supercluster/core/`
+- Shared package: `web/@gestalt/core/`
 
 ---
 
 ## Repository Map
 
 ```
-supercluster/                     ← monorepo root
+gestalt/                     ← monorepo root
   AGENTS.md                       ← you are here
   ARCHITECTURE.md                 ← architecture rules & dependency graph
   .editorconfig                   ← C# formatting (applies to all src/ and tests/)
   src/
-    Supercluster.Lib.Primitives/  ← shared: Result<T>, Option<T>, Error, Unit
-    Supercluster.Lib.Domain/      ← shared: Entity, AggregateRoot, DomainEvent
+    Gestalt.Lib.Primitives/  ← shared: Result<T>, Option<T>, Error, Unit
+    Gestalt.Lib.Domain/      ← shared: Entity, AggregateRoot, DomainEvent
     {Project}.Core.Domain/        ← per-project: domain entities & business rules
     {Project}.Core.Application/   ← per-project: commands/queries, ports/interfaces
     {Project}.Infrastructure/     ← per-project: DB, external APIs, file I/O
     {Project}.Presentation.Http/  ← per-project: ASP.NET controllers, middleware
   web/
-    @supercluster/
+    @gestalt/
       core/                        ← shared: design system, components, PWA, auth, nav, i18n
     {app-name}/                    ← per-app SolidJS SPA/PWA (kebab-case)
   tests/
-    Supercluster.Lib.Primitives.Tests/
+    Gestalt.Lib.Primitives.Tests/
     {Project}.Core.Domain.Tests/
     {Project}.Core.Application.Tests/
     ...
@@ -69,7 +69,7 @@ Presentation → Application → Domain
 - **Infrastructure** (`{Project}.Infrastructure`): Implements Application ports. DB, external APIs, file I/O.
 - **Presentation** (`{Project}.Presentation.Http`): ASP.NET controllers, middleware, request/response mapping.
 
-**Shared libraries** (`Supercluster.Lib.*`) provide base types used by all projects. They are the only cross-project code dependencies.
+**Shared libraries** (`Gestalt.Lib.*`) provide base types used by all projects. They are the only cross-project code dependencies.
 
 **Cross-cutting concerns** (auth, telemetry, feature flags) enter through a single Providers/Middleware interface in the Presentation or Infrastructure layer. No domain code reaches out to infrastructure directly.
 
@@ -186,7 +186,7 @@ services.AddPassportInfrastructure(persistenceConfig);    // repos, services, Db
 - **DI registration** → `Add{Project}Endpoints()` in `Extensions/ServiceCollectionExtensions.cs`
 
 ### Mediator
-- **`ISender`** → `Supercluster.Lib.Application.Mediator` — inject this, not individual handlers
+- **`ISender`** → `Gestalt.Lib.Application.Mediator` — inject this, not individual handlers
 - **`AddMediator()`** → registers `ISender` / `Sender` (shared lib)
 - **`AddHandlers(assemblies)`** → scans assemblies for `ICommandHandler<,>` and `IQueryHandler<,>`
 - Handlers are auto-discovered — creating a new handler class is all that's needed

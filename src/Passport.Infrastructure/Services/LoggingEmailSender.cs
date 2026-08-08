@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using Supercluster.Lib.Infrastructure.Email;
+using Gestalt.Lib.Infrastructure.Email;
 
 namespace Passport.Infrastructure.Services;
 

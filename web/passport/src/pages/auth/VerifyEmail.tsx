@@ -1,5 +1,5 @@
 import { Component, createSignal } from "solid-js";
-import { Button, Text } from "@supercluster/core";
+import { Button, Text } from "@gestalt/core";
 import { useNavigate, useSearchParams } from "@solidjs/router";
 import { verifyEmail } from "../../api/auth";
 import CodeInput from "../../components/CodeInput";

@@ -14,7 +14,7 @@ public sealed class AccessTokenConfiguration
     public string Issuer { get; set; } = "https://localhost:5001";
 
     /// <summary>
-    /// Token audience (the Supercluster ecosystem).
+    /// Token audience (the Gestalt ecosystem).
     /// </summary>
-    public string Audience { get; set; } = "supercluster";
+    public string Audience { get; set; } = "gestalt";
 }

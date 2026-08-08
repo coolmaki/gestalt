@@ -1,6 +1,6 @@
 using NSubstitute;
 using Xunit;
-using Supercluster.Lib.Primitives;
+using Gestalt.Lib.Primitives;
 using Passport.Core.Application.Commands;
 using Passport.Core.Application.Services;
 

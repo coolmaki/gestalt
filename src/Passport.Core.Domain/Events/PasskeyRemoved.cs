@@ -1,4 +1,4 @@
-using Supercluster.Lib.Domain;
+using Gestalt.Lib.Domain;
 using Passport.Core.Domain.ValueObjects;
 
 namespace Passport.Core.Domain.Events;

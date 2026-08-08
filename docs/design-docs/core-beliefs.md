@@ -1,6 +1,6 @@
 # Core Beliefs
 
-These are the foundational, non-negotiable principles that guide all design decisions across every project in the Supercluster monorepo. When facing a tradeoff, resolve it in favor of these beliefs.
+These are the foundational, non-negotiable principles that guide all design decisions across every project in the Gestalt monorepo. When facing a tradeoff, resolve it in favor of these beliefs.
 
 ---
 
@@ -31,7 +31,7 @@ Every project follows the same layered dependency structure: Domain → Applicat
 **Implications:**
 - Inner layers never reference outer layers. Period.
 - Interfaces (ports) are defined in Application; implementations (adapters) in Infrastructure.
-- Shared libraries (`Supercluster.Lib.*`) provide base types only — no business logic.
+- Shared libraries (`Gestalt.Lib.*`) provide base types only — no business logic.
 - New projects are scaffolded identically; the structure is not open for interpretation.
 
 ## 4. Progressive Disclosure

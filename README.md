@@ -1,4 +1,4 @@
-# Supercluster
+# Gestalt
 
 A collection of self-hosted services, built with .NET and SolidJS.
 
@@ -25,7 +25,7 @@ tests/   — mirrored test suite
 docs/    — system of record for all design & planning
 ```
 
-Shared libraries (`Supercluster.Lib.*`) provide primitives and domain base classes. Each project layers cleanly: `Domain → Application → Infrastructure → Presentation`.
+Shared libraries (`Gestalt.Lib.*`) provide primitives and domain base classes. Each project layers cleanly: `Domain → Application → Infrastructure → Presentation`.
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the full map.
 

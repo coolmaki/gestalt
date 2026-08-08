@@ -1,6 +1,6 @@
 import { render } from "solid-js/web";
 import { Router, Route } from "@solidjs/router";
-import { ThemeProvider } from "@supercluster/core";
+import { ThemeProvider } from "@gestalt/core";
 import { lazy, type Component, type JSX } from "solid-js";
 import "./styles.css";
 

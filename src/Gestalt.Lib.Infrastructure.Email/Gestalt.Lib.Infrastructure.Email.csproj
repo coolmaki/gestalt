@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../Gestalt.Lib.Primitives/Gestalt.Lib.Primitives.csproj" />
+  </ItemGroup>
+
+</Project>

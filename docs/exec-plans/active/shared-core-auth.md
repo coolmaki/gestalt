@@ -2,13 +2,13 @@
 
 **Created:** 2026-07-10
 **Status:** 🔜 Not started
-**Project:** Supercluster (cross-project)
+**Project:** Gestalt (cross-project)
 **Driving Agent:** human
 **Depends on:** Plan 2 (`shared-core-design-tokens`)
 
 ## Goal
 
-Add authentication utilities (token storage, API client, auth signal, protected routes), a mobile-style stack navigator, and internationalization support to `@supercluster/core`.
+Add authentication utilities (token storage, API client, auth signal, protected routes), a mobile-style stack navigator, and internationalization support to `@gestalt/core`.
 
 ## Design Decisions
 

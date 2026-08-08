@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Passport.Core.Application/Passport.Core.Application.csproj" />
-    <ProjectReference Include="../Supercluster.Lib.Infrastructure.Email/Supercluster.Lib.Infrastructure.Email.csproj" />
+    <ProjectReference Include="../Gestalt.Lib.Infrastructure.Email/Gestalt.Lib.Infrastructure.Email.csproj" />
   </ItemGroup>
 
   <ItemGroup>

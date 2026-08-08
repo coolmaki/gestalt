@@ -1,5 +1,5 @@
 using Passport.Core.Domain.ValueObjects;
-using Supercluster.Lib.Domain;
+using Gestalt.Lib.Domain;
 
 namespace Passport.Core.Domain.Events;
 

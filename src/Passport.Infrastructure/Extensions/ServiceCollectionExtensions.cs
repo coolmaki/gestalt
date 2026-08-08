@@ -10,7 +10,7 @@ using Passport.Infrastructure.Extensions;
 using Passport.Infrastructure.Persistence;
 using Passport.Infrastructure.Repositories;
 using Passport.Infrastructure.Services;
-using Supercluster.Lib.Infrastructure.Email;
+using Gestalt.Lib.Infrastructure.Email;
 
 namespace Passport.Infrastructure.Extensions;
 

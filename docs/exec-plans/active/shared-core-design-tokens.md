@@ -2,13 +2,13 @@
 
 **Created:** 2026-07-10
 **Status:** ✅ Completed
-**Project:** Supercluster (cross-project)
+**Project:** Gestalt (cross-project)
 **Driving Agent:** human
 **Depends on:** Plan 1 (`shared-core-scaffold`)
 
 ## Goal
 
-Define the visual foundation of all Supercluster apps: design tokens, multi-theme CSS variable system, Geist Mono font, Tailwind v4 plugin for theme injection, and ThemeProvider. By the end of this plan, importing `@supercluster/core/styles.css` gives any app a consistent visual baseline.
+Define the visual foundation of all Gestalt apps: design tokens, multi-theme CSS variable system, Geist Mono font, Tailwind v4 plugin for theme injection, and ThemeProvider. By the end of this plan, importing `@gestalt/core/styles.css` gives any app a consistent visual baseline.
 
 ## Design Decisions
 
@@ -23,7 +23,7 @@ Define the visual foundation of all Supercluster apps: design tokens, multi-them
 
 ## Steps
 
-1. [ ] Create `web/@supercluster/core/src/design/` directory
+1. [ ] Create `web/@gestalt/core/src/design/` directory
 2. [ ] Create `src/design/tokens.ts`:
     - Define `ColorTokens` interface with 22 color slots:
       - Surface: `surface`, `surfaceContent`, `surfaceAlt`, `surfaceAltContent`
@@ -85,8 +85,8 @@ tokens.ts — ColorTokens interface (22 color slots)
 
 ## Acceptance Criteria
 
-- [ ] `import "@supercluster/core/styles.css"` imports shared Tailwind theme with 4 themes
-- [ ] `import { tokens, themes } from "@supercluster/core"` exposes token types and theme values
+- [ ] `import "@gestalt/core/styles.css"` imports shared Tailwind theme with 4 themes
+- [ ] `import { tokens, themes } from "@gestalt/core"` exposes token types and theme values
 - [ ] `ThemeProvider` sets `data-theme` attribute, persists to localStorage
 - [ ] All 4 themes switch colors via `data-theme` attribute (obsidian, matrix, pearl, vapor)
 - [ ] `@theme inline` maps CSS custom properties to Tailwind utility classes (e.g., `bg-primary`, `text-surface-content`)

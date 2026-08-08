@@ -1,5 +1,5 @@
 import { Component } from "solid-js";
-import { Text, Button } from "@supercluster/core";
+import { Text, Button } from "@gestalt/core";
 
 const Unsupported: Component = () => {
   return (

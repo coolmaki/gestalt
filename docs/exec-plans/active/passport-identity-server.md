@@ -7,11 +7,11 @@
 
 ## Goal
 
-Build Passport: a self-hosted identity server that serves as the authentication foundation for all Supercluster apps. It implements OAuth 2.0 / OpenID Connect with **passkeys (WebAuthn) as the exclusive first-class authentication method** — no password login. Users register with email (for account recovery) and a passkey. The service is self-hosted first but designed to be deployable by other tech-savvy operators.
+Build Passport: a self-hosted identity server that serves as the authentication foundation for all Gestalt apps. It implements OAuth 2.0 / OpenID Connect with **passkeys (WebAuthn) as the exclusive first-class authentication method** — no password login. Users register with email (for account recovery) and a passkey. The service is self-hosted first but designed to be deployable by other tech-savvy operators.
 
 ## High-Level Architecture
 
-Passport follows Clean Architecture like all Supercluster projects:
+Passport follows Clean Architecture like all Gestalt projects:
 
 ```
 Passport.Presentation.Http   ← OAuth/OIDC endpoints, login/signup pages (API + SSR or SPA)
@@ -29,7 +29,7 @@ Frontend: SolidJS SPA in `web/passport/` for login, signup, passkey management, 
 | Passkeys only, no passwords | Eliminates credential stuffing, phishing, and password reset flows entirely |
 | Email for recovery only | Minimal barrier to signup — just email and a passkey tap; email serves as the recovery channel |
 | Hybrid token model (JWT + refresh) | Short-lived JWTs (locally validated → fast), opaque refresh tokens (stored → revocable) |
-| One user pool for all Supercluster apps | Single identity; apps get scoped access via OAuth scopes/claims |
+| One user pool for all Gestalt apps | Single identity; apps get scoped access via OAuth scopes/claims |
 | EF Core with Postgres + SQLite adapters | Postgres for production, SQLite for low-traffic deployments; same domain code, swappable adapter |
 | Authorization Code + PKCE for pre-v1 | The secure SPA flow; client credentials and device flow deferred to backlog |
 
@@ -49,7 +49,7 @@ The minimum viable identity server: register with passkey, authenticate with pas
 - Presentation: 11 minimal API endpoints implementing `IEndpoint`; `EndpointVersion` enum with `v1` default; RFC 7807 Problem Details via `Result<T>.ToHttpResponse()`
 - Host: ASP.NET Core minimal API host; DI wired with `AddMediator()`, `AddPassportCommandsAndQueries()`, `AddPassportInfrastructure()`, `AddPassportEndpoints()`
 - Tests: 42 domain + 21 application + 3 integration = 66 tests passing
-- Shared libs added: `Supercluster.Lib.Application` (CQRS, mediator, providers), `Supercluster.Lib.Infrastructure` (provider impls), `Supercluster.Lib.Presentation.Http` (IEndpoint, versioning, RFC 7807)
+- Shared libs added: `Gestalt.Lib.Application` (CQRS, mediator, providers), `Gestalt.Lib.Infrastructure` (provider impls), `Gestalt.Lib.Presentation.Http` (IEndpoint, versioning, RFC 7807)
 
 ---
 
@@ -605,7 +605,7 @@ public readonly record struct RefreshTokenId(Guid Value);
     "AccessToken": {
       "LifetimeMinutes": 15,
       "Issuer": "https://passport.example.com",
-      "Audience": "supercluster"
+      "Audience": "gestalt"
     },
     "RefreshToken": {
       "LifetimeDays": 30,
@@ -666,7 +666,7 @@ Login, signup, and account management in `web/passport/`.
 - (Post-Phase 4): OAuth consent screen
 
 **Shared UI dependencies:**
-- `web/@supercluster/core/` scaffolded with design tokens, Button, Input, Modal, Card, Text, Icon, Select, FormField, 4 themes, ThemeProvider
+- `web/@gestalt/core/` scaffolded with design tokens, Button, Input, Modal, Card, Text, Icon, Select, FormField, 4 themes, ThemeProvider
 
 **Status:** ✅ Completed (2026-08-08)
 

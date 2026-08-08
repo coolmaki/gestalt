@@ -1,6 +1,6 @@
 # Design Docs Index
 
-Catalog of design documents that have shaped the Supercluster architecture and conventions.
+Catalog of design documents that have shaped the Gestalt architecture and conventions.
 
 | Document | Status | Last Updated | Summary |
 |----------|--------|-------------|---------|

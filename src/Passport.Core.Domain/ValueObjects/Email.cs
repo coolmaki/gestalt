@@ -1,4 +1,4 @@
-using Supercluster.Lib.Primitives;
+using Gestalt.Lib.Primitives;
 
 namespace Passport.Core.Domain.ValueObjects;
 

@@ -94,8 +94,8 @@ When starting a new project in the monorepo:
    - If frontend: create `apps/{project-name}/` with SolidJS + Tailwind scaffold
 
 3. **Wire dependencies:**
-   - All projects reference `Supercluster.Lib.Primitives`
-   - Domain projects reference `Supercluster.Lib.Domain`
+   - All projects reference `Gestalt.Lib.Primitives`
+   - Domain projects reference `Gestalt.Lib.Domain`
    - Application references Domain
    - Infrastructure references Application
    - Presentation.Http references Application

@@ -11,7 +11,7 @@
     <ProjectReference Include="../Passport.Core.Application/Passport.Core.Application.csproj" />
     <ProjectReference Include="../Passport.Infrastructure/Passport.Infrastructure.csproj" />
     <ProjectReference Include="../Passport.Presentation.Http/Passport.Presentation.Http.csproj" />
-    <ProjectReference Include="../Supercluster.Lib.Infrastructure/Supercluster.Lib.Infrastructure.csproj" />
+    <ProjectReference Include="../Gestalt.Lib.Infrastructure/Gestalt.Lib.Infrastructure.csproj" />
   </ItemGroup>
 
   <Target Name="BuildSpa" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">

@@ -1,7 +1,7 @@
 using Passport.Core.Application.Configuration;
 using Passport.Core.Application.Services;
 using Passport.Core.Domain.ValueObjects;
-using Supercluster.Lib.Infrastructure.Email;
+using Gestalt.Lib.Infrastructure.Email;
 
 namespace Passport.Infrastructure.Services;
 

@@ -1,6 +1,6 @@
 # RELIABILITY.md
 
-Reliability principles and practices for Supercluster.
+Reliability principles and practices for Gestalt.
 
 ## Core Principles
 

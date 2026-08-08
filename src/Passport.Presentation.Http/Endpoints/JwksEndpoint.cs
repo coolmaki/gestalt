@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http;
-using Supercluster.Lib.Presentation.Http;
+using Gestalt.Lib.Presentation.Http;
 using Passport.Core.Application.Services;
 
 namespace Passport.Presentation.Http.Endpoints;

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using Supercluster.Lib.Presentation.Http.Extensions;
+using Gestalt.Lib.Presentation.Http.Extensions;
 
 namespace Passport.Presentation.Http.Extensions;
 

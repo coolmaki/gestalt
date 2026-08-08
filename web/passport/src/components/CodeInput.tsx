@@ -1,5 +1,5 @@
 import { Component, createSignal, createEffect, For, onMount } from "solid-js";
-import { Input, Text } from "@supercluster/core";
+import { Input, Text } from "@gestalt/core";
 
 interface CodeInputProps {
   length?: number;

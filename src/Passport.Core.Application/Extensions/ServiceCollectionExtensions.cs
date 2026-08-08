@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using Supercluster.Lib.Application.Extensions;
+using Gestalt.Lib.Application.Extensions;
 
 namespace Passport.Core.Application.Extensions;
 

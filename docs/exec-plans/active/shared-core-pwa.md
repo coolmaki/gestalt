@@ -2,13 +2,13 @@
 
 **Created:** 2026-07-10
 **Status:** 🔜 Not started
-**Project:** Supercluster (cross-project)
+**Project:** Gestalt (cross-project)
 **Driving Agent:** human
 **Depends on:** Plan 2 (`shared-core-design-tokens`), Plan 3 (`shared-core-components` for AppSettings)
 
 ## Goal
 
-Build PWA infrastructure and the configurable app settings page. Every Supercluster app uses this to register its service worker, generate a manifest, and provide users with a settings page for themes and auto-update behavior.
+Build PWA infrastructure and the configurable app settings page. Every Gestalt app uses this to register its service worker, generate a manifest, and provide users with a settings page for themes and auto-update behavior.
 
 ## Design Decisions
 
@@ -22,7 +22,7 @@ Build PWA infrastructure and the configurable app settings page. Every Superclus
 
 ## Steps
 
-1. [ ] Create `web/@supercluster/core/src/pwa/` directory
+1. [ ] Create `web/@gestalt/core/src/pwa/` directory
 2. [ ] Create `src/pwa/service-worker.ts`:
    - `registerSW(options: { autoUpdate?: boolean })` — registers service worker
    - Auto-update mode: worker auto-installs on new version

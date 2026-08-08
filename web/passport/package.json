@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@supercluster/core": "workspace:*",
+    "@gestalt/core": "workspace:*",
     "solid-js": "catalog:",
     "@solidjs/router": "catalog:"
   },

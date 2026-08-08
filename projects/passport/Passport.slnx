@@ -1,10 +1,10 @@
 <Solution>
-  <Project Path="../../src/Supercluster.Lib.Primitives/Supercluster.Lib.Primitives.csproj" />
-  <Project Path="../../src/Supercluster.Lib.Domain/Supercluster.Lib.Domain.csproj" />
-  <Project Path="../../src/Supercluster.Lib.Application/Supercluster.Lib.Application.csproj" />
-  <Project Path="../../src/Supercluster.Lib.Infrastructure/Supercluster.Lib.Infrastructure.csproj" />
-  <Project Path="../../src/Supercluster.Lib.Infrastructure.Email/Supercluster.Lib.Infrastructure.Email.csproj" />
-  <Project Path="../../src/Supercluster.Lib.Presentation.Http/Supercluster.Lib.Presentation.Http.csproj" />
+  <Project Path="../../src/Gestalt.Lib.Primitives/Gestalt.Lib.Primitives.csproj" />
+  <Project Path="../../src/Gestalt.Lib.Domain/Gestalt.Lib.Domain.csproj" />
+  <Project Path="../../src/Gestalt.Lib.Application/Gestalt.Lib.Application.csproj" />
+  <Project Path="../../src/Gestalt.Lib.Infrastructure/Gestalt.Lib.Infrastructure.csproj" />
+  <Project Path="../../src/Gestalt.Lib.Infrastructure.Email/Gestalt.Lib.Infrastructure.Email.csproj" />
+  <Project Path="../../src/Gestalt.Lib.Presentation.Http/Gestalt.Lib.Presentation.Http.csproj" />
   <Project Path="../../src/Passport.Core.Domain/Passport.Core.Domain.csproj" />
   <Project Path="../../src/Passport.Core.Application/Passport.Core.Application.csproj" />
   <Project Path="../../src/Passport.Infrastructure/Passport.Infrastructure.csproj" />

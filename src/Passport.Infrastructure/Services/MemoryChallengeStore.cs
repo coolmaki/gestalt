@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using Supercluster.Lib.Primitives;
+using Gestalt.Lib.Primitives;
 using Passport.Core.Application.Services;
 
 namespace Passport.Infrastructure.Services;

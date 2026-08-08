@@ -2,13 +2,13 @@
 
 **Created:** 2026-07-10
 **Status:** ✅ Completed
-**Project:** Supercluster (cross-project)
+**Project:** Gestalt (cross-project)
 **Driving Agent:** human
 **Depends on:** Plan 2 (`shared-core-design-tokens`)
 
 ## Goal
 
-Build the initial component library. Deliver 7 components (Icon, Button, Input, Text, Card, FormField, Modal) with compound variants, full test coverage, and themed via `@supercluster/core` design tokens.
+Build the initial component library. Deliver 7 components (Icon, Button, Input, Text, Card, FormField, Modal) with compound variants, full test coverage, and themed via `@gestalt/core` design tokens.
 
 ## Design Decisions
 
@@ -56,7 +56,7 @@ Build the initial component library. Deliver 7 components (Icon, Button, Input, 
 - Props: `open, onClose, title, children`
 - Focus trap via `solid-focus-trap` (1.1 KB) — Tab cycling, focus restore, DOM observation
 - Fixed overlay, centered card, closes on backdrop + Escape
-- SDependency: `solid-focus-trap` added to `@supercluster/core`
+- SDependency: `solid-focus-trap` added to `@gestalt/core`
 
 ## Steps
 

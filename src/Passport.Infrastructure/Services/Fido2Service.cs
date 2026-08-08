@@ -3,7 +3,7 @@ using System.Text.Json;
 using Fido2NetLib;
 using Fido2NetLib.Objects;
 using Microsoft.Extensions.Options;
-using Supercluster.Lib.Primitives;
+using Gestalt.Lib.Primitives;
 using Passport.Core.Application.Services;
 using Passport.Core.Domain.ValueObjects;
 using Passport.Infrastructure.Configuration;

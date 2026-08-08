@@ -1,5 +1,5 @@
 import { Component, createSignal } from "solid-js";
-import { Button, Input, FormField, Text } from "@supercluster/core";
+import { Button, Input, FormField, Text } from "@gestalt/core";
 import { useNavigate } from "@solidjs/router";
 import { beginRegistration, completeRegistration } from "../../api/auth";
 import { createCredential } from "../../utils/webauthn";

@@ -1,6 +1,6 @@
 # TESTING.md
 
-Test conventions, coverage targets, and exclusion policy for all projects in the Supercluster monorepo.
+Test conventions, coverage targets, and exclusion policy for all projects in the Gestalt monorepo.
 
 ---
 
