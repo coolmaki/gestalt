@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Gestalt Theme Schema",
+  "description": "Closed set of 76 semantic design tokens every Gestalt theme must implement. Values follow DTCG conventions ($type/$value).",
+  "type": "object",
+  "required": ["name", "colors", "typography", "shadows", "borders"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "maxLength": 64
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "author": {
+      "type": "string",
+      "maxLength": 64
+    },
+    "colors": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/primaryColors" },
+        { "$ref": "#/$defs/secondaryColors" },
+        { "$ref": "#/$defs/infoColors" },
+        { "$ref": "#/$defs/successColors" },
+        { "$ref": "#/$defs/warningColors" },
+        { "$ref": "#/$defs/dangerColors" },
+        { "$ref": "#/$defs/structuralColors" }
+      ],
+      "unevaluatedProperties": false
+    },
+    "typography": {
+      "type": "object",
+      "required": ["fontFamily"],
+      "additionalProperties": false,
+      "properties": {
+        "fontFamily": { "$ref": "#/$defs/fontFamilyToken" }
+      }
+    },
+    "shadows": {
+      "type": "object",
+      "required": ["shadowXs", "shadowSm", "shadowMd", "shadowLg", "shadowXl"],
+      "additionalProperties": false,
+      "properties": {
+        "shadowXs": { "$ref": "#/$defs/shadowToken" },
+        "shadowSm": { "$ref": "#/$defs/shadowToken" },
+        "shadowMd": { "$ref": "#/$defs/shadowToken" },
+        "shadowLg": { "$ref": "#/$defs/shadowToken" },
+        "shadowXl": { "$ref": "#/$defs/shadowToken" }
+      }
+    },
+    "borders": {
+      "type": "object",
+      "required": ["borderWidth"],
+      "additionalProperties": false,
+      "properties": {
+        "borderWidth": { "$ref": "#/$defs/dimensionToken" }
+      }
+    }
+  },
+  "$defs": {
+    "hexColor": {
+      "type": "object",
+      "required": ["$type", "$value"],
+      "additionalProperties": false,
+      "properties": {
+        "$type": { "const": "color" },
+        "$value": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+        }
+      }
+    },
+    "channelColor": {
+      "type": "object",
+      "required": ["$type", "$value"],
+      "additionalProperties": false,
+      "properties": {
+        "$type": { "const": "color" },
+        "$value": {
+          "type": "object",
+          "required": ["colorSpace", "components"],
+          "additionalProperties": false,
+          "properties": {
+            "colorSpace": {
+              "type": "string",
+              "enum": ["srgb", "display-p3", "srgb-linear", "display-p3-linear", "rec2020", "rec2020-linear", "xyz-d50", "xyz-d65", "hsl", "hwb", "lab", "lch", "oklab", "oklch"]
+            },
+            "components": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 3,
+              "maxItems": 4
+            },
+            "alpha": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        }
+      }
+    },
+    "colorToken": {
+      "oneOf": [
+        { "$ref": "#/$defs/hexColor" },
+        { "$ref": "#/$defs/channelColor" }
+      ]
+    },
+    "dimensionToken": {
+      "type": "object",
+      "required": ["$type", "$value"],
+      "additionalProperties": false,
+      "properties": {
+        "$type": { "const": "dimension" },
+        "$value": {
+          "type": "object",
+          "required": ["value", "unit"],
+          "additionalProperties": false,
+          "properties": {
+            "value": { "type": "number" },
+            "unit": { "type": "string", "enum": ["px", "rem"] }
+          }
+        }
+      }
+    },
+    "shadowToken": {
+      "type": "object",
+      "required": ["$type", "$value"],
+      "additionalProperties": false,
+      "properties": {
+        "$type": { "const": "shadow" },
+        "$value": {
+          "type": "object",
+          "required": ["offsetX", "offsetY", "blur", "spread", "color"],
+          "additionalProperties": false,
+          "properties": {
+            "offsetX": { "$ref": "#/$defs/dimensionValue" },
+            "offsetY": { "$ref": "#/$defs/dimensionValue" },
+            "blur": { "$ref": "#/$defs/dimensionValue" },
+            "spread": { "$ref": "#/$defs/dimensionValue" },
+            "color": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+            }
+          }
+        }
+      }
+    },
+    "dimensionValue": {
+      "type": "object",
+      "required": ["value", "unit"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": "number" },
+        "unit": { "type": "string", "enum": ["px", "rem"] }
+      }
+    },
+    "fontFamilyToken": {
+      "type": "object",
+      "required": ["$type", "$value"],
+      "additionalProperties": false,
+      "properties": {
+        "$type": { "const": "fontFamily" },
+        "$value": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "contains": {
+            "enum": ["Geist Mono", "JetBrains Mono", "Fira Code", "IBM Plex Mono", "monospace"]
+          }
+        }
+      }
+    },
+    "primaryColors": {
+      "type": "object",
+      "required": [
+        "primary", "primaryContent",
+        "primaryHover", "primaryHoverContent",
+        "primaryActive", "primaryActiveContent",
+        "primaryFocus", "primaryFocusContent",
+        "primaryDisabled", "primaryDisabledContent"
+      ],
+      "properties": {
+        "primary": { "$ref": "#/$defs/colorToken" },
+        "primaryContent": { "$ref": "#/$defs/colorToken" },
+        "primaryHover": { "$ref": "#/$defs/colorToken" },
+        "primaryHoverContent": { "$ref": "#/$defs/colorToken" },
+        "primaryActive": { "$ref": "#/$defs/colorToken" },
+        "primaryActiveContent": { "$ref": "#/$defs/colorToken" },
+        "primaryFocus": { "$ref": "#/$defs/colorToken" },
+        "primaryFocusContent": { "$ref": "#/$defs/colorToken" },
+        "primaryDisabled": { "$ref": "#/$defs/colorToken" },
+        "primaryDisabledContent": { "$ref": "#/$defs/colorToken" }
+      }
+    },
+    "secondaryColors": {
+      "type": "object",
+      "required": [
+        "secondary", "secondaryContent",
+        "secondaryHover", "secondaryHoverContent",
+        "secondaryActive", "secondaryActiveContent",
+        "secondaryFocus", "secondaryFocusContent",
+        "secondaryDisabled", "secondaryDisabledContent"
+      ],
+      "properties": {
+        "secondary": { "$ref": "#/$defs/colorToken" },
+        "secondaryContent": { "$ref": "#/$defs/colorToken" },
+        "secondaryHover": { "$ref": "#/$defs/colorToken" },
+        "secondaryHoverContent": { "$ref": "#/$defs/colorToken" },
+        "secondaryActive": { "$ref": "#/$defs/colorToken" },
+        "secondaryActiveContent": { "$ref": "#/$defs/colorToken" },
+        "secondaryFocus": { "$ref": "#/$defs/colorToken" },
+        "secondaryFocusContent": { "$ref": "#/$defs/colorToken" },
+        "secondaryDisabled": { "$ref": "#/$defs/colorToken" },
+        "secondaryDisabledContent": { "$ref": "#/$defs/colorToken" }
+      }
+    },
+    "infoColors": {
+      "type": "object",
+      "required": [
+        "info", "infoContent",
+        "infoHover", "infoHoverContent",
+        "infoActive", "infoActiveContent",
+        "infoFocus", "infoFocusContent",
+        "infoDisabled", "infoDisabledContent"
+      ],
+      "properties": {
+        "info": { "$ref": "#/$defs/colorToken" },
+        "infoContent": { "$ref": "#/$defs/colorToken" },
+        "infoHover": { "$ref": "#/$defs/colorToken" },
+        "infoHoverContent": { "$ref": "#/$defs/colorToken" },
+        "infoActive": { "$ref": "#/$defs/colorToken" },
+        "infoActiveContent": { "$ref": "#/$defs/colorToken" },
+        "infoFocus": { "$ref": "#/$defs/colorToken" },
+        "infoFocusContent": { "$ref": "#/$defs/colorToken" },
+        "infoDisabled": { "$ref": "#/$defs/colorToken" },
+        "infoDisabledContent": { "$ref": "#/$defs/colorToken" }
+      }
+    },
+    "successColors": {
+      "type": "object",
+      "required": [
+        "success", "successContent",
+        "successHover", "successHoverContent",
+        "successActive", "successActiveContent",
+        "successFocus", "successFocusContent",
+        "successDisabled", "successDisabledContent"
+      ],
+      "properties": {
+        "success": { "$ref": "#/$defs/colorToken" },
+        "successContent": { "$ref": "#/$defs/colorToken" },
+        "successHover": { "$ref": "#/$defs/colorToken" },
+        "successHoverContent": { "$ref": "#/$defs/colorToken" },
+        "successActive": { "$ref": "#/$defs/colorToken" },
+        "successActiveContent": { "$ref": "#/$defs/colorToken" },
+        "successFocus": { "$ref": "#/$defs/colorToken" },
+        "successFocusContent": { "$ref": "#/$defs/colorToken" },
+        "successDisabled": { "$ref": "#/$defs/colorToken" },
+        "successDisabledContent": { "$ref": "#/$defs/colorToken" }
+      }
+    },
+    "warningColors": {
+      "type": "object",
+      "required": [
+        "warning", "warningContent",
+        "warningHover", "warningHoverContent",
+        "warningActive", "warningActiveContent",
+        "warningFocus", "warningFocusContent",
+        "warningDisabled", "warningDisabledContent"
+      ],
+      "properties": {
+        "warning": { "$ref": "#/$defs/colorToken" },
+        "warningContent": { "$ref": "#/$defs/colorToken" },
+        "warningHover": { "$ref": "#/$defs/colorToken" },
+        "warningHoverContent": { "$ref": "#/$defs/colorToken" },
+        "warningActive": { "$ref": "#/$defs/colorToken" },
+        "warningActiveContent": { "$ref": "#/$defs/colorToken" },
+        "warningFocus": { "$ref": "#/$defs/colorToken" },
+        "warningFocusContent": { "$ref": "#/$defs/colorToken" },
+        "warningDisabled": { "$ref": "#/$defs/colorToken" },
+        "warningDisabledContent": { "$ref": "#/$defs/colorToken" }
+      }
+    },
+    "dangerColors": {
+      "type": "object",
+      "required": [
+        "danger", "dangerContent",
+        "dangerHover", "dangerHoverContent",
+        "dangerActive", "dangerActiveContent",
+        "dangerFocus", "dangerFocusContent",
+        "dangerDisabled", "dangerDisabledContent"
+      ],
+      "properties": {
+        "danger": { "$ref": "#/$defs/colorToken" },
+        "dangerContent": { "$ref": "#/$defs/colorToken" },
+        "dangerHover": { "$ref": "#/$defs/colorToken" },
+        "dangerHoverContent": { "$ref": "#/$defs/colorToken" },
+        "dangerActive": { "$ref": "#/$defs/colorToken" },
+        "dangerActiveContent": { "$ref": "#/$defs/colorToken" },
+        "dangerFocus": { "$ref": "#/$defs/colorToken" },
+        "dangerFocusContent": { "$ref": "#/$defs/colorToken" },
+        "dangerDisabled": { "$ref": "#/$defs/colorToken" },
+        "dangerDisabledContent": { "$ref": "#/$defs/colorToken" }
+      }
+    },
+    "structuralColors": {
+      "type": "object",
+      "required": [
+        "surface",
+        "surfaceContent",
+        "surfaceAlt",
+        "surfaceAltContent",
+        "highEmphasis",
+        "mediumEmphasis",
+        "lowEmphasis",
+        "border",
+        "overlay"
+      ],
+      "properties": {
+        "surface": { "$ref": "#/$defs/colorToken" },
+        "surfaceContent": { "$ref": "#/$defs/colorToken" },
+        "surfaceAlt": { "$ref": "#/$defs/colorToken" },
+        "surfaceAltContent": { "$ref": "#/$defs/colorToken" },
+        "highEmphasis": { "$ref": "#/$defs/colorToken" },
+        "mediumEmphasis": { "$ref": "#/$defs/colorToken" },
+        "lowEmphasis": { "$ref": "#/$defs/colorToken" },
+        "border": { "$ref": "#/$defs/colorToken" },
+        "overlay": { "$ref": "#/$defs/colorToken" }
+      }
+    }
+  }
+}

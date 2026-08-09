@@ -1,5 +1,6 @@
 import { createContext, createMemo, createSignal, useContext, type Accessor, type JSX } from "solid-js";
-import { availableThemes, themes, type ThemeConfig, type ThemeKey } from "./design/themes";
+import { availableThemes, themes, type ThemeKey } from "./design/themes";
+import type { ThemeTokens } from "./design/tokens";
 
 const THEME_STORAGE_KEY = "gestalt-theme";
 const RADIUS_STORAGE_KEY = "gestalt-radius";
@@ -7,10 +8,10 @@ const RADIUS_STORAGE_KEY = "gestalt-radius";
 export type Radius = "none" | "sm" | "md" | "lg";
 
 interface ThemeContextValue {
-  theme: Accessor<ThemeConfig>;
+  theme: Accessor<ThemeTokens>;
   themeKey: Accessor<ThemeKey>;
   setTheme: (key: ThemeKey) => void;
-  availableThemes: ThemeConfig[];
+  availableThemes: ThemeTokens[];
   radius: Accessor<Radius>;
   setRadius: (r: Radius) => void;
 }

@@ -26,6 +26,7 @@
     "@solidjs/testing-library": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
+    "ajv": "^8.20.0",
     "jsdom": "catalog:",
     "solid-js": "catalog:",
     "typescript": "catalog:",
@@ -35,7 +36,10 @@
     "vitest": "catalog:"
   },
   "dependencies": {
+    "@fontsource/fira-code": "^5.3.0",
     "@fontsource/geist-mono": "catalog:",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
     "lucide-solid": "catalog:",
     "solid-focus-trap": "catalog:"
   }
