@@ -55,7 +55,7 @@ const Dashboard: Component = () => {
     <div class="flex flex-col gap-6">
       <div class="flex items-center justify-between">
         <Text variant="headline" class="text-high-emphasis">Passkeys</Text>
-        <Button variant="ghost" size="sm" onClick={handleLogoutEverywhere}>
+        <Button variant="danger" fill="ghost" size="sm" onClick={handleLogoutEverywhere}>
           Log out everywhere
         </Button>
       </div>
@@ -86,7 +86,8 @@ const Dashboard: Component = () => {
                 </div>
               </div>
               <Button
-                variant="ghost"
+                variant="danger"
+                fill="ghost"
                 size="sm"
                 onClick={() => {
                   setCredentialToRemove(cred);

@@ -19,7 +19,6 @@ export type {
 } from "./design/tokens";
 export { themes, availableThemes } from "./design/themes";
 export type { ThemeKey } from "./design/themes";
-export type { EmphasisVariant, SemanticVariant, Variant } from "./design/variants";
 export { ThemeProvider, useTheme } from "./theme-provider";
 export type { ThemeProviderProps, Radius } from "./theme-provider";
 export {
@@ -37,6 +36,7 @@ export type {
   IconProps,
   ButtonProps,
   ButtonVariant,
+  ButtonFill,
   ButtonSize,
   InputProps,
   TextProps,

@@ -4,17 +4,21 @@ import { Card } from "@/components/Card";
 import { Text } from "@/components/Text";
 import { FormField } from "@/components/FormField";
 import { Select } from "@/components/Select";
-import type { ButtonVariant, ButtonSize } from "@/components/Button";
+import type { ButtonVariant, ButtonFill, ButtonSize } from "@/components/Button";
 import type { SelectOption } from "@/components/Select";
 
 const variantOpts: SelectOption[] = [
   { value: "primary", label: "Primary" },
   { value: "secondary", label: "Secondary" },
-  { value: "ghost", label: "Ghost" },
   { value: "info", label: "Info" },
   { value: "success", label: "Success" },
   { value: "warning", label: "Warning" },
   { value: "danger", label: "Danger" },
+];
+
+const emphasisOpts: SelectOption[] = [
+  { value: "filled", label: "Filled" },
+  { value: "ghost", label: "Ghost" },
 ];
 
 const sizeOpts: SelectOption[] = [
@@ -25,6 +29,7 @@ const sizeOpts: SelectOption[] = [
 
 export function ButtonDemo() {
   const [variant, setVariant] = createSignal<ButtonVariant>("primary");
+  const [fill, setFill] = createSignal<ButtonFill>("filled");
   const [size, setSize] = createSignal<ButtonSize>("md");
   const [disabled, setDisabled] = createSignal(false);
   const [loading, setLoading] = createSignal(false);
@@ -38,6 +43,7 @@ export function ButtonDemo() {
           <div class="flex items-center justify-center gap-4 p-12">
             <Button
               variant={variant()}
+              fill={fill()}
               size={size()}
               disabled={disabled()}
               loading={loading()}
@@ -56,6 +62,14 @@ export function ButtonDemo() {
                 placeholder="Variant"
                 value={variant()}
                 onChange={(v) => setVariant(v as ButtonVariant)}
+              />
+            </FormField>
+            <FormField label="Fill" htmlFor="btn-fill">
+              <Select
+                options={emphasisOpts}
+                placeholder="Fill"
+                value={fill()}
+                onChange={(v) => setFill(v as ButtonFill)}
               />
             </FormField>
             <FormField label="Size" htmlFor="btn-size">

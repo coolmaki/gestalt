@@ -41,7 +41,7 @@ describe("Modal", () => {
         <p>Content</p>
       </Modal>
     ));
-    const backdrop = document.querySelector(".bg-black\\/60") as HTMLElement;
+    const backdrop = document.querySelector(".bg-overlay") as HTMLElement;
     backdrop.click();
     expect(closed).toBe(true);
   });

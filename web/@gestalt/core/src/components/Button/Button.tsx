@@ -1,13 +1,14 @@
 import type { Component, JSX } from "solid-js";
 import { Show } from "solid-js";
 import { Icon } from "@/components/Icon";
-import type { Variant } from "@/design/variants";
+import type { ButtonVariant, ButtonFill } from "@/design/variants";
 
-export type ButtonVariant = Variant;
+export type { ButtonVariant, ButtonFill };
 export type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps {
   variant?: ButtonVariant;
+  fill?: ButtonFill;
   size?: ButtonSize;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
@@ -17,15 +18,25 @@ export interface ButtonProps {
   children: JSX.Element;
 }
 
-const variantStyles: Record<ButtonVariant, string> = {
-  primary: "bg-primary text-primary-content hover:bg-primary-hover border-transparent",
-  secondary: "bg-surface-alt text-high-emphasis hover:bg-surface border border-border",
-  ghost: "bg-transparent text-high-emphasis hover:bg-surface-alt border-transparent",
-  info: "bg-info text-info-content border-transparent",
-  success: "bg-success text-success-content border-transparent",
-  warning: "bg-warning text-warning-content border-transparent",
-  danger: "bg-danger text-danger-content hover:bg-danger-hover border-transparent",
-};
+function makeVariantStyles(variant: ButtonVariant, fill: ButtonFill): string {
+  const v = variant;
+
+  if (fill === "ghost") {
+    return [
+      `bg-transparent text-${v} border-transparent`,
+      `hover:bg-${v} hover:text-${v}-content`,
+      `active:bg-${v}-active active:text-${v}-active-content`,
+      `disabled:opacity-50 disabled:cursor-not-allowed`,
+    ].join(" ");
+  }
+
+  return [
+    `bg-${v} text-${v}-content border-transparent`,
+    `hover:bg-${v}-hover hover:text-${v}-hover-content`,
+    `active:bg-${v}-active active:text-${v}-active-content`,
+    `disabled:bg-${v}-disabled disabled:text-${v}-disabled-content disabled:cursor-not-allowed`,
+  ].join(" ");
+}
 
 const sizeStyles: Record<ButtonSize, string> = {
   sm: "px-3 py-1.5 text-sm gap-1.5",
@@ -35,11 +46,12 @@ const sizeStyles: Record<ButtonSize, string> = {
 
 export const Button: Component<ButtonProps> = (props) => {
   const variant = () => props.variant ?? "primary";
+  const fill = () => props.fill ?? "filled";
   const size = () => props.size ?? "md";
   const isDisabled = () => props.disabled || props.loading;
 
   const styles = () =>
-    `inline-flex items-center justify-center font-medium border rounded-field transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${isDisabled() ? "bg-disabled text-disabled-content cursor-not-allowed" : `${variantStyles[variant()]} cursor-pointer`} ${sizeStyles[size()]} ${props.class ?? ""}`;
+    `inline-flex items-center justify-center font-medium border rounded-field transition-colors duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus focus-visible:ring-offset-2 ${makeVariantStyles(variant(), fill())} ${sizeStyles[size()]} ${props.class ?? ""}`;
 
   return (
     <button

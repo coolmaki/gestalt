@@ -73,7 +73,7 @@ export const Modal: Component<ModalProps> = (props) => {
           aria-label={props.title}
         >
           <div
-            class={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-200 ${visible() ? "opacity-100" : "opacity-0"}`}
+            class={`fixed inset-0 bg-overlay backdrop-blur-sm transition-opacity duration-200 ${visible() ? "opacity-100" : "opacity-0"}`}
             onClick={close}
           />
           <div

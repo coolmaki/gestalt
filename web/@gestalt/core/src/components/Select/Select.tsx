@@ -58,7 +58,7 @@ export const Select: Component<SelectProps> = (props) => {
     <div class={`relative ${props.disabled ? "opacity-50 cursor-not-allowed" : ""} ${props.class ?? ""}`}>
       <button
         type="button"
-        class="w-full px-3 py-2 bg-surface border border-border rounded-field text-left text-high-emphasis placeholder:text-low-emphasis transition-colors duration-150 shadow-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent flex items-center justify-between gap-2 cursor-pointer"
+        class="w-full px-3 py-2 bg-surface border border-border rounded-field text-left text-high-emphasis placeholder:text-low-emphasis transition-colors duration-150 shadow-none focus:outline-none focus:ring-2 focus:ring-primary-focus focus:border-transparent flex items-center justify-between gap-2 cursor-pointer"
         disabled={props.disabled}
         onClick={open}
         aria-haspopup="listbox"
@@ -76,7 +76,7 @@ export const Select: Component<SelectProps> = (props) => {
         <Portal mount={document.body}>
           <div class="fixed inset-0 z-50">
             <div
-              class={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-200 ${visible() ? "opacity-100" : "opacity-0"}`}
+              class={`fixed inset-0 bg-overlay backdrop-blur-sm transition-opacity duration-200 ${visible() ? "opacity-100" : "opacity-0"}`}
               onClick={close}
             />
             <div

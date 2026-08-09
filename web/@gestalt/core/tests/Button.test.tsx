@@ -20,16 +20,17 @@ describe("Button", () => {
     expect(btn.classList.contains("bg-danger")).toBe(true);
   });
 
-  it("renders ghost variant", () => {
-    render(() => <Button variant="ghost">Ghost</Button>);
+  it("renders ghost emphasis", () => {
+    render(() => <Button variant="primary" fill="ghost">Ghost</Button>);
     const btn = screen.getByText("Ghost");
     expect(btn.classList.contains("bg-transparent")).toBe(true);
+    expect(btn.classList.contains("text-primary")).toBe(true);
   });
 
-  it("applies secondary variant", () => {
+  it("applies secondary variant with filled emphasis", () => {
     render(() => <Button variant="secondary">Secondary</Button>);
     const btn = screen.getByText("Secondary");
-    expect(btn.classList.contains("bg-surface-alt")).toBe(true);
+    expect(btn.classList.contains("bg-secondary")).toBe(true);
   });
 
   it("applies size classes", () => {

@@ -35,7 +35,7 @@ const DashboardLayout: Component<DashboardLayoutProps> = (props) => {
           <Text variant="subhead" class="text-primary">Passport</Text>
           <div class="flex items-center gap-4">
             <Text variant="caption" class="text-medium-emphasis">{currentEmail()}</Text>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>Log out</Button>
+            <Button variant="danger" fill="ghost" size="sm" onClick={handleLogout}>Log out</Button>
           </div>
         </div>
       </header>

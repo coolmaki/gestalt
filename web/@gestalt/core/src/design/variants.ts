@@ -1,5 +1,3 @@
-export type EmphasisVariant = "primary" | "secondary" | "ghost";
+export type ButtonVariant = "primary" | "secondary" | "info" | "success" | "warning" | "danger";
 
-export type SemanticVariant = "info" | "success" | "warning" | "danger";
-
-export type Variant = EmphasisVariant | SemanticVariant;
+export type ButtonFill = "filled" | "ghost";
