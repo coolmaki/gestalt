@@ -3,6 +3,7 @@ import { Modal } from "@/components/Modal";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Text } from "@/components/Text";
+import { Input } from "@/components/Input";
 import { FormField } from "@/components/FormField";
 
 export function ModalDemo() {
@@ -21,11 +22,10 @@ export function ModalDemo() {
         <Card>
           <div class="flex flex-col gap-4 p-4">
             <FormField label="Title" htmlFor="modal-title">
-              <input
+              <Input
                 id="modal-title"
-                class="w-full"
                 value={title()}
-                onInput={(e) => setTitle(e.currentTarget.value)}
+                onChange={setTitle}
               />
             </FormField>
           </div>

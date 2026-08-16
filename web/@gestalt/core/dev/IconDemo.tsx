@@ -36,7 +36,7 @@ export function IconDemo() {
               <input
                 id="icon-size"
                 type="number"
-                class="w-full"
+                class="w-full px-3 py-2 bg-surface border border-border rounded-field text-high-emphasis placeholder:text-low-emphasis transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary-focus focus:border-transparent"
                 min={12}
                 max={96}
                 value={size()}

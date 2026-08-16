@@ -1,5 +1,5 @@
 import { createSignal, Switch, Match } from "solid-js";
-import { useTheme } from "@/theme-provider";
+import { useTheme, themeMetaList } from "@/theme-provider";
 import type { ThemeKey } from "@/design/themes";
 import type { Radius } from "@/theme-provider";
 import { Select } from "@/components/Select";
@@ -46,12 +46,7 @@ const sectionGroups: SectionGroup[] = [
   },
 ];
 
-const themeOpts: SelectOption[] = [
-  { value: "obsidian", label: "Obsidian" },
-  { value: "matrix", label: "Matrix" },
-  { value: "pearl", label: "Pearl" },
-  { value: "vapor", label: "Vapor" },
-];
+const themeOpts: SelectOption[] = themeMetaList.map((t) => ({ value: t.key, label: t.name }));
 
 const radiusOpts: SelectOption[] = [
   { value: "none", label: "None" },

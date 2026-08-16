@@ -1,9 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="obsidian">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Component Gallery — @gestalt/core</title>
+    <script>
+      (function() {
+        try {
+          var t = localStorage.getItem("gestalt-theme");
+          var validKeys = ["obsidian", "matrix", "pearl", "vapor"];
+          if (!t || validKeys.indexOf(t) === -1) t = "obsidian";
+          var r = localStorage.getItem("gestalt-radius") || "sm";
+          document.documentElement.setAttribute("data-theme", t);
+          document.documentElement.setAttribute("data-radius", r);
+        } catch(e) {}
+      })();
+    </script>
   </head>
   <body class="bg-surface text-surface-content">
     <div id="app"></div>
