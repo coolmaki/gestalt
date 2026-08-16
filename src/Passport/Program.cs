@@ -6,6 +6,7 @@ using Passport.Core.Application.Configuration;
 using Passport.Core.Application.Extensions;
 using Passport.Infrastructure.Configuration;
 using Passport.Infrastructure.Extensions;
+using Passport.Infrastructure.Services;
 using Passport.Presentation.Http.Extensions;
 
 using Gestalt.Lib.Application.Extensions;
@@ -106,7 +107,29 @@ if (app.Environment.IsDevelopment())
 #else
 app.UseDefaultFiles();
 app.UseStaticFiles();
-app.MapFallbackToFile("index.html");
+
+var themeProvider = new ThemeCssProvider(app.Environment.WebRootPath!);
+app.Logger.LogInformation("ThemeCssProvider loaded {Count} themes", themeProvider.ThemeCount);
+
+app.MapFallback(async (HttpContext context) =>
+{
+    var themeKey = context.Request.Cookies["gestalt-theme"] ?? "obsidian";
+    themeKey = themeProvider.ResolveThemeKey(themeKey);
+
+    var htmlPath = Path.Combine(app.Environment.WebRootPath!, "index.html");
+    var html = await File.ReadAllTextAsync(htmlPath);
+
+    var injection = "";
+    if (themeProvider.TryGetCss(themeKey, out var css))
+    {
+        injection = $"<style>{css}</style>\n{themeProvider.GetThemeUrlsScript()}";
+    }
+
+    html = html.Replace("<!-- gestalt-theme-css -->", injection);
+
+    context.Response.ContentType = "text/html";
+    await context.Response.WriteAsync(html);
+});
 #endif
 
 app.Run();

@@ -8,13 +8,26 @@
     <script>
       (function() {
         try {
-          var t = localStorage.getItem("gestalt-theme") || "obsidian";
+          var m = document.cookie.match(/(?:^|;\s*)gestalt-theme=([^;]*)/);
+          var t = m ? decodeURIComponent(m[1]) : null;
+          if (!t) t = localStorage.getItem("gestalt-theme");
+          var validKeys = ["obsidian", "matrix", "pearl", "vapor"];
+          if (!t || validKeys.indexOf(t) === -1) t = "obsidian";
           var r = localStorage.getItem("gestalt-radius") || "sm";
           document.documentElement.setAttribute("data-theme", t);
           document.documentElement.setAttribute("data-radius", r);
+          if (t !== "obsidian") {
+            var url = "/src/themes/" + t + ".css";
+            var link = document.createElement("link");
+            link.id = "gestalt-theme-css";
+            link.rel = "stylesheet";
+            link.href = url;
+            document.head.appendChild(link);
+          }
         } catch(e) {}
       })();
     </script>
+    <!-- gestalt-theme-css -->
   </head>
   <body class="h-full">
     <div id="root" class="h-full"></div>

@@ -4,7 +4,7 @@
 @import "@fontsource/fira-code";
 @import "@fontsource/ibm-plex-mono";
 @source "../src";
-@plugin "./design/plugin.ts";
+@import "./themes/obsidian.css";
 
 :root {
   --app-field-height: 2.5rem;

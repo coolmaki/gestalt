@@ -1,6 +1,4 @@
-import plugin from "tailwindcss/plugin";
-import { themes } from "./themes";
-import type { ColorTokens, ColorStateTokens, ShadowTokens, BorderTokens, TypographyTokens } from "./tokens";
+import type { ColorTokens, ColorStateTokens, ShadowTokens, BorderTokens, TypographyTokens, ThemeTokens } from "./tokens";
 
 function camelToKebab(str: string): string {
   return str.replace(/([A-Z])/g, "-$1").toLowerCase();
@@ -14,8 +12,9 @@ function flattenColors(colors: ColorTokens): Record<string, string> {
     "highEmphasis", "mediumEmphasis", "lowEmphasis", "border", "overlay",
   ] as const;
   for (const key of structuralKeys) {
-    if (colors[key] !== undefined) {
-      vars[`--theme-color-${camelToKebab(key)}`] = colors[key] as string;
+    const value = colors[key];
+    if (typeof value === "string") {
+      vars[`--theme-color-${camelToKebab(key)}`] = value;
     }
   }
 
@@ -70,17 +69,11 @@ function flattenBorders(borders: BorderTokens): Record<string, string> {
   };
 }
 
-export default plugin(({ addBase }) => {
-  const baseStyles: Record<string, Record<string, string>> = {};
-
-  for (const [themeKey, themeConfig] of Object.entries(themes)) {
-    baseStyles[`[data-theme="${themeKey}"]`] = {
-      ...flattenColors(themeConfig.colors),
-      ...flattenShadows(themeConfig.shadows),
-      ...flattenTypography(themeConfig.typography),
-      ...flattenBorders(themeConfig.borders),
-    };
-  }
-
-  addBase(baseStyles);
-});
+export function tokensToCssVars(tokens: ThemeTokens): Record<string, string> {
+  return {
+    ...flattenColors(tokens.colors),
+    ...flattenShadows(tokens.shadows),
+    ...flattenTypography(tokens.typography),
+    ...flattenBorders(tokens.borders),
+  };
+}

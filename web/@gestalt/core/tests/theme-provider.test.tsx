@@ -27,6 +27,10 @@ describe("ThemeProvider", () => {
     localStorage.clear();
     document.documentElement.removeAttribute("data-theme");
     document.documentElement.removeAttribute("data-radius");
+    document.cookie = "gestalt-theme=; path=/; max-age=0";
+    document.cookie = "gestalt-theme=; path=/; SameSite=Lax; max-age=0";
+    const existing = document.getElementById("gestalt-theme-css");
+    if (existing) existing.remove();
   });
 
   it("sets data-theme on html element on mount", () => {

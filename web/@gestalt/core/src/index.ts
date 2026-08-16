@@ -1,26 +1,8 @@
 import "@/styles.css";
 
-export type {
-  ColorTokens,
-  SemanticColorTokens,
-  StructuralColorTokens,
-  ColorStateTokens,
-  ShadowTokens,
-  BorderTokens,
-  TypographyTokens,
-  ThemeTokens,
-  HexColorValue,
-  ChannelColorValue,
-  ColorValue,
-  DimensionValue,
-  ShadowValue,
-  FontFamilyValue,
-  FontKey,
-} from "./design/tokens";
-export { themes, availableThemes } from "./design/themes";
 export type { ThemeKey } from "./design/themes";
-export { ThemeProvider, useTheme } from "./theme-provider";
-export type { ThemeProviderProps, Radius } from "./theme-provider";
+export { ThemeProvider, useTheme, themeMetaList } from "./theme-provider";
+export type { ThemeProviderProps, Radius, ThemeMeta } from "./theme-provider";
 export {
   Icon,
   Button,
