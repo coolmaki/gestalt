@@ -1,7 +1,7 @@
 # Plan: Theme System — Phase 1: JSON Schema & Type Definitions
 
 **Created:** 2026-08-09
-**Status:** Active
+**Status:** ✅ Completed
 **Project:** Gestalt (cross-project)
 **Depends on:** `shared-core-design-tokens` (completed)
 **Design doc:** `docs/design-docs/theme-system.md`

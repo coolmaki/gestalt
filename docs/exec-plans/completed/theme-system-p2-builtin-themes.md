@@ -1,7 +1,7 @@
 # Plan: Theme System — Phase 2: Built-in Theme Rebuild
 
 **Created:** 2026-08-09
-**Status:** Active
+**Status:** ✅ Completed
 **Project:** Gestalt (cross-project)
 **Depends on:** `theme-system-p1-schema` (Phase 1)
 **Design doc:** `docs/design-docs/theme-system.md`
