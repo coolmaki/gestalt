@@ -4,6 +4,7 @@ import { Card } from "@/components/Card";
 import { Text } from "@/components/Text";
 import { FormField } from "@/components/FormField";
 import { Select } from "@/components/Select";
+import { Toggle } from "@/components/Toggle";
 import type { ButtonVariant, ButtonFill, ButtonSize } from "@/components/Button";
 import type { SelectOption } from "@/components/Select";
 
@@ -80,14 +81,8 @@ export function ButtonDemo() {
                 onChange={(v) => setSize(v as ButtonSize)}
               />
             </FormField>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={disabled()} onChange={(e) => setDisabled(e.currentTarget.checked)} />
-              <span class="text-sm">Disabled</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={loading()} onChange={(e) => setLoading(e.currentTarget.checked)} />
-              <span class="text-sm">Loading</span>
-            </label>
+            <Toggle checked={disabled()} onChange={setDisabled} label="Disabled" />
+            <Toggle checked={loading()} onChange={setLoading} label="Loading" />
           </div>
         </Card>
       </div>

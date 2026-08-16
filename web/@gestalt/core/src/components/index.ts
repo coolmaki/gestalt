@@ -6,3 +6,5 @@ export { Card, type CardProps, type CardVariant } from "./Card";
 export { Select, type SelectOption, type SelectProps } from "./Select";
 export { FormField, type FormFieldProps } from "./FormField";
 export { Modal, type ModalProps } from "./Modal";
+export { Toggle, type ToggleProps } from "./Toggle";
+export { LoadingIndicator, type LoadingIndicatorProps } from "./LoadingIndicator";

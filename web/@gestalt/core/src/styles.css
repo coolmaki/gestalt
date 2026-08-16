@@ -10,6 +10,29 @@
   --app-field-height: 2.5rem;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-color-border) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--theme-color-border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-color-medium-emphasis);
+}
+
 [data-radius="none"] {
   --app-radius-field: 0rem;
   --app-radius-card: 0rem;

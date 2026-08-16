@@ -3,6 +3,7 @@ import { FormField } from "@/components/FormField";
 import { Input } from "@/components/Input";
 import { Card } from "@/components/Card";
 import { Text } from "@/components/Text";
+import { Toggle } from "@/components/Toggle";
 
 export function FormFieldDemo() {
   const [error, setError] = createSignal("");
@@ -36,10 +37,7 @@ export function FormFieldDemo() {
                 onChange={setError}
               />
             </FormField>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={disabled()} onChange={(e) => setDisabled(e.currentTarget.checked)} />
-              <span class="text-sm">Disabled</span>
-            </label>
+            <Toggle checked={disabled()} onChange={setDisabled} label="Disabled" />
           </div>
         </Card>
       </div>

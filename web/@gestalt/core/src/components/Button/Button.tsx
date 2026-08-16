@@ -1,6 +1,6 @@
 import type { Component, JSX } from "solid-js";
 import { Show } from "solid-js";
-import { Icon } from "@/components/Icon";
+import { LoadingIndicator } from "@/components/LoadingIndicator";
 import type { ButtonVariant, ButtonFill } from "@/design/variants";
 
 export type { ButtonVariant, ButtonFill };
@@ -65,7 +65,7 @@ export const Button: Component<ButtonProps> = (props) => {
       }}
     >
       <Show when={props.loading}>
-        <Icon name="loading-ring" class="animate-spin" size={size() === "sm" ? 14 : 16} />
+        <LoadingIndicator size={size() === "sm" ? 16 : 24} />
       </Show>
       {props.children}
     </button>

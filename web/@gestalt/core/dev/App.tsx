@@ -12,8 +12,9 @@ import { CardDemo } from "./CardDemo";
 import { SelectDemo } from "./SelectDemo";
 import { FormFieldDemo } from "./FormFieldDemo";
 import { ModalDemo } from "./ModalDemo";
+import { ToggleDemo } from "./ToggleDemo";
 
-type SectionKey = "icon" | "button" | "input" | "text" | "card" | "select" | "formfield" | "modal";
+type SectionKey = "icon" | "button" | "input" | "text" | "card" | "select" | "formfield" | "modal" | "toggle";
 
 interface SectionGroup {
   label: string;
@@ -35,6 +36,7 @@ const sectionGroups: SectionGroup[] = [
       { key: "button", label: "Button" },
       { key: "input", label: "Input" },
       { key: "select", label: "Select" },
+      { key: "toggle", label: "Toggle" },
       { key: "formfield", label: "FormField" },
     ],
   },
@@ -116,6 +118,7 @@ export function App() {
             <Match when={active() === "text"}><TextDemo /></Match>
             <Match when={active() === "card"}><CardDemo /></Match>
             <Match when={active() === "select"}><SelectDemo /></Match>
+            <Match when={active() === "toggle"}><ToggleDemo /></Match>
             <Match when={active() === "formfield"}><FormFieldDemo /></Match>
             <Match when={active() === "modal"}><ModalDemo /></Match>
           </Switch>

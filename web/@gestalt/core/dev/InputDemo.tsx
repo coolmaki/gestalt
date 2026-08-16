@@ -3,6 +3,7 @@ import { Input } from "@/components/Input";
 import { Card } from "@/components/Card";
 import { Text } from "@/components/Text";
 import { FormField } from "@/components/FormField";
+import { Toggle } from "@/components/Toggle";
 
 export function InputDemo() {
   const [value, setValue] = createSignal("Hello world");
@@ -47,10 +48,7 @@ export function InputDemo() {
                 onChange={setError}
               />
             </FormField>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={disabled()} onChange={(e) => setDisabled(e.currentTarget.checked)} />
-              <span class="text-sm">Disabled</span>
-            </label>
+            <Toggle checked={disabled()} onChange={setDisabled} label="Disabled" />
           </div>
         </Card>
       </div>
