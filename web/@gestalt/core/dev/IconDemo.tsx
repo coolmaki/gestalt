@@ -27,7 +27,8 @@ export function IconDemo() {
             <FormField label="Name" htmlFor="icon-name">
               <Select
                 options={nameOpts}
-                placeholder="Choose an icon"
+                placeholder="Search icons..."
+                searchable
                 value={name()}
                 onChange={(v) => setName(v as IconName)}
               />

@@ -222,7 +222,7 @@ export const Select: Component<SelectProps> = (props) => {
                   }
                 >
                   <div class="flex items-center justify-center py-6 text-medium-emphasis">
-                    <LoadingIndicator />
+                    <LoadingIndicator size={32} />
                   </div>
                 </Show>
               </div>
