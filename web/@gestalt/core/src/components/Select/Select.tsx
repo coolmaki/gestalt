@@ -68,7 +68,7 @@ export const Select: Component<SelectProps> = (props) => {
           {selected()?.label ?? props.placeholder}
         </span>
         <span class={`transition-transform duration-200 shrink-0 flex items-center ${visible() ? "rotate-180" : ""}`}>
-          <Icon name="chevron-down" size={16} class="text-medium-emphasis" />
+          <Icon name="arrow-down" size={16} class="text-medium-emphasis" />
         </span>
       </button>
 
@@ -107,7 +107,7 @@ export const Select: Component<SelectProps> = (props) => {
                     >
                       <span>{option.label}</span>
                       {option.value === currentValue() && (
-                        <Icon name="check" size={16} class="text-primary shrink-0" />
+                        <Icon name="tick" size={16} class="text-primary shrink-0" />
                       )}
                     </button>
                   )}

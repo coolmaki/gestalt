@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@solidjs/testing-library";
+import { render, screen, waitFor } from "@solidjs/testing-library";
 import { Button } from "@/components/Button";
 
 describe("Button", () => {
@@ -45,11 +45,12 @@ describe("Button", () => {
     expect(btn.hasAttribute("disabled")).toBe(true);
   });
 
-  it("shows loading spinner", () => {
+  it("shows loading spinner", async () => {
     render(() => <Button loading>Saving</Button>);
     expect(screen.getByText("Saving")).toBeTruthy();
-    const svg = document.querySelector("svg");
-    expect(svg).toBeTruthy();
+    await waitFor(() => {
+      expect(document.querySelector("svg")).toBeTruthy();
+    });
   });
 
   it("calls onClick when clicked", () => {

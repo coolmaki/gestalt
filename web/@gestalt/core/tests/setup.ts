@@ -1,3 +1,5 @@
+import { vi } from "vitest";
+
 const storage = new Map<string, string>();
 
 Object.defineProperty(globalThis, "localStorage", {
@@ -11,3 +13,7 @@ Object.defineProperty(globalThis, "localStorage", {
   },
   writable: true,
 });
+
+vi.mock("@/components/Icon/registry", () => ({
+  loadIconShapes: async (_name: string) => [{ type: "path", d: "M0 0h10v10H0z" }],
+}));

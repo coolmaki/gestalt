@@ -443,6 +443,9 @@ test-results/
 # Icon must end with two \r
 Icon
 
+# Keep the @gestalt/core Icon component directory (a real directory, not the macOS Icon\r\r file)
+!web/@gestalt/core/src/components/Icon/
+
 
 # Thumbnails
 ._*

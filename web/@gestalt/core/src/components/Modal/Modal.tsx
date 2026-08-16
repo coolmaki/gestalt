@@ -87,11 +87,11 @@ export const Modal: Component<ModalProps> = (props) => {
               </Show>
               <button
                 type="button"
-                class="ml-auto p-1 rounded-field text-medium-emphasis hover:text-high-emphasis hover:bg-surface-alt transition-colors"
+                class="ml-auto inline-flex items-center justify-center p-1 rounded-field text-medium-emphasis hover:text-high-emphasis hover:bg-surface-alt transition-colors"
                 onClick={close}
                 aria-label="Close"
               >
-                <Icon name="x" size={20} />
+                <Icon name="cross" size={20} />
               </button>
             </div>
             {props.children}

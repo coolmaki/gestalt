@@ -19,6 +19,7 @@
     "build": "vite build",
     "dev": "vite --config vite.dev.config.ts",
     "test": "vitest run",
+    "generate-icons": "npx tsx scripts/generate-icons.ts",
     "generate-themes": "npx tsx scripts/generate-themes.ts"
   },
   "peerDependencies": {
@@ -41,7 +42,6 @@
     "@fontsource/geist-mono": "catalog:",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/jetbrains-mono": "^5.3.0",
-    "lucide-solid": "catalog:",
     "solid-focus-trap": "catalog:"
   }
 }

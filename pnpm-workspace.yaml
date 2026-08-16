@@ -15,5 +15,4 @@ catalog:
   vite-plugin-solid: ^2.0.0
   vitest: ^3.0.0
   '@fontsource/geist-mono': ^5.2.8
-  lucide-solid: ^1.24.0
   solid-focus-trap: ^0.1.9

@@ -18,25 +18,23 @@ export interface ButtonProps {
   children: JSX.Element;
 }
 
-function makeVariantStyles(variant: ButtonVariant, fill: ButtonFill): string {
-  const v = variant;
+const filledStyles: Record<ButtonVariant, string> = {
+  primary: "bg-primary text-primary-content border-transparent hover:bg-primary-hover hover:text-primary-hover-content active:bg-primary-active active:text-primary-active-content disabled:bg-primary-disabled disabled:text-primary-disabled-content disabled:cursor-not-allowed",
+  secondary: "bg-secondary text-secondary-content border-transparent hover:bg-secondary-hover hover:text-secondary-hover-content active:bg-secondary-active active:text-secondary-active-content disabled:bg-secondary-disabled disabled:text-secondary-disabled-content disabled:cursor-not-allowed",
+  info: "bg-info text-info-content border-transparent hover:bg-info-hover hover:text-info-hover-content active:bg-info-active active:text-info-active-content disabled:bg-info-disabled disabled:text-info-disabled-content disabled:cursor-not-allowed",
+  success: "bg-success text-success-content border-transparent hover:bg-success-hover hover:text-success-hover-content active:bg-success-active active:text-success-active-content disabled:bg-success-disabled disabled:text-success-disabled-content disabled:cursor-not-allowed",
+  warning: "bg-warning text-warning-content border-transparent hover:bg-warning-hover hover:text-warning-hover-content active:bg-warning-active active:text-warning-active-content disabled:bg-warning-disabled disabled:text-warning-disabled-content disabled:cursor-not-allowed",
+  danger: "bg-danger text-danger-content border-transparent hover:bg-danger-hover hover:text-danger-hover-content active:bg-danger-active active:text-danger-active-content disabled:bg-danger-disabled disabled:text-danger-disabled-content disabled:cursor-not-allowed",
+};
 
-  if (fill === "ghost") {
-    return [
-      `bg-transparent text-${v} border-transparent`,
-      `hover:bg-${v} hover:text-${v}-content`,
-      `active:bg-${v}-active active:text-${v}-active-content`,
-      `disabled:opacity-50 disabled:cursor-not-allowed`,
-    ].join(" ");
-  }
-
-  return [
-    `bg-${v} text-${v}-content border-transparent`,
-    `hover:bg-${v}-hover hover:text-${v}-hover-content`,
-    `active:bg-${v}-active active:text-${v}-active-content`,
-    `disabled:bg-${v}-disabled disabled:text-${v}-disabled-content disabled:cursor-not-allowed`,
-  ].join(" ");
-}
+const ghostStyles: Record<ButtonVariant, string> = {
+  primary: "bg-transparent text-primary border-transparent hover:bg-primary hover:text-primary-content active:bg-primary-active active:text-primary-active-content disabled:opacity-50 disabled:cursor-not-allowed",
+  secondary: "bg-transparent text-secondary border-transparent hover:bg-secondary hover:text-secondary-content active:bg-secondary-active active:text-secondary-active-content disabled:opacity-50 disabled:cursor-not-allowed",
+  info: "bg-transparent text-info border-transparent hover:bg-info hover:text-info-content active:bg-info-active active:text-info-active-content disabled:opacity-50 disabled:cursor-not-allowed",
+  success: "bg-transparent text-success border-transparent hover:bg-success hover:text-success-content active:bg-success-active active:text-success-active-content disabled:opacity-50 disabled:cursor-not-allowed",
+  warning: "bg-transparent text-warning border-transparent hover:bg-warning hover:text-warning-content active:bg-warning-active active:text-warning-active-content disabled:opacity-50 disabled:cursor-not-allowed",
+  danger: "bg-transparent text-danger border-transparent hover:bg-danger hover:text-danger-content active:bg-danger-active active:text-danger-active-content disabled:opacity-50 disabled:cursor-not-allowed",
+};
 
 const sizeStyles: Record<ButtonSize, string> = {
   sm: "px-3 py-1.5 text-sm gap-1.5",
@@ -50,8 +48,10 @@ export const Button: Component<ButtonProps> = (props) => {
   const size = () => props.size ?? "md";
   const isDisabled = () => props.disabled || props.loading;
 
-  const styles = () =>
-    `inline-flex items-center justify-center font-medium border rounded-field transition-colors duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus focus-visible:ring-offset-2 ${makeVariantStyles(variant(), fill())} ${sizeStyles[size()]} ${props.class ?? ""}`;
+  const styles = () => {
+    const variantStyles = fill() === "ghost" ? ghostStyles : filledStyles;
+    return `inline-flex items-center justify-center font-medium border rounded-field transition-colors duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus focus-visible:ring-offset-2 ${variantStyles[variant()]} ${sizeStyles[size()]} ${props.class ?? ""}`;
+  };
 
   return (
     <button
@@ -65,7 +65,7 @@ export const Button: Component<ButtonProps> = (props) => {
       }}
     >
       <Show when={props.loading}>
-        <Icon name="loader" class="animate-spin" size={size() === "sm" ? 14 : 16} />
+        <Icon name="loading-ring" class="animate-spin" size={size() === "sm" ? 14 : 16} />
       </Show>
       {props.children}
     </button>

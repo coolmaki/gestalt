@@ -10,7 +10,7 @@ import type { SelectOption } from "@/components/Select";
 const nameOpts: SelectOption[] = Icons.map((n) => ({ value: n, label: n }));
 
 export function IconDemo() {
-  const [name, setName] = createSignal<IconName>("check");
+  const [name, setName] = createSignal<IconName>("tick");
   const [size, setSize] = createSignal(24);
 
   return (
